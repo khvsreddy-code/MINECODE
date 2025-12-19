@@ -1,11 +1,11 @@
 # 💎 MineCode: The AI-Powered Logic Forge
 
-> **"Better than CodeDex. Deeper than Codecademy. Pure Logic."**
+> **"Beyond Syntax. Deep Logic. Professional Mastery."**
 
 MineCode is a next-generation, gamified coding platform designed to bridge the gap between "Hello World" and professional software engineering. Unlike traditional platforms that focus on rote syntax memorization, MineCode emphasizes **Architectural Logic, System Design, and Real-World Problem Solving** from Day 1.
 
-## 🚀 Mission: The "Competitor" Standard
-We are building a fully functional competitor to existing market leaders. Our philosophy:
+## 🚀 Mission: The Logic Standard
+We are building the ultimate diverse coding ecosystem. Our philosophy:
 1.  **No Hand-Holding**: We give you *Smart Hints*, not answers.
 2.  **Visual & Audio Immersion**: A "Cozy/Cyber" aesthetic that makes coding feel like hacking the mainframe.
 3.  **Real-Time Feedback**: Our "Live Link" editor analyzes your keystrokes instantly.
@@ -32,7 +32,7 @@ The platform is currently in **Active Beta**.
 - [x] Audio System Implementation
 - [x] Reactive "Live Link" Header
 
-### Phase 5: The Competitor Layer (Current)
+### Phase 5: The Functional Layer (Current)
 - [x] Full Gamification of Java & C++
 - [x] End-to-End Progression Logic
 - [ ] Advanced Visual Triggers
