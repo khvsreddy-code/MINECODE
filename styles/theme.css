@@ -1,0 +1,77 @@
+:root {
+    /* Palette: Obsidian Void (Black Aesthetic) */
+    --bg-deep: #000000;
+    --bg-panel: #050505;
+    --bg-editor: #030303;
+
+    --primary-blue: #3B82F6;
+    /* Action/Trust */
+    --primary-blue-hover: #2563EB;
+
+    --community-orange: #F59E0B;
+    /* Community/Help */
+    --community-orange-hover: #D97706;
+
+    --content-purple: #8B5CF6;
+    /* Solutions/Deep Content */
+    --content-purple-hover: #7C3AED;
+
+    --accent-friendly: #ffb700;
+
+    --success-green: #10B981;
+    --text-main: #ffffff;
+    --text-muted: #a0a0a0;
+
+    --bg-card: rgba(10, 10, 10, 0.6);
+    --glass-border: rgba(255, 255, 255, 0.08);
+    --glass-bg: rgba(5, 5, 5, 0.9);
+
+    --shadow-glow: 0 0 20px rgba(0, 255, 157, 0.2);
+    --shadow-friendly: 0 0 25px rgba(255, 183, 0, 0.25);
+
+    --accent-primary: #00ff9d;
+    /* Emerald/Code success */
+    --accent-secondary: #bd00ff;
+    /* Amethyst/Magic */
+    /* Amber/Puppy Friendliness */
+    --accent-alert: #ff0055;
+    /* Ruby/Error */
+
+    --font-display: 'Outfit', sans-serif;
+    --font-code: 'JetBrains Mono', monospace;
+
+    --gradient-primary: linear-gradient(135deg, #00ff9d 0%, #00ccff 100%);
+    --gradient-friendly: linear-gradient(135deg, #ffb700 0%, #ff8800 100%);
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    background-color: var(--bg-deep);
+    color: var(--text-main);
+    font-family: var(--font-display);
+    overflow: hidden;
+    /* App-like feel */
+}
+
+* {
+    box-sizing: border-box;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--bg-deep);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--bg-panel);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--text-muted);
+}
