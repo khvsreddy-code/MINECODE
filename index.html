@@ -4,537 +4,296 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MineCode: The Caverns of Logic</title>
-    <link rel="stylesheet" href="styles/theme.css">
-    <link rel="stylesheet" href="styles/main.css">
-    <link rel="stylesheet" href="styles/cozy_video.css">
-    <!-- Google Fonts for that premium feel -->
+    <title>MineCode - Cyber Code Academy</title>
+
+    <link rel="stylesheet" href="styles/cyber-engine.css">
+    <link rel="stylesheet" href="styles/gamification.css"> <!-- Gamification Engine -->
+
+    <!-- True Pixel Fonts from Google -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
-        href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Outfit:wght@300;500;700&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700&display=swap"
         rel="stylesheet">
-    <script>
-        window.onerror = function (msg, url, lineNo, columnNo, error) {
-            console.error('Global Error: ' + msg + '\nURL: ' + url + '\nLine: ' + lineNo + '\nColumn: ' + columnNo + '\nError object: ' + JSON.stringify(error));
-            return false;
-        };
-    </script>
+
+    <!-- Anime.js for Creative Animations -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.2/anime.min.js"></script>
+
+    <!-- Lucide Icons - Clean, aesthetic SVG icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
 </head>
 
 <body>
     <div id="app">
-        <!-- Cinematic Intro Overlay -->
-        <div id="intro-overlay" class="overlay">
-            <div class="intro-content">
-                <h1 class="glitch-text" data-text="MINECODE">MINECODE</h1>
-                <p class="subtitle">Descend. Decode. Discover.</p>
-                <button id="start-btn" class="btn-primary" data-route="onboarding1">INITIALIZE DESCENT</button>
-            </div>
+
+        <!-- Animated Cyber Background -->
+        <div class="cyber-bg">
+            <canvas id="matrix-canvas"></canvas>
+            <div class="crt-overlay"></div> <!-- Vignette/Scanlines -->
+            <div class="grid-overlay"></div>
+            <div class="floating-particles"></div>
         </div>
 
-        <!-- Onboarding Screen 1: Typing Text -->
-        <div id="onboarding-1" class="overlay hidden" data-route="onboarding2">
-            <div class="onboarding-content">
-                <p class="typing-text">Welcome to the world of computing!<br>We are so happy to have you here.</p>
-                <div class="skip-hint">Click anywhere to continue</div>
-            </div>
-        </div>
-
-        <!-- Onboarding S2: Companions (REMOVED) -->
-        <!-- Onboarding S2: Companions (REMOVED - Now Path Selection) -->
-        <div id="onboarding-2" class="overlay hidden">
-            <div class="onboarding-content">
-                <div class="drinee-greeting-container">
-                    <h1>Choose Your Path</h1>
-                    <p>Select your learning style to customize your experience.</p>
-                    <button id="onboarding-continue-btn" class="btn-primary" data-route="onboarding3">Continue</button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Onboarding Screen 3: Experience Level -->
-        <div id="onboarding-3" class="overlay hidden">
-            <div class="progress-bar-top">
-                <div class="step active"></div>
-                <div class="step active"></div>
-                <div class="step active"></div>
-                <div class="step"></div>
-            </div>
-            <div class="onboarding-centered-layout">
-                <div class="content-container">
-                    <h2>Experience Level</h2>
-                    <p>How much code have you written before?</p>
-
-                    <div class="card-grid" data-btn="onboarding-3-continue">
-                        <div class="selection-card" data-action="select-card" data-value="beginner">
-                            <div class="icon-box">🌱</div>
-                            <span>None, I'm new!</span>
-                        </div>
-                        <div class="selection-card" data-action="select-card" data-value="intermediate">
-                            <div class="icon-box">🌿</div>
-                            <span>A little bit</span>
-                        </div>
-                        <div class="selection-card" data-action="select-card" data-value="advanced">
-                            <div class="icon-box">🌲</div>
-                            <span>I know my way around</span>
+        <!-- Top Navigation -->
+        <nav id="topnav" class="topnav">
+            <div class="nav-left">
+                <a href="#" class="nav-brand" data-route="home">
+                    <span class="brand-icon cyber-glow"><i data-lucide="zap"
+                            style="width:24px;height:24px;color:#ffc800;"></i></span>
+                    <span class="brand-text">MineCode</span>
+                </a>
+                <div class="nav-menu">
+                    <div class="nav-dropdown">
+                        <button class="nav-btn active">Learn ▾</button>
+                        <div class="dropdown-content">
+                            <a href="#" data-route="courses">All Courses</a>
+                            <a href="#" data-route="course-python">Python</a>
+                            <a href="#" data-route="course-html">HTML/CSS</a>
+                            <a href="#" data-route="course-js">JavaScript</a>
                         </div>
                     </div>
-
-                    <button id="onboarding-3-continue" class="btn-primary disabled" style="pointer-events: none;"
-                        data-route="onboarding4">Continue</button>
+                    <div class="nav-dropdown">
+                        <button class="nav-btn">Practice ▾</button>
+                        <div class="dropdown-content">
+                            <a href="#" data-route="practice">Challenge Packs</a>
+                            <a href="#" data-route="builds">Project Builds</a>
+                            <a href="#" data-route="practice">#30DaysOfCode</a>
+                        </div>
+                    </div>
+                    <button class="nav-btn" data-route="builds">Build</button>
+                    <button class="nav-btn" data-route="community">Community</button>
                 </div>
             </div>
-        </div>
-
-        <!-- Onboarding Screen 4: Interests -->
-        <div id="onboarding-4" class="overlay hidden">
-            <div class="progress-bar-top">
-                <div class="step active"></div>
-                <div class="step active"></div>
-                <div class="step active"></div>
-                <div class="step active"></div>
+            <div class="nav-right">
+                <button class="nav-icon" title="Search"><i data-lucide="search"
+                        style="width:20px;height:20px;"></i></button>
+                <button class="nav-icon notification-badge" title="Notifications"><i data-lucide="bell"
+                        style="width:20px;height:20px;"></i></button>
+                <div class="nav-avatar" id="nav-avatar" title="Profile">
+                    <i data-lucide="user" style="width:20px;height:20px;"></i>
+                </div>
+                <button class="btn-cyber-primary" id="join-club-btn">Join Club</button>
             </div>
-            <div class="onboarding-centered-layout">
-                <div class="content-container">
-                    <h2>What brings you here?</h2>
-                    <p>Let us know so we can tailor your journey.</p>
+        </nav>
 
-                    <div class="card-grid" data-btn="onboarding-4-continue">
-                        <div class="selection-card" data-action="select-card" data-value="fundamentals">
-                            <div class="icon-box">💻</div>
-                            <span>Programming fundamentals</span>
-                        </div>
-                        <div class="selection-card" data-action="select-card" data-value="data">
-                            <div class="icon-box">📈</div>
-                            <span>Analyzing data</span>
-                        </div>
-                        <div class="selection-card" data-action="select-card" data-value="web">
-                            <div class="icon-box">🖥️</div>
-                            <span>Building websites or web apps</span>
-                        </div>
-                        <div class="selection-card" data-action="select-card" data-value="other">
-                            <div class="icon-box">...</div>
-                            <span>Something else</span>
-                        </div>
-                        <div class="selection-card" data-action="select-card" data-value="explore">
-                            <div class="icon-box">🗺️</div>
-                            <span>I'm not sure! I just want to explore</span>
+        <!-- Main Layout -->
+        <div id="main-layout" class="main-layout">
+
+            <main id="main-content" class="main-content">
+
+                <!-- Welcome Section -->
+                <section class="welcome-section animate-in">
+                    <div class="welcome-avatar">
+                        <div class="pixel-robot"><i data-lucide="bot" style="width:48px;height:48px;color:#22d3ee;"></i>
                         </div>
                     </div>
-
-                    <button id="onboarding-4-continue" class="btn-primary disabled" style="pointer-events: none;"
-                        data-route="dashboard">Continue</button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Dashboard Interface (CodeDex Style) -->
-        <!-- Dashboard Interface (CodeDex Style - Main Hub) -->
-        <!-- DASHBOARD (HOME / STATS) -->
-        <main id="dashboard" class="hidden">
-            <header class="dashboard-header">
-                <div class="logo">MINECODE</div>
-                <nav class="top-nav">
-                    <a href="#" class="active" data-route="dashboard">Dashboard</a>
-                    <a href="#" data-route="courses-view">Courses</a>
-                    <a href="#" data-route="practice">Practice</a>
-                    <a href="#" data-route="build">Build</a>
-                    <a href="#" data-route="support">Support</a>
-                </nav>
-                <div class="user-menu">
-                    <div class="avatar-small"></div>
-                    <button class="btn-club">JOIN CLUB</button>
-                </div>
-            </header>
-
-            <!-- SUPPORT VIEW ("Comms Relay") -->
-            <div id="support-view" class="main-content hidden">
-                <div class="dashboard-hero cyber-hero"
-                    style="min-height: 150px; border-color: var(--accent-secondary);">
-                    <div class="hero-content">
-                        <h1 class="cyber-glitch" data-text="COMMS RELAY">COMMS RELAY</h1>
-                        <p class="terminal-text">System Diagnostics & Uplink Support</p>
+                    <div class="welcome-bubble">
+                        <span class="typing-effect">Welcome back, Coder! Let's hack the future.</span>
                     </div>
-                </div>
+                </section>
 
-                <div class="card-grid" style="margin-top: 2rem;">
-                    <div class="course-card cyber-card"
-                        style="min-height: 250px; justify-content: center; align-items: center; text-align: center; padding: 2rem;">
-                        <div style="font-size: 3rem; margin-bottom: 1rem;">🛰️</div>
-                        <h3>Direct Uplink</h3>
-                        <p class="cyber-dim">Connect with the Architects on Discord.</p>
-                        <button class="btn-primary" style="margin-top: 1rem;">OPEN CHANNEL</button>
+                <!-- Jump Back In (Hero) -->
+                <section class="content-section">
+                    <div class="section-header">
+                        <h2 class="section-title"> > JUMP BACK IN</h2>
                     </div>
-
-                    <div class="course-card cyber-card"
-                        style="min-height: 250px; justify-content: center; align-items: center; text-align: center; padding: 2rem;">
-                        <div style="font-size: 3rem; margin-bottom: 1rem;">🐞</div>
-                        <h3>Bug Report</h3>
-                        <p class="cyber-dim">Found a glitch in the simulation?</p>
-                        <button class="btn-secondary" style="margin-top: 1rem;">SUBMIT LOG</button>
-                    </div>
-                </div>
-            </div>
-
-            <div class="dashboard-grid full-width">
-                <div class="main-content">
-                    <!-- Personal Hero -->
-                    <div class="dashboard-hero cyber-hero" style="min-height: 200px;">
-                        <div class="hero-content">
-                            <h1 class="cyber-glitch" data-text="WELCOME BACK, INITIATE">WELCOME BACK, INITIATE</h1>
-                            <p class="terminal-text">Level 1 • 0 XP • Streak: 0 Days</p>
-                        </div>
-                    </div>
-
-                    <!-- User Stats / Resume Section -->
-                    <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 2rem; padding: 2rem;">
-                        <!-- Recent Activity -->
-                        <div>
-                            <h3 class="section-title cyber-title">> JUMP_BACK_IN</h3>
-                            <div class="course-card cyber-card" style="border-left: 4px solid #00ff00;">
-                                <div class="card-content">
-                                    <h2 style="margin-bottom:0.5rem;">No Active Protocol</h2>
-                                    <p class="cyber-dim">You haven't started a course yet.</p>
-                                    <button class="btn-primary cyber-btn-small" data-route="courses-view"
-                                        style="margin-top:1rem;">
-                                        EXPLORE CATALOG
-                                    </button>
+                    <div class="hero-card cyber-card" id="hero-course-card">
+                        <div class="hero-card-visual">
+                            <div class="neon-city"></div>
+                            <div class="hero-progress-bar">
+                                <div class="progress-track">
+                                    <div class="progress-fill" id="hero-progress" style="width: 44%"></div>
                                 </div>
+                                <span class="progress-text">44%</span>
                             </div>
                         </div>
+                        <div class="hero-card-info">
+                            <span class="card-badge">PYTHON COURSE</span>
+                            <h3 class="card-title">PYTHON FUNDAMENTALS</h3>
+                            <p class="card-subtitle">Next: Variables & Data Types</p>
+                        </div>
+                        <div class="hero-card-actions">
+                            <button class="btn-cyber-primary" data-route="lesson">
+                                CONTINUE LEARNING
+                            </button>
+                            <a href="#" class="btn-cyber-link" data-route="course-python">VIEW COURSE</a>
+                        </div>
+                    </div>
+                </section>
 
-                        <!-- Stats Box -->
-                        <div>
-                            <h3 class="section-title cyber-title">> SYSTEM_STATUS</h3>
-                            <div class="cyber-card" style="padding:1.5rem;">
-                                <div style="display:flex; justify-content:space-between; margin-bottom:1rem;">
-                                    <span>XP</span>
-                                    <span style="color:#00ff00;">0</span>
-                                </div>
-                                <div style="display:flex; justify-content:space-between; margin-bottom:1rem;">
-                                    <span>RANK</span>
-                                    <span style="color:#00ff00;">Novice</span>
-                                </div>
-                                <div style="display:flex; justify-content:space-between;">
-                                    <span>CHAPTERS</span>
-                                    <span style="color:#00ff00;">0/120</span>
-                                </div>
+                <!-- Continue Progress -->
+                <section class="content-section">
+                    <h2 class="section-title"> > CONTINUE PROGRESS</h2>
+                    <div class="course-cards-row" id="progress-cards">
+                        <!-- JS Rendered -->
+                    </div>
+                </section>
+
+                <!-- Explore Grid -->
+                <section class="content-section">
+                    <h2 class="section-title"> > EXPLORE MORE</h2>
+                    <div class="explore-grid">
+                        <div class="explore-card cyber-card" data-route="challenges">
+                            <div class="explore-icon">🎯</div>
+                            <div class="explore-info">
+                                <h4>CHALLENGE PACKS</h4>
+                                <p>Bite-sized coding puzzles.</p>
+                            </div>
+                        </div>
+                        <div class="explore-card cyber-card" data-route="projects">
+                            <div class="explore-icon">🚀</div>
+                            <div class="explore-info">
+                                <h4>PROJECT TUTORIALS</h4>
+                                <p>Build real apps step-by-step.</p>
+                            </div>
+                        </div>
+                        <div class="explore-card cyber-card" data-route="30days">
+                            <div class="explore-icon">🔥</div>
+                            <div class="explore-info">
+                                <h4>#30DaysOfCode</h4>
+                                <p>Daily coding streak challenge.</p>
+                            </div>
+                        </div>
+                        <div class="explore-card cyber-card" data-route="builds">
+                            <div class="explore-icon">🛠️</div>
+                            <div class="explore-info">
+                                <h4>BUILDS</h4>
+                                <p>Share your code snippets.</p>
                             </div>
                         </div>
                     </div>
-                </div>
-            </div>
-        </main>
+                </section>
 
-        <!-- CATALOG VIEW (FULL COURSE LIST) -->
-        <main id="catalog-view" class="hidden">
-            <header class="dashboard-header">
-                <div class="logo">MINECODE</div>
-                <nav class="top-nav">
-                    <a href="#" data-route="dashboard">Dashboard</a>
-                    <a href="#" class="active" data-route="courses-view">Courses</a>
-                    <a href="#" data-route="practice">Practice</a>
-                    <a href="#" data-route="build">Build</a>
-                    <a href="#" data-route="community">Community</a>
-                </nav>
-                <div class="user-menu">
-                    <div class="avatar-small"></div>
-                    <button class="btn-club">JOIN CLUB</button>
-                </div>
-            </header>
+                <!-- Tutorials -->
+                <section class="content-section">
+                    <div class="section-header">
+                        <h2 class="section-title"> > NEW TUTORIALS</h2>
+                        <a href="#" class="section-link">SEE ALL -></a>
+                    </div>
+                    <div class="tutorial-grid" id="tutorials-grid">
+                        <!-- JS Rendered -->
+                    </div>
+                </section>
 
-            <div class="dashboard-grid full-width">
-                <div class="main-content">
-                    <div class="dashboard-hero cyber-hero"
-                        style="background: linear-gradient(45deg, #000 0%, #0a1f0a 100%);">
-                        <div class="hero-content">
-                            <h1 class="cyber-glitch">COURSE DIRECTORY</h1>
-                            <p class="terminal-text">Select a language to install knowledge.</p>
+            </main>
+
+            <!-- Right Sidebar -->
+            <aside id="right-sidebar" class="right-sidebar">
+
+                <div class="profile-card cyber-card">
+                    <div class="profile-header">
+                        <div class="profile-avatar">
+                            <span id="user-avatar">👤</span>
+                        </div>
+                        <div class="profile-info">
+                            <span class="profile-name" id="user-name">Guest</span>
+                            <span class="profile-level"
+                                style="color: var(--neon-cyan); font-family: var(--font-code);">LEVEL 1</span>
                         </div>
                     </div>
-
-                    <h3 class="section-title cyber-title">> AVAILABLE_PROTOCOLS</h3>
-
-                    <!-- This Grid is Populated by Catalog.js or Bootloader -->
-                    <div class="active-courses-grid">
-                        <!-- Dynamic Content -->
-                    </div>
-                </div>
-            </div>
-        </main>
-
-        <!-- Course Catalog Screen (REMOVED - Merged into Dashboard) -->
-        <main id="course-catalog" class="hidden">
-            <!-- This container is kept empty to prevent router errors if old links exist -->
-        </main>
-
-
-        <!-- Course Detail View (Gen AI) -->
-        <main id="course-detail" class="hidden">
-            <header class="dashboard-header">
-                <div class="logo">MINECODE</div>
-                <nav class="top-nav">
-                    <a href="#" id="detail-back-btn">← Back to Catalog</a>
-                    <button class="btn-community-nav">Community ▼</button>
-                </nav>
-                <div class="user-menu">
-                    <div class="avatar-small"></div>
-                </div>
-            </header>
-
-            <div class="detail-hero">
-                <div class="detail-hero-content">
-                    <div class="course-meta">
-                        <span class="tag">INTERMEDIATE</span>
-                        <span class="tag">COURSE</span>
-                    </div>
-                    <h1>Gen AI</h1>
-                    <p class="course-desc">Dive into the fundamentals of Generative AI and machine learning.</p>
-                    <button id="start-learning-btn" class="btn-primary">Start Learning for Free</button>
-                </div>
-            </div>
-
-            <div class="detail-container">
-                <div class="curriculum-section">
-                    <div class="chapter-marker">
-                        <div class="chapter-num">1</div>
-                        <h3>Language Models</h3>
-                    </div>
-
-                    <div class="curriculum-list">
-                        <div class="curriculum-item active">
-                            <span class="item-title">Exercise 1: Gen AI</span>
-                            <button class="btn-start-exercise">Start</button>
+                    <div class="profile-stats">
+                        <div class="stat-item">
+                            <span class="stat-icon glow-cyan">⭐</span>
+                            <span class="stat-value" id="stat-xp">0</span>
+                            <span class="stat-label">XP</span>
                         </div>
-                        <div class="curriculum-item locked">
-                            <span class="item-title">Exercise 2: Language Models</span>
-                            <span class="status-icon">???</span>
+                        <div class="stat-item">
+                            <span class="stat-icon glow-magenta">🏆</span>
+                            <span class="stat-value">Bronze</span>
+                            <span class="stat-label">RANK</span>
                         </div>
-                        <div class="curriculum-item locked">
-                            <span class="item-title">Exercise 3: Tokenization</span>
-                            <span class="status-icon">???</span>
+                        <div class="stat-item">
+                            <span class="stat-icon glow-green">🔥</span>
+                            <span class="stat-value" id="stat-streak">0</span>
+                            <span class="stat-label">STREAK</span>
                         </div>
-                        <div class="curriculum-item locked">
-                            <span class="item-title">Exercise 4: N-grams</span>
-                            <span class="status-icon">???</span>
-                        </div>
-                        <div class="curriculum-item locked">
-                            <span class="item-title">Exercise 5: Text Classification</span>
-                            <span class="status-icon">???</span>
+                        <div class="stat-item">
+                            <span class="stat-icon">🎖️</span>
+                            <span class="stat-value" id="stat-badges">0</span>
+                            <span class="stat-label">BADGES</span>
                         </div>
                     </div>
-
-                    <div class="chapter-marker locked">
-                        <div class="chapter-num">2</div>
-                        <h3>Coming Soon</h3>
-                    </div>
+                    <button class="btn-cyber-outline" data-route="profile">VIEW PROFILE</button>
                 </div>
 
-                <div class="detail-sidebar">
-                    <div class="sidebar-card">
-                        <h4>Course Progress</h4>
-                        <div class="progress-stat">
-                            <span>Exercises</span>
-                            <span>0/8</span>
-                        </div>
-                        <div class="progress-bar-sm">
-                            <div class="fill" style="width: 0%"></div>
-                        </div>
-
-                        <div class="progress-stat">
-                            <span>XP Earned</span>
-                            <span>0/80</span>
-                        </div>
-                        <div class="progress-bar-sm">
-                            <div class="fill" style="width: 0%"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </main>
-
-        <!-- Lesson View -->
-        <main id="lesson-view" class="hidden">
-            <header class="lesson-header">
-                <div class="lesson-breadcrumbs">
-                    <span class="course-name" id="breadcrumb-course">Stratum 0</span>
-                    <span class="separator">/</span>
-                    <span class="lesson-name" id="breadcrumb-lesson">Loading...</span>
-                </div>
-                <div class="lesson-progress-bar">
-                    <div class="fill" style="width: 0%"></div>
-                </div>
-                <div class="user-menu">
-                    <div class="avatar-small"></div>
-                </div>
-            </header>
-
-            <!-- CodeDex Split Pane Layout -->
-            <div class="split-view-container">
-
-                <!-- LEFT PANE: Narrative & Instructions -->
-                <div class="split-pane-left">
-                    <div class="story-header">
-                        <h2 id="lesson-title">Loading...</h2>
-                        <div class="xp-badge">XP: <span id="xp-value">0</span></div>
-                    </div>
-
-                    <div id="lesson-theory" class="theory-content">
-                        <!-- Dynamic Content -->
-                    </div>
-
-                    <div class="instruction-box">
-                        <div class="instruction-header">
-                            <span>🚀 MISSION OBJECTIVE</span>
-                        </div>
-                        <div class="instruction-body" id="lesson-task">
-                            <p>Awaiting directive...</p>
-                        </div>
-                    </div>
-
-                    <div class="hint-box community-hint hidden" id="lesson-hint-box">
-                        <div class="hint-header">💡 Quantum Hint</div>
-                        <div class="hint-body" id="lesson-hint"></div>
-                    </div>
-                </div>
-
-                <!-- RIGHT PANE: Workstation -->
-                <div class="split-pane-right">
-                    <div class="editor-pane">
-                        <div class="editor-header">
-                            <span class="file-name">main.py</span>
-                            <button class="run-btn btn-primary">RUN CODE</button>
-                        </div>
-                        <div class="code-area">
-                            <div class="line-numbers">1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10</div>
-                            <div class="code-content" contenteditable="true" spellcheck="false">
-                                # Write your code here
+                <div class="sidebar-card cyber-card events-card">
+                    <h3 class="sidebar-title">UPCOMING EVENTS</h3>
+                    <div class="events-list" id="events-list">
+                        <div class="event-item">
+                            <div class="event-date">
+                                <span class="date-month">DEC</span>
+                                <span class="date-day">30</span>
+                            </div>
+                            <div class="event-info">
+                                <span class="event-name">End of Year Jam</span>
+                                <span class="event-time">2:00 PM EST</span>
                             </div>
                         </div>
-                        <!-- Terminal docked at bottom of right pane -->
-                        <div class="console-output">
-                            <div class="console-prompt">> System Ready...</div>
-                        </div>
                     </div>
                 </div>
 
-            </div>
-
-            <footer class="lesson-footer">
-                <div class="footer-left">
-                    <button class="btn-icon">≡</button>
-                    <span id="footer-status">Status: Active</span>
-                </div>
-                <div class="footer-center">
-                    <span class="console-feedback"></span>
-                </div>
-                <div class="footer-right">
-                    <button id="lesson-back-btn" class="btn-secondary">Abort</button>
-                    <button id="lesson-next-btn" class="btn-secondary disabled">Next Sector</button>
-                </div>
-            </footer>
-        </main>
-        <!-- Main Game Interface -->
-        <main id="game-interface" class="hidden">
-            <!-- Left: Navigation/Status -->
-            <aside class="sidebar">
-                <div class="profile-section">
-                    <div class="avatar-container">
-                        <div class="avatar-placeholder"></div>
-                        <div class="status-indicator online"></div>
-                    </div>
-                    <div class="user-info">
-                        <span class="username">Initiate</span>
-                        <span class="stratum-badge">Stratum 1: The Crust</span>
-                    </div>
-                </div>
-                <nav class="nav-menu">
-                    <button class="nav-item active" data-view="terminal">
-                        <span class="icon">_></span> Terminal
-                    </button>
-                    <button class="nav-item" data-view="map">
-                        <span class="icon">🗺️</span> Map
-                    </button>
-                    <button class="nav-item" data-view="codex">
-                        <span class="icon">📘</span> Codex
-                    </button>
-                </nav>
-                <div class="lattice-status">
-                    <span class="pulse"></span> Lattice: Connected
-                </div>
             </aside>
 
-            <!-- Center: The Viewport (Game/Visuals) -->
-            <section class="viewport">
-                <div class="scene-container">
-                    <!-- Canvas or DOM-based game scene goes here -->
-                    <div class="scene-placeholder">
-                        <div class="crystal floating"></div>
-                        <div class="dialogue-box">
-                            <div class="dialogue-text">
-                                <span class="speaker">SYSTEM:</span>
-                                <span class="message">Logic gates locked. Run loop protocol to access.</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Right: The IDE/Editor -->
-            <section class="editor-pane">
-                <div class="editor-header">
-                    <span class="file-name">gate_control.py</span>
-                    <button class="run-btn">▶ RUN</button>
-                </div>
-                <div class="code-area">
-                    <div class="line-numbers">1<br>2<br>3<br>4<br>5</div>
-                    <div class="code-content" contenteditable="true">
-                        # TODO: Write a loop to open the gate
-                        door_strength = 10
-
-                        def open_gate():
-                        pass
-                    </div>
-                </div>
-                <div class="console-output">
-                    <span class="console-prompt">user@minecode:~$</span> <span class="cursor">_</span>
-                </div>
-            </section>
-        </main>
-    </div>
-
-    <!-- Hidden Views for Router -->
-    <div id="practice-view" class="view-container hidden"></div>
-    <div id="build-view" class="view-container hidden">
-        <h2 class="section-title center-text">BUILD FORGE: COMING SOON</h2>
-    </div>
-    <div id="support-view" class="view-container hidden">
-        <div class="comms-relay">
-            <h1 class="glitch-header">COMMS RELAY</h1>
-            <p>Direct Uplink to Central Command.</p>
         </div>
+
+        <!-- Views Container -->
+        <div id="courses-view" class="view hidden">
+            <div class="view-container">
+                <h1 class="view-title cyber-text" style="font-size: 24px;">COURSES CATALOG</h1>
+                <div class="courses-grid" id="all-courses-grid"></div>
+            </div>
+        </div>
+
+        <div id="course-view" class="view hidden">
+            <div class="course-layout" style="max-width: 1000px; margin: 0 auto;">
+                <div id="course-content"></div>
+                <div id="course-sidebar"></div>
+            </div>
+        </div>
+
+        <div id="lesson-view" class="view hidden">
+            <div class="workspace-layout">
+                <div class="workspace-left" id="lesson-instructions"></div>
+                <div class="workspace-right">
+                    <div class="editor-panel" id="code-editor"></div>
+                    <div class="terminal-panel" id="terminal"></div>
+                </div>
+            </div>
+            <div class="lesson-nav" id="lesson-nav"></div>
+        </div>
+
+        <div id="community-view" class="view hidden">
+            <div class="community-layout">
+                <div class="community-channels" id="channels-list"></div>
+                <div class="community-feed" id="posts-feed"></div>
+                <div class="community-aside" id="community-sidebar"></div>
+            </div>
+        </div>
+
     </div>
 
-    <!-- Core Modules -->
-    <script src="scripts/core/config.js"></script>
-    <script src="scripts/core/router.js"></script>
-    <script src="scripts/modules/runtime.js"></script>
+    <!-- Supabase JS -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-    <!-- Feature Modules -->
-    <script src="scripts/modules/curriculum.js"></script>
-    <script src="scripts/modules/validator.js"></script>
-    <script src="scripts/modules/gamification.js"></script>
-    <script src="scripts/modules/tutorial.js"></script>
-    <script src="scripts/modules/practice.js"></script>
-    <script src="scripts/modules/editor.js"></script>
-    <script src="scripts/modules/catalog.js"></script>
+    <!-- Scripts -->
+    <script src="scripts/effects/matrix-rain.js"></script>
+    <script src="scripts/effects/tilt-effect.js"></script>
+    <script src="scripts/supabase-client.js"></script> <!-- Subapase Config -->
+    <script src="scripts/modules/ui-utils.js"></script> <!-- UI Utils (Toast/Trans) -->
+    <script src="scripts/modules/auth.js"></script> <!-- Auth Logic -->
+    <script src="scripts/cyber-app.js"></script>
+    <script src="scripts/modules/cyber-buttons.js"></script>
+    <script src="scripts/modules/gamification.js"></script> <!-- Gamification Overrides -->
 
-    <!-- Main Bootstrapper -->
-    <script src="scripts/main.js?v=6"></script>
-
-    <!-- Bootloader: The Universal Controller -->
-    <!-- Handles Navigation, Fallback Rendering, and Interactions -->
-    <script src="scripts/bootloader.js"></script>
+    <!-- Initialize Lucide Icons on page load -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            if (window.lucide) {
+                window.lucide.createIcons();
+            }
+        });
+    </script>
 
 </body>
+
+</html>

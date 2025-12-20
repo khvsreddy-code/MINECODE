@@ -1,77 +1,182 @@
+/* ============================================
+   MINECODE DESIGN SYSTEM v3.0
+   Codedex-Inspired • Cyber Cozy • Premium Dark
+   NO GOLD - Using Cyan/Green/Purple Accents
+   ============================================ */
+
 :root {
-    /* Palette: Obsidian Void (Black Aesthetic) */
-    --bg-deep: #000000;
-    --bg-panel: #050505;
-    --bg-editor: #030303;
+    /* === DEEP DARK BACKGROUNDS (Codedex-style Navy) === */
+    --bg-void: #000814;
+    /* Deepest background */
+    --bg-dark: #001029;
+    /* Primary dark */
+    --bg-panel: #0d1b2a;
+    /* Panel/card background */
+    --bg-elevated: #1b2838;
+    /* Elevated elements */
+    --bg-surface: #233140;
+    /* Surface elements */
+    --bg-input: #0a1622;
+    /* Input fields */
 
-    --primary-blue: #3B82F6;
-    /* Action/Trust */
-    --primary-blue-hover: #2563EB;
+    /* === PRIMARY ACCENT: NEON CYAN === */
+    --primary: #00d4ff;
+    --primary-dim: #00a8cc;
+    --primary-glow: rgba(0, 212, 255, 0.4);
+    --primary-subtle: rgba(0, 212, 255, 0.1);
 
-    --community-orange: #F59E0B;
-    /* Community/Help */
-    --community-orange-hover: #D97706;
+    /* === SECONDARY ACCENT: EMERALD GREEN === */
+    --success: #00ff88;
+    --success-dim: #00cc6a;
+    --success-glow: rgba(0, 255, 136, 0.4);
+    --success-subtle: rgba(0, 255, 136, 0.1);
 
-    --content-purple: #8B5CF6;
-    /* Solutions/Deep Content */
-    --content-purple-hover: #7C3AED;
+    /* === TERTIARY ACCENT: ELECTRIC PURPLE === */
+    --purple: #a855f7;
+    --purple-dim: #8b3dd9;
+    --purple-glow: rgba(168, 85, 247, 0.4);
 
-    --accent-friendly: #ffb700;
+    /* === FUNCTIONAL COLORS === */
+    --warning: #ff9f43;
+    --error: #ff6b6b;
+    --info: #54a0ff;
 
-    --success-green: #10B981;
-    --text-main: #ffffff;
-    --text-muted: #a0a0a0;
+    /* === TEXT HIERARCHY === */
+    --text-bright: #ffffff;
+    --text-primary: #e8eef4;
+    --text-secondary: #8892a2;
+    --text-muted: #5a6577;
+    --text-dim: #3d4654;
 
-    --bg-card: rgba(10, 10, 10, 0.6);
-    --glass-border: rgba(255, 255, 255, 0.08);
-    --glass-bg: rgba(5, 5, 5, 0.9);
+    /* === BORDERS & GLASS === */
+    --border-subtle: rgba(255, 255, 255, 0.08);
+    --border-medium: rgba(255, 255, 255, 0.12);
+    --border-accent: rgba(0, 212, 255, 0.3);
+    --glass-bg: rgba(13, 27, 42, 0.9);
 
-    --shadow-glow: 0 0 20px rgba(0, 255, 157, 0.2);
-    --shadow-friendly: 0 0 25px rgba(255, 183, 0, 0.25);
+    /* === SHADOWS === */
+    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.4);
+    --shadow-md: 0 4px 24px rgba(0, 0, 0, 0.5);
+    --shadow-lg: 0 8px 40px rgba(0, 0, 0, 0.6);
+    --glow-primary: 0 0 30px var(--primary-glow);
+    --glow-success: 0 0 30px var(--success-glow);
 
-    --accent-primary: #00ff9d;
-    /* Emerald/Code success */
-    --accent-secondary: #bd00ff;
-    /* Amethyst/Magic */
-    /* Amber/Puppy Friendliness */
-    --accent-alert: #ff0055;
-    /* Ruby/Error */
+    /* === TYPOGRAPHY === */
+    --font-display: 'Outfit', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    --font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    --font-code: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
 
-    --font-display: 'Outfit', sans-serif;
-    --font-code: 'JetBrains Mono', monospace;
+    /* === SPACING === */
+    --space-xs: 0.25rem;
+    --space-sm: 0.5rem;
+    --space-md: 1rem;
+    --space-lg: 1.5rem;
+    --space-xl: 2rem;
+    --space-2xl: 3rem;
+    --space-3xl: 4rem;
 
-    --gradient-primary: linear-gradient(135deg, #00ff9d 0%, #00ccff 100%);
-    --gradient-friendly: linear-gradient(135deg, #ffb700 0%, #ff8800 100%);
+    /* === RADIUS === */
+    --radius-sm: 6px;
+    --radius-md: 10px;
+    --radius-lg: 14px;
+    --radius-xl: 20px;
+    --radius-2xl: 28px;
+    --radius-full: 9999px;
+
+    /* === Z-INDEX === */
+    --z-base: 1;
+    --z-dropdown: 100;
+    --z-sticky: 500;
+    --z-overlay: 1000;
+    --z-modal: 5000;
+    --z-max: 10000;
+
+    /* === TRANSITIONS === */
+    --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+    --ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+    --duration-fast: 150ms;
+    --duration-normal: 250ms;
+    --duration-slow: 400ms;
+}
+
+/* === GLOBAL RESET === */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    font-size: 16px;
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
 body {
-    margin: 0;
-    padding: 0;
-    background-color: var(--bg-deep);
-    color: var(--text-main);
-    font-family: var(--font-display);
-    overflow: hidden;
-    /* App-like feel */
+    background: var(--bg-void);
+    color: var(--text-primary);
+    font-family: var(--font-body);
+    line-height: 1.6;
+    min-height: 100vh;
+    overflow-x: hidden;
 }
 
-* {
-    box-sizing: border-box;
+/* === AMBIENT BACKGROUND === */
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background:
+        radial-gradient(circle at 15% 15%, rgba(0, 212, 255, 0.03) 0%, transparent 35%),
+        radial-gradient(circle at 85% 85%, rgba(168, 85, 247, 0.02) 0%, transparent 35%);
+    pointer-events: none;
+    z-index: -1;
 }
 
-/* Scrollbar */
+/* === SCROLLBAR === */
 ::-webkit-scrollbar {
     width: 8px;
+    height: 8px;
 }
 
 ::-webkit-scrollbar-track {
-    background: var(--bg-deep);
+    background: var(--bg-void);
 }
 
 ::-webkit-scrollbar-thumb {
-    background: var(--bg-panel);
+    background: var(--bg-elevated);
     border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-    background: var(--text-muted);
+    background: var(--primary);
+}
+
+/* === SELECTION === */
+::selection {
+    background: var(--primary);
+    color: var(--bg-void);
+}
+
+/* === FOCUS === */
+:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+}
+
+/* === LINKS === */
+a {
+    color: var(--primary);
+    text-decoration: none;
+    transition: color var(--duration-fast);
+}
+
+a:hover {
+    color: var(--text-bright);
 }

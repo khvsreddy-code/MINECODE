@@ -1,67 +1,152 @@
-// View Router Module
+// View Router Module - Fixed ID Handling
 window.App = window.App || {};
 
 const Router = {
     routes: {},
+
     init: function () {
         window.addEventListener('hashchange', this.handleRoute.bind(this));
-        // this.handleRoute(); // Defer to main init
         this.cacheDOM();
     },
 
     cacheDOM: function () {
         this.views = {
+            // Onboarding
             introOverlay: document.getElementById('intro-overlay'),
             onboarding1: document.getElementById('onboarding-1'),
             onboarding2: document.getElementById('onboarding-2'),
             onboarding3: document.getElementById('onboarding-3'),
             onboarding4: document.getElementById('onboarding-4'),
+
+            // Main Views
             dashboard: document.getElementById('dashboard'),
-            courseCatalog: document.getElementById('catalog-view'), // Updated ID
+            catalog: document.getElementById('catalog-view'),
             courseDetail: document.getElementById('course-detail'),
-            lessonView: document.getElementById('lesson-view')
+            lessonView: document.getElementById('lesson-view'),
+
+            // Feature Views
+            profile: document.getElementById('profile-view'),
+            community: document.getElementById('community-view'),
+            shop: document.getElementById('shop-view'),
+            challenges: document.getElementById('challenges-view'),
+            leaderboard: document.getElementById('leaderboard-view'),
+            auth: document.getElementById('auth-view')
         };
     },
 
     show: function (viewId, param) {
-        console.log(`[Router] Showing: ${viewId}`);
+        console.log(`[Router] Showing: ${viewId}, Param: ${param}`);
 
-        // Safety: Ensure views are cached
         if (!this.views) this.cacheDOM();
 
-        // 1. Hide all views
+        // Hide all views
         document.querySelectorAll('main, .overlay').forEach(el => {
             el.classList.add('hidden');
+            el.style.display = 'none';
         });
 
-        // 2. Map viewId to DOM Element
-        // Simple mapping based on viewId matching keys in this.views or IDs
-        let target = this.views[viewId];
+        // Route Resolution Map (handles all ID variations)
+        const routeMap = {
+            // Dashboard
+            'dashboard': 'dashboard',
+            'home': 'dashboard',
 
-        // Manual Map for specifics
-        if (viewId === 'dashboard') target = this.views.dashboard;
-        if (viewId === 'courseCatalog') target = this.views.courseCatalog;
-        if (viewId === 'catalog-view') target = this.views.courseCatalog;
-        if (viewId === 'catalog-view') target = this.views.courseCatalog;
-        if (viewId === 'courses-view') target = this.views.courseCatalog; // Fix for Explore Catalog button
-        if (viewId === 'support') target = document.getElementById('support-view');
-        if (viewId === 'practice') {
-            target = document.getElementById('practice-view');
-            if (window.App.Practice) window.App.Practice.init();
+            // Auth
+            'auth': 'auth',
+            'login': 'auth',
+            'signup': 'auth',
+
+            // Catalog
+            'catalog': 'catalog',
+            'catalog-view': 'catalog',
+            'courseCatalog': 'catalog',
+            'courses-view': 'catalog',
+            'courses': 'catalog',
+            'learn': 'catalog',
+
+            // Course Detail
+            'courseDetail': 'courseDetail',
+            'course-detail': 'courseDetail',
+
+            // Lesson View
+            'lessonView': 'lessonView',
+            'lesson-view': 'lessonView',
+            'lesson': 'lessonView',
+
+            // Profile
+            'profile': 'profile',
+            'profile-view': 'profile',
+
+            // Community
+            'community': 'community',
+            'community-view': 'community',
+            'lattice': 'community',
+
+            // Shop
+            'shop': 'shop',
+            'shop-view': 'shop',
+            'fabricator': 'shop',
+
+            // Challenges
+            'challenges': 'challenges',
+            'challenges-view': 'challenges',
+            'practice': 'challenges',
+            'arena': 'challenges',
+
+            // Leaderboard
+            'leaderboard': 'leaderboard',
+            'leaderboard-view': 'leaderboard',
+            'rankings': 'leaderboard',
+
+            // Onboarding
+            'onboarding1': 'onboarding1',
+            'onboarding2': 'onboarding2',
+            'onboarding3': 'onboarding3',
+            'onboarding4': 'onboarding4'
+        };
+
+        // Resolve the route
+        const resolvedKey = routeMap[viewId] || viewId;
+        let target = this.views[resolvedKey];
+
+        // Trigger module renders
+        if (resolvedKey === 'lessonView' && window.App.Academy) {
+            window.App.Academy.load(param || 'python-hello');
         }
-        if (viewId === 'build') target = document.getElementById('build-view');
+        if (resolvedKey === 'profile' && window.App.Profile) {
+            window.App.Profile.render();
+        }
+        if (resolvedKey === 'community' && window.App.Community) {
+            window.App.Community.render();
+        }
+        if (resolvedKey === 'shop' && window.App.Shop) {
+            window.App.Shop.render();
+        }
+        if (resolvedKey === 'challenges' && window.App.Challenges) {
+            window.App.Challenges.render();
+        }
+        if (resolvedKey === 'leaderboard' && window.App.Leaderboard) {
+            window.App.Leaderboard.render();
+        }
+        if (resolvedKey === 'auth' && window.App.Auth) {
+            window.App.Auth.renderAuthPage();
+        }
+        if (resolvedKey === 'catalog' && window.App.Catalog) {
+            window.App.Catalog.renderCatalogGrid();
+        }
 
+        // Show the target view
         if (target) {
             target.classList.remove('hidden');
-            // Force flex/block based on type
-            if (target.classList.contains('overlay')) target.style.display = 'flex';
-            else target.style.display = 'block';
+            target.style.display = target.classList.contains('overlay') ? 'flex' : 'block';
+            console.log(`[Router] ✅ Displayed: ${resolvedKey}`);
         } else {
-            console.warn(`[Router] View ID '${viewId}' not found in cache.`);
-            // Try formatting ID
-            const byId = document.getElementById(viewId);
-            if (byId) {
-                byId.classList.remove('hidden');
+            console.warn(`[Router] ❌ View not found: ${viewId} -> ${resolvedKey}`);
+            // Fallback: try by ID directly
+            const fallback = document.getElementById(viewId) || document.getElementById(viewId + '-view');
+            if (fallback) {
+                fallback.classList.remove('hidden');
+                fallback.style.display = 'block';
             }
         }
     },
@@ -70,10 +155,6 @@ const Router = {
         const hash = window.location.hash.slice(1) || 'dashboard';
         const [route, param] = hash.split('/');
         this.show(route, param);
-    },
-
-    togglePersistentItems: function (show) {
-        // Placeholder
     }
 };
 

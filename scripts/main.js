@@ -17,6 +17,9 @@ const initApp = () => {
         // 2. Initialize Core
         window.App.Router.init();
 
+        // 2.5. Inject Global Navigation
+        if (window.App.Nav) window.App.Nav.injectGlobalNav();
+
         // 3. Initialize Features (if loaded)
         if (window.App.Lattice) {
             window.App.Lattice.init();
@@ -37,6 +40,11 @@ const initApp = () => {
         }
 
         if (window.App.Terminal) window.App.Terminal.init();
+        if (window.App.Profile) window.App.Profile.init();
+        if (window.App.Community) window.App.Community.init();
+        if (window.App.Shop) window.App.Shop.init();
+        if (window.App.Challenges) window.App.Challenges.init();
+        if (window.App.Leaderboard) window.App.Leaderboard.init();
 
         // 4. Audio Engine (Safe Init)
         if (window.AudioEngine) {

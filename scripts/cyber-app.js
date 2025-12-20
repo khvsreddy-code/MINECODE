@@ -1,0 +1,1458 @@
+/**
+ * MineCode Cyber App Controller v1.2
+ * Assets: Custom Pixel Art Cards
+ */
+
+// DATA
+const COURSES = [
+    // === THE LEGEND OF PYTHON ===
+    {
+        id: 'python',
+        title: 'PYTHON',
+        icon: '🐍',
+        desc: 'Learn programming fundamentals: syntax, variables, control flow, and loops.',
+        lessons: 30,
+        completed: 13,
+        image: './assets/pixel_art/python.png',
+        gradient: 'linear-gradient(135deg, #306998, #ffe873)',
+        difficulty: 'BEGINNER',
+        category: 'python-legend'
+    },
+    {
+        id: 'intermediate-python',
+        title: 'INTERMEDIATE PYTHON',
+        icon: '🐍',
+        desc: 'Begin learning interwoven Python with data structures.',
+        lessons: 25,
+        completed: 0,
+        image: './assets/pixel_art/python.png', // Reusing Python asset
+        gradient: 'linear-gradient(135deg, #4B8BBE, #FFD43B)',
+        difficulty: 'INTERMEDIATE',
+        category: 'python-legend'
+    },
+    {
+        id: 'numpy',
+        title: 'NUMPY',
+        icon: '🔢',
+        desc: 'Learn the fundamentals of data manipulation using NumPy.',
+        lessons: 15,
+        completed: 0,
+        image: null,
+        gradient: 'linear-gradient(135deg, #013243, #4d05e8)',
+        difficulty: 'INTERMEDIATE',
+        category: 'python-legend'
+    },
+
+    // === THE ORIGINS TRILOGY ===
+    {
+        id: 'html',
+        title: 'HTML',
+        icon: '🌐',
+        desc: 'Create your first website with HTML, the building blocks of the web.',
+        lessons: 15,
+        completed: 0,
+        image: './assets/pixel_art/web.png',
+        gradient: 'linear-gradient(135deg, #e34c26, #f06529)',
+        difficulty: 'BEGINNER',
+        category: 'origins'
+    },
+    {
+        id: 'css',
+        title: 'CSS',
+        icon: '🎨',
+        desc: 'Learn to use CSS selectors and properties to style your HTML pages.',
+        lessons: 20,
+        completed: 0,
+        image: null,
+        gradient: 'linear-gradient(135deg, #264de4, #2965f1)',
+        difficulty: 'BEGINNER',
+        category: 'origins'
+    },
+    {
+        id: 'js',
+        title: 'JAVASCRIPT',
+        icon: '⚡',
+        desc: 'Learn variables, loops, functions, and events to start building interactive apps.',
+        lessons: 35,
+        completed: 0,
+        image: './assets/pixel_art/js.png',
+        gradient: 'linear-gradient(135deg, #f0db4f, #d4bf28)',
+        difficulty: 'BEGINNER',
+        category: 'origins'
+    },
+
+    // === ALL COURSES ===
+    {
+        id: 'react',
+        title: 'REACT',
+        icon: '⚛️',
+        desc: 'Build powerful user interfaces',
+        lessons: 40,
+        completed: 0,
+        image: null,
+        gradient: 'linear-gradient(135deg, #61dbfb, #38a5c4)',
+        difficulty: 'ADVANCED'
+    },
+    {
+        id: 'sql',
+        title: 'SQL',
+        icon: '💾',
+        desc: 'Manage and query databases',
+        lessons: 25,
+        completed: 0,
+        image: 'C:/Users/harin/.gemini/antigravity/brain/848c9a17-8c76-4202-b319-cfbcb0039c4b/cyber_cozy_sql_1766205759320.png',
+        gradient: 'linear-gradient(135deg, #00758f, #005c70)',
+        difficulty: 'INTERMEDIATE'
+    },
+    {
+        id: 'lua',
+        title: 'LUA',
+        icon: '🌙',
+        desc: 'Learn programming fundamentals with Lua in Roblox.',
+        lessons: 20,
+        completed: 0,
+        image: null,
+        gradient: 'linear-gradient(135deg, #000080, #0000cd)',
+        difficulty: 'BEGINNER'
+    },
+    {
+        id: 'cpp',
+        title: 'C++',
+        icon: '⚙️',
+        desc: 'High-performance system programming',
+        lessons: 50,
+        completed: 0,
+        image: './assets/pixel_art/cpp.png',
+        gradient: 'linear-gradient(135deg, #00599c, #004482)',
+        difficulty: 'HARD'
+    },
+    {
+        id: 'java',
+        title: 'JAVA',
+        icon: '☕',
+        desc: 'Object-oriented programming mastery',
+        lessons: 45,
+        completed: 0,
+        image: './assets/pixel_art/java.png',
+        gradient: 'linear-gradient(135deg, #5382a1, #f89820)',
+        difficulty: 'INTERMEDIATE'
+    },
+    {
+        id: 'git',
+        title: 'GIT',
+        icon: '📦',
+        desc: 'Version control for everyone',
+        lessons: 10,
+        completed: 0,
+        image: null,
+        gradient: 'linear-gradient(135deg, #f1502f, #3e2c00)',
+        difficulty: 'BEGINNER'
+    },
+    {
+        id: 'csharp',
+        title: 'C#',
+        icon: '#️⃣',
+        desc: 'Build Windows apps and games',
+        lessons: 40,
+        completed: 0,
+        image: null,
+        gradient: 'linear-gradient(135deg, #6a1577, #9e58aa)',
+        difficulty: 'INTERMEDIATE'
+    },
+    {
+        id: 'go',
+        title: 'GO',
+        icon: '🐹',
+        desc: 'Scalable cloud software',
+        lessons: 30,
+        completed: 0,
+        image: null,
+        gradient: 'linear-gradient(135deg, #00add8, #007d9c)',
+        difficulty: 'INTERMEDIATE'
+    },
+    {
+        id: 'rust',
+        title: 'RUST',
+        icon: '🦀',
+        desc: 'Safety and performance',
+        lessons: 55,
+        completed: 0,
+        image: null,
+        gradient: 'linear-gradient(135deg, #dea584, #b7410e)',
+        difficulty: 'HARD'
+    },
+    {
+        id: 'ml',
+        title: 'MACHINE LEARNING',
+        icon: '🧠',
+        desc: 'Learn the foundations of ML.',
+        lessons: 45,
+        completed: 0,
+        image: null,
+        gradient: 'linear-gradient(135deg, #111111, #333333)',
+        difficulty: 'ADVANCED'
+    },
+    {
+        id: 'copilot',
+        title: 'GITHUB COPILOT',
+        icon: '🤖',
+        desc: 'Learn to code with AI assistance.',
+        lessons: 10,
+        completed: 0,
+        image: null,
+        gradient: 'linear-gradient(135deg, #000000, #4078c0)',
+        difficulty: 'BEGINNER'
+    }
+];
+
+const TUTORIALS = [
+    {
+        id: 'calc',
+        title: 'BUILD A CALCULATOR',
+        // Reusing JS Asset for now as it fits 'Calculator' logic
+        img: 'url("C:/Users/harin/.gemini/antigravity/brain/848c9a17-8c76-4202-b319-cfbcb0039c4b/cyber_js_card_1766153042285.png")',
+        tags: ['JS', 'BEGINNER']
+    },
+    {
+        id: 'game',
+        title: 'PYTHON GAME DEV',
+        img: 'url("C:/Users/harin/.gemini/antigravity/brain/848c9a17-8c76-4202-b319-cfbcb0039c4b/cyber_game_dev_card_1766153114465.png")',
+        tags: ['PY', 'INTERMEDIATE']
+    }
+];
+
+// STATE MANAGEMENT (The "Brain")
+const GameState = {
+    data: {
+        user: {
+            name: 'Guest',
+            xp: 0,
+            streak: 0,
+            level: 1,
+            title: 'Novice Scripter'
+        },
+        progress: {
+            // CourseID: { completedLessons: [], unlocked: true }
+            'python': { completedLessons: [1, 2, 3], unlocked: true },
+            'html': { completedLessons: [], unlocked: true },
+            'js': { completedLessons: [], unlocked: true }
+        },
+        unlockedBadges: [],
+        inventory: []
+    },
+
+    init() {
+        const saved = localStorage.getItem('minecode_save_v1');
+        if (saved) {
+            this.data = { ...this.data, ...JSON.parse(saved) };
+            console.log(' [SYSTEM] Save loaded. Welcome back, agent.');
+        } else {
+            console.log(' [SYSTEM] New profile initialized.');
+            this.save();
+        }
+        this.updateUI();
+    },
+
+    save() {
+        localStorage.setItem('minecode_save_v1', JSON.stringify(this.data));
+        this.updateUI();
+    },
+
+    addXP(amount) {
+        this.data.user.xp += amount;
+        this.checkLevelUp();
+        this.save();
+        this.showToast(`+${amount} XP Gained!`, 'success');
+    },
+
+    checkLevelUp() {
+        const xp = this.data.user.xp;
+        const newLevel = Math.floor(xp / 1000) + 1;
+        if (newLevel > this.data.user.level) {
+            this.data.user.level = newLevel;
+            this.showToast(`LEVEL UP! You are now Level ${newLevel}`, 'accent');
+            // Play sound/animation here in future
+        }
+    },
+
+    completeLesson(courseId, lessonId) {
+        if (!this.data.progress[courseId]) {
+            this.data.progress[courseId] = { completedLessons: [], unlocked: true };
+        }
+
+        const prog = this.data.progress[courseId];
+        if (!prog.completedLessons.includes(lessonId)) {
+            prog.completedLessons.push(lessonId);
+            this.addXP(100); // Standard lesson reward
+            this.save();
+            return true; // First time completion
+        }
+        return false; // Replay
+    },
+
+    updateUI() {
+        // Update Sidebars/Navs if they exist
+        const xpEls = document.querySelectorAll('[id="stat-xp"]');
+        xpEls.forEach(el => el.textContent = this.data.user.xp);
+
+        const levelEls = document.querySelectorAll('.level-badge, .profile-level span');
+        levelEls.forEach(el => el.textContent = `LVL ${this.data.user.level}`);
+
+        const streakEls = document.querySelectorAll('[id="stat-streak"]');
+        streakEls.forEach(el => el.textContent = this.data.user.streak);
+
+        // Update Progress Bars
+        Object.keys(this.data.progress).forEach(courseId => {
+            const course = COURSES.find(c => c.id === courseId);
+            if (course) {
+                // Approximate progress for demo
+                const completed = this.data.progress[courseId].completedLessons.length;
+                course.completed = completed; // Sync with static data for renderers
+            }
+        });
+    },
+
+    showToast(msg, type = 'info') {
+        const toast = document.createElement('div');
+        toast.className = `cyber-toast toast-${type} slide-in-right`;
+        toast.innerHTML = `
+            <span class="toast-icon">${type === 'success' ? '✅' : '⚡'}</span>
+            <span class="toast-msg">${msg}</span>
+        `;
+        document.body.appendChild(toast);
+        setTimeout(() => toast.remove(), 3000);
+    }
+};
+
+// INIT
+document.addEventListener('DOMContentLoaded', () => {
+    GameState.init(); // Load save data
+    initNavigation();
+    // Start at Landing Page to simulate new user flow
+    navigateTo('landing');
+});
+
+function initNavigation() {
+    document.addEventListener('click', (e) => {
+        const routeEl = e.target.closest('[data-route]');
+        if (routeEl) {
+            e.preventDefault();
+            navigateTo(routeEl.dataset.route);
+        }
+    });
+}
+
+// MINECODE LANDING PAGE (Logged Out View)
+function renderLandingPage() {
+    const mainContent = document.getElementById('main-content');
+    const sidebar = document.querySelector('.sidebar');
+
+    // Hide sidebar for landing page to give full screen feel
+    if (sidebar) sidebar.style.display = 'none';
+
+    // Use the World Map Banner for the hero background
+    const heroImage = "./assets/pixel_art/ChatGPT Image Dec 20, 2025, 09_38_38 AM.png";
+
+    mainContent.innerHTML = `
+        <div class="landing-hero">
+            <video id="landing-video-bg" class="landing-bg" autoplay muted loop playsinline>
+                <source src="./assets/_looped_video_1080p_202512201349.mp4" type="video/mp4">
+            </video>
+            <div class="landing-content">
+                <h1 class="landing-title">Start Your<br>Coding Adventure</h1>
+                <p class="landing-subtitle">The most fun and beginner-friendly way to learn to code.</p>
+                <button class="btn-codedex-yellow" onclick="navigateTo('signup')">GET STARTED</button>
+            </div>
+        </div>
+        
+        <div class="landing-courses-preview">
+            <div class="landing-section-header">
+                <h2 class="section-title-large" style="justify-content: center; font-size: 24px;">Journey through the world of programming</h2>
+                <p class="section-subtitle" style="margin: 0 auto; max-width: 600px;">Learn to code with fun, interactive courses handcrafted by industry experts.</p>
+            </div>
+            
+            <div id="landing-grid" class="section-grid-3">
+                <!-- Top 3 Courses will be injected here -->
+            </div>
+            
+            <div style="text-align: center; margin-top: 48px;">
+                <button class="btn-cyber-primary" onclick="navigateTo('signup')" style="padding: 12px 32px;">Explore All Courses</button>
+            </div>
+        </div>
+    `;
+
+    // Force play video to ensure it starts (Fix for autoplay inconsistencies)
+    const v = document.getElementById('landing-video-bg');
+    if (v) {
+        v.play().catch(e => console.log('Autoplay blocked:', e));
+    }
+
+    // Inject top 3 courses (Using Python and Origins for variety)
+    const featuredCourses = COURSES.filter(c => ['python', 'html', 'javascript'].includes(c.id));
+    const grid = document.getElementById('landing-grid');
+
+    if (grid) {
+        // Simple direct HTML generation to avoid dependencies on helper functions that might not be in scope if not careful
+        grid.innerHTML = featuredCourses.map((c, index) => {
+            const bgStyle = c.image
+                ? `background-image: url('${c.image}'); background-size: cover; background-position: center;`
+                : `background: ${c.gradient}; display: flex; justify-content: center; align-items: center;`;
+
+            return `
+            <div class="course-card cyber-card stagger-item" onclick="navigateTo('course-${c.id}')" style="cursor: pointer; animation-delay: ${0.1 * index}s">
+                <div class="course-card-image" style="${bgStyle}"></div>
+                <div class="course-card-content">
+                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                        <h3 style="font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 16px; color: var(--text-bright); margin: 0;">${c.title}</h3>
+                        <span class="course-pill">${c.difficulty}</span>
+                    </div>
+                    <p style="font-family: 'Outfit', sans-serif; font-size: 13px; color: var(--text-secondary); margin-top: 4px;">${c.desc}</p>
+                </div>
+            </div>
+            `;
+        }).join('');
+
+        // Initialize Tilt
+        if (window.TiltEffect) setTimeout(() => window.TiltEffect.init('.course-card', { max: 12, speed: 400 }), 100);
+    }
+}
+
+// SIGN UP PAGE - CODEDEX INSPIRED
+function renderSignupPage() {
+    const contentHTML = `
+        <div style="
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+            background: linear-gradient(180deg, #0a0e17 0%, #0d1117 50%, #161b22 100%);
+            position: relative;
+            overflow: hidden;
+        ">
+            <!-- Pixel Stars Background -->
+            <div style="position: absolute; inset: 0; background-image: 
+                radial-gradient(2px 2px at 10% 20%, rgba(255,255,255,0.3), transparent),
+                radial-gradient(2px 2px at 30% 15%, rgba(255,255,255,0.2), transparent),
+                radial-gradient(2px 2px at 50% 25%, rgba(255,255,255,0.4), transparent),
+                radial-gradient(2px 2px at 70% 10%, rgba(255,255,255,0.2), transparent),
+                radial-gradient(2px 2px at 90% 30%, rgba(255,255,255,0.3), transparent),
+                radial-gradient(1px 1px at 20% 80%, rgba(255,255,255,0.2), transparent),
+                radial-gradient(1px 1px at 80% 70%, rgba(255,255,255,0.3), transparent);
+                pointer-events: none;
+            "></div>
+
+            <!-- Mascot with Speech Bubble (Clean Icons) -->
+            <div style="display: flex; align-items: flex-end; gap: 16px; margin-bottom: -20px; z-index: 10;">
+                <div style="width: 64px; height: 64px; background: linear-gradient(135deg, #22d3ee, #06b6d4); border-radius: 16px; display: flex; align-items: center; justify-content: center; box-shadow: 4px 4px 0 rgba(0,0,0,0.3); animation: bounce 2s ease-in-out infinite;">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="10" x="3" y="11" rx="2"/><circle cx="12" cy="5" r="2"/><path d="M12 7v4"/><line x1="8" x2="8" y1="16" y2="16"/><line x1="16" x2="16" y1="16" y2="16"/></svg>
+                </div>
+                <div style="
+                    background: white;
+                    color: #1a1a2e;
+                    padding: 12px 20px;
+                    border-radius: 16px;
+                    font-size: 14px;
+                    font-weight: 600;
+                    position: relative;
+                    box-shadow: 4px 4px 0 rgba(0,0,0,0.3);
+                    max-width: 260px;
+                ">
+                    Create an account to save your progress!
+                    <div style="position: absolute; left: -8px; bottom: 12px; width: 0; height: 0; border: 8px solid transparent; border-right-color: white;"></div>
+                </div>
+            </div>
+            
+            <!-- Auth Card (NES Style with Cyber Glow) -->
+            <div style="
+                background: #0d1117;
+                border: 4px solid #30363d;
+                border-radius: 16px;
+                padding: 40px;
+                max-width: 420px;
+                width: 100%;
+                position: relative;
+                box-shadow: 
+                    8px 8px 0 rgba(0,0,0,0.4),
+                    0 0 40px rgba(34, 211, 238, 0.1);
+            ">
+                <!-- Inner Glow Border -->
+                <div style="position: absolute; inset: 4px; border: 1px solid rgba(34, 211, 238, 0.15); border-radius: 12px; pointer-events: none;"></div>
+                
+                <!-- Header -->
+                <div style="text-align: center; margin-bottom: 28px;">
+                    <h1 style="font-family: var(--font-display); font-size: 24px; color: white; margin-bottom: 8px;">Join MineCode</h1>
+                    <p style="color: #8b949e; font-size: 15px;">Start your coding adventure today</p>
+                </div>
+
+                <!-- GitHub Button (Primary) -->
+                <button onclick="alert('GitHub OAuth coming soon!')" style="
+                    width: 100%;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    gap: 12px;
+                    padding: 14px 24px;
+                    background: #238636;
+                    color: white;
+                    border: none;
+                    border-radius: 8px;
+                    font-size: 15px;
+                    font-weight: 600;
+                    cursor: pointer;
+                    box-shadow: 0 4px 0 #1a7f37;
+                    transition: all 0.15s;
+                    margin-bottom: 20px;
+                " onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 0 #1a7f37'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 0 #1a7f37'" onmousedown="this.style.transform='translateY(2px)'; this.style.boxShadow='0 2px 0 #1a7f37'">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+                    Continue with GitHub
+                </button>
+
+                <!-- Divider -->
+                <div style="display: flex; align-items: center; gap: 16px; margin: 20px 0; color: #6e7681; font-size: 13px;">
+                    <div style="flex: 1; height: 1px; background: #30363d;"></div>
+                    <span>or</span>
+                    <div style="flex: 1; height: 1px; background: #30363d;"></div>
+                </div>
+
+                <!-- Email Input -->
+                <div style="margin-bottom: 16px;">
+                    <label style="display: block; font-size: 14px; color: #8b949e; margin-bottom: 8px; font-weight: 500;">Email</label>
+                    <input type="email" placeholder="you@example.com" style="
+                        width: 100%;
+                        padding: 12px 14px;
+                        background: #010409;
+                        border: 1px solid #30363d;
+                        border-radius: 6px;
+                        color: white;
+                        font-size: 15px;
+                        outline: none;
+                        box-sizing: border-box;
+                    " onfocus="this.style.borderColor='#58a6ff'; this.style.boxShadow='0 0 0 3px rgba(88,166,255,0.15)'" onblur="this.style.borderColor='#30363d'; this.style.boxShadow='none'">
+                </div>
+
+                <!-- Password Input -->
+                <div style="margin-bottom: 24px;">
+                    <label style="display: block; font-size: 14px; color: #8b949e; margin-bottom: 8px; font-weight: 500;">Password</label>
+                    <input type="password" placeholder="At least 8 characters" style="
+                        width: 100%;
+                        padding: 12px 14px;
+                        background: #010409;
+                        border: 1px solid #30363d;
+                        border-radius: 6px;
+                        color: white;
+                        font-size: 15px;
+                        outline: none;
+                        box-sizing: border-box;
+                    " onfocus="this.style.borderColor='#58a6ff'; this.style.boxShadow='0 0 0 3px rgba(88,166,255,0.15)'" onblur="this.style.borderColor='#30363d'; this.style.boxShadow='none'">
+                </div>
+
+                <!-- Submit Button -->
+                <button onclick="navigateTo('home')" style="
+                    width: 100%;
+                    padding: 14px;
+                    background: linear-gradient(180deg, #22d3ee 0%, #06b6d4 100%);
+                    color: #000;
+                    border: none;
+                    border-radius: 8px;
+                    font-family: var(--font-display);
+                    font-size: 13px;
+                    font-weight: 700;
+                    cursor: pointer;
+                    box-shadow: 0 4px 0 #0891b2;
+                    transition: all 0.15s;
+                    text-transform: uppercase;
+                    letter-spacing: 1px;
+                " onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 0 #0891b2'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 0 #0891b2'" onmousedown="this.style.transform='translateY(2px)'; this.style.boxShadow='0 2px 0 #0891b2'">
+                    Sign Up Free
+                </button>
+
+                <!-- Footer -->
+                <div style="text-align: center; margin-top: 20px; font-size: 14px; color: #6e7681;">
+                    Already have an account? <a href="#" onclick="navigateTo('home')" style="color: #58a6ff; text-decoration: none; font-weight: 500;">Log in</a>
+                </div>
+            </div>
+        </div>
+        
+        <style>
+            @keyframes bounce {
+                0%, 100% { transform: translateY(0); }
+                50% { transform: translateY(-8px); }
+            }
+        </style>
+    `;
+
+    document.getElementById('main-content').innerHTML = contentHTML;
+}
+
+// HOME DASHBOARD (Logged In) - CYBER FUTURISTIC CODEDEX STYLE
+// HOME DASHBOARD (Logged In) - CYBER FUTURISTIC CODEDEX STYLE
+function renderHomeDashboard() {
+    document.querySelector('.right-sidebar').style.display = 'none';
+
+    // ASSETS
+    const bannerArt = "./assets/pixel_art/cyber_cozy_lofi_lounge_panoramic.png";
+    const pythonArt = "./assets/pixel_art/python.png";
+    const jsArt = "./assets/pixel_art/js.png";
+
+    const dashboardHTML = `
+        <div class="cyber-dashboard">
+            <!-- MAIN CONTENT AREA -->
+            <div class="dash-main">
+                <!-- MASCOT TIP BAR -->
+                <div class="cyber-tip-bar">
+                    <div class="tip-mascot"><i data-lucide="bot" style="width:28px;height:28px;color:#22d3ee;"></i></div>
+                    <div class="tip-content">
+                        <span class="tip-badge">NEW</span>
+                        <span>Intermediate Python is out now! Start your journey deeper into the code.</span>
+                    </div>
+                    <button class="tip-dismiss">✕</button>
+                </div>
+
+                <!-- HERO WELCOME BANNER -->
+                <div class="cyber-hero-banner">
+                    <!-- ANIMATED BACKGROUND LOOP -->
+                    <video class="cyber-video-bg" autoplay muted loop playsinline>
+                        <source src="./assets/_looped_video_1080p_202512201349.mp4" type="video/mp4">
+                    </video>
+                    <!-- RAIN OVERLAY -->
+                    <div class="rain-overlay"></div>
+                    
+                    <div class="hero-overlay"></div>
+                    <div class="hero-content">
+                        <h1 class="cyber-title cyber-glitch-text" data-text="Start Your Coding Adventure">Start Your Coding Adventure</h1>
+                        <p class="cyber-subtitle">Your coding journey awaits. Choose your path and start building.</p>
+                        <div class="hero-actions">
+                            <button class="nes-btn nes-btn-primary" onclick="navigateTo('courses')">
+                                <i data-lucide="rocket" style="width:18px;height:18px;"></i> Start Learning
+                            </button>
+                            <button class="nes-btn" onclick="navigateTo('practice')">
+                                <i data-lucide="swords" style="width:18px;height:18px;"></i> Practice Now
+                            </button>
+                        </div>
+                    </div>
+                    <div class="hero-decor"></div>
+                </div>
+
+                <!-- EXPLORE SECTION -->
+                <div class="section-header">
+                    <h2 class="section-title"><span class="title-accent">//</span> EXPLORE</h2>
+                </div>
+                <div class="cyber-explore-grid">
+                    <div class="cyber-cozy-card" onclick="navigateTo('practice')" style="--card-accent: #00f5ff;">
+                        <div class="card-icon"><i data-lucide="zap" style="width:32px;height:32px;"></i></div>
+                        <div class="card-label">PRACTICE</div>
+                        <h3>Challenge Packs</h3>
+                        <p>Sharpen your skills with coding challenges</p>
+                    </div>
+                    <div class="cyber-cozy-card" onclick="navigateTo('builds')" style="--card-accent: #a855f7;">
+                        <div class="card-icon"><i data-lucide="wrench" style="width:32px;height:32px;"></i></div>
+                        <div class="card-label">BUILD</div>
+                        <h3>Project Tutorials</h3>
+                        <p>Create real-world applications step by step</p>
+                    </div>
+                    <div class="cyber-cozy-card" onclick="navigateTo('community')" style="--card-accent: #4ade80;">
+                        <div class="card-icon"><i data-lucide="moon" style="width:32px;height:32px;"></i></div>
+                        <div class="card-label">COMMIT</div>
+                        <h3>#30NitesOfCode</h3>
+                        <p>Join the coding streak challenge</p>
+                    </div>
+                    <div class="cyber-cozy-card" onclick="navigateTo('community')" style="--card-accent: #ffc800;">
+                        <div class="card-icon"><i data-lucide="globe" style="width:32px;height:32px;"></i></div>
+                        <div class="card-label">COMMUNITY</div>
+                        <h3>Builds Gallery</h3>
+                        <p>Share your creations with others</p>
+                    </div>
+                </div>
+
+                <!-- CONTINUE LEARNING -->
+                <div class="section-header">
+                    <h2 class="section-title"><span class="title-accent">//</span> CONTINUE LEARNING</h2>
+                    <a href="#" class="section-link" onclick="navigateTo('courses')">View All →</a>
+                </div>
+                <div class="cyber-course-row">
+                    <div class="cyber-course-card" onclick="navigateTo('course-python')">
+                        <div class="course-image" style="background-image: url('${pythonArt}');"></div>
+                        <div class="course-info">
+                            <span class="course-language">PYTHON</span>
+                            <h4>The Legend of Python</h4>
+                            <div class="course-progress">
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: 44%;"></div>
+                                </div>
+                                <span class="progress-text">44% Complete</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="cyber-course-card" onclick="navigateTo('course-js')">
+                        <div class="course-image" style="background-image: url('${jsArt}');"></div>
+                        <div class="course-info">
+                            <span class="course-language">JAVASCRIPT</span>
+                            <h4>JavaScript Origins</h4>
+                            <div class="course-progress">
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: 12%;"></div>
+                                </div>
+                                <span class="progress-text">12% Complete</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SIDEBAR -->
+            <div class="dash-sidebar">
+                <!-- USER PROFILE WIDGET -->
+                <div class="cyber-widget cyber-profile">
+                    <div class="profile-header">
+                        <div class="profile-avatar">
+                            <span>👤</span>
+                            <div class="avatar-ring"></div>
+                        </div>
+                        <div class="profile-info">
+                            <h4>${GameState.data.user.name}</h4>
+                            <div class="profile-level">
+                                <span class="level-badge">LVL ${GameState.data.user.level}</span>
+                                <span class="xp-text" id="stat-xp">${GameState.data.user.xp} XP</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="profile-xp-bar">
+                        <div class="xp-fill" style="width: ${(GameState.data.user.xp % 1000) / 10}%;"></div>
+                    </div>
+                    <div class="profile-stats">
+                        <div class="stat-item">
+                            <span class="stat-value" id="stat-streak">${GameState.data.user.streak}</span>
+                            <span class="stat-label">Streak 🔥</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-value">0</span>
+                            <span class="stat-label">Badges</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-value">0</span>
+                            <span class="stat-label">Projects</span>
+                        </div>
+                    </div>
+                    <button class="cyber-btn cyber-btn-secondary full-width" onclick="navigateTo('courses')">
+                        View Profile
+                    </button>
+                </div>
+
+                <!-- EVENTS WIDGET -->
+                <div class="cyber-widget">
+                    <h4 class="widget-title">
+                        <span class="title-icon">📅</span> Upcoming Events
+                    </h4>
+                    <div class="cyber-event">
+                        <div class="event-date-box">
+                            <span class="event-month">DEC</span>
+                            <span class="event-day">22</span>
+                        </div>
+                        <div class="event-details">
+                            <h5>Game Jam 2025</h5>
+                            <p>10:00 AM EST</p>
+                        </div>
+                    </div>
+                    <div class="cyber-event">
+                        <div class="event-date-box">
+                            <span class="event-month">JAN</span>
+                            <span class="event-day">05</span>
+                        </div>
+                        <div class="event-details">
+                            <h5>Python Workshop</h5>
+                            <p>2:00 PM EST</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="cyber-widget cyber-club">
+                    <div class="club-glow"></div>
+                    <h3><i data-lucide="crown" style="width:20px;height:20px;color:#ffc800;"></i> JOIN THE CLUB</h3>
+                    <p>Get unlimited access to all courses, projects, and exclusive content.</p>
+                    <button class="cyber-btn cyber-btn-gold full-width">Learn More</button>
+                </div>
+            </div>
+        </div>
+    `;
+
+    document.getElementById('main-content').innerHTML = dashboardHTML;
+
+    // Initialize 3D Tilt on Home Cards
+    if (window.TiltEffect) {
+        window.TiltEffect.init('.cyber-cozy-card', { max: 10, speed: 400 });
+        window.TiltEffect.init('.cyber-course-card', { max: 5, speed: 400 });
+        window.TiltEffect.init('.cyber-widget', { max: 2, scale: 1.01 });
+    }
+
+    // Initialize Lucide Icons
+    if (window.lucide) {
+        window.lucide.createIcons();
+    }
+}
+
+
+function navigateTo(route) {
+    const sidebar = document.querySelector('.right-sidebar');
+    const mainLayout = document.getElementById('main-layout');
+
+    // Default Layout State (Authenticated)
+    if (sidebar) sidebar.style.display = 'flex';
+    if (mainLayout) {
+        mainLayout.style.display = 'grid';
+        mainLayout.style.gridTemplateColumns = '1fr 320px'; // Restore original grid
+    }
+
+    // Stop specific module loops if leaving their page
+    if (window.App && window.App.Community && route !== 'community') {
+        window.App.Community.stopSimulation();
+    }
+
+    // Hide all views first
+    document.querySelectorAll('.view').forEach(v => v.classList.add('hidden'));
+
+    // Handle Routes
+    if (route === 'landing') {
+        if (sidebar) sidebar.style.display = 'none';
+        if (mainLayout) mainLayout.style.display = 'block';
+        renderLandingPage();
+    } else if (route === 'signup') {
+        if (sidebar) sidebar.style.display = 'none';
+        if (mainLayout) mainLayout.style.display = 'block';
+        renderSignupPage();
+    } else if (route === 'home') {
+        // HOME DASHBOARD LAYOUT
+        if (sidebar) sidebar.style.display = 'none'; // Custom sidebar in dashboard
+        if (mainLayout) mainLayout.style.display = 'block'; // Full width container
+        renderHomeDashboard();
+    } else if (route === 'courses') {
+        document.getElementById('main-layout').style.display = 'grid';
+        document.getElementById('courses-view').classList.remove('hidden');
+        renderAllCourses();
+    } else if (route === 'lesson') {
+        document.getElementById('lesson-view').classList.remove('hidden');
+        renderLessonWorkspace();
+    } else if (route === 'practice') {
+        // PRACTICE PAGE (Challenge Packs)
+        if (sidebar) sidebar.style.display = 'none';
+        if (mainLayout) mainLayout.style.display = 'block';
+        renderPracticePage();
+    } else if (route === 'builds') {
+        // BUILDS PAGE (User Projects)
+        if (sidebar) sidebar.style.display = 'none';
+        if (mainLayout) mainLayout.style.display = 'block';
+        renderBuildsPage();
+    } else if (route === 'community') {
+        // COMMUNITY PAGE (Updated 3-column layout)
+        if (sidebar) sidebar.style.display = 'none';
+        if (mainLayout) mainLayout.style.display = 'block';
+        renderCommunityPage();
+    } else if (route.startsWith('course-')) {
+        document.getElementById('course-view').classList.remove('hidden');
+        renderCourseRoadmap(route.replace('course-', ''));
+    }
+}
+
+// ============== NEW PAGE RENDERERS ==============
+
+// CHALLENGE PACKS DATA
+const CHALLENGE_PACKS = [
+    { id: 'py-basics', title: 'Python Basics', icon: '🐍', color: '#3572A5', concepts: ['Variables', 'Print', 'Input'], difficulty: 'BEGINNER' },
+    { id: 'py-control', title: 'Control Flow', icon: '🔀', color: '#3572A5', concepts: ['If/Else', 'Loops', 'Break'], difficulty: 'BEGINNER' },
+    { id: 'py-functions', title: 'Functions', icon: '⚙️', color: '#3572A5', concepts: ['Def', 'Return', 'Parameters'], difficulty: 'INTERMEDIATE' },
+    { id: 'js-basics', title: 'JavaScript Basics', icon: '📦', color: '#f7df1e', concepts: ['Variables', 'Console', 'Types'], difficulty: 'BEGINNER' },
+    { id: 'js-dom', title: 'DOM Manipulation', icon: '🌐', color: '#f7df1e', concepts: ['Select', 'Events', 'Modify'], difficulty: 'INTERMEDIATE' },
+    { id: 'html-struct', title: 'HTML Structure', icon: '🏗️', color: '#e34c26', concepts: ['Tags', 'Attributes', 'Semantic'], difficulty: 'BEGINNER' },
+];
+
+// PRACTICE PAGE
+function renderPracticePage() {
+    const bannerArt = "./assets/pixel_art/ChatGPT Image Dec 20, 2025, 09_33_16 AM.png";
+
+    const html = `
+        <div class="page-container" style="max-width: 1200px; margin: 0 auto; padding: 24px;">
+            <div class="page-banner" style="background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('${bannerArt}'); background-size: cover; background-position: center; border-radius: 24px; padding: 60px 40px; margin-bottom: 32px;">
+                <h1 style="font-family: 'Press Start 2P'; font-size: 28px; margin-bottom: 16px;">Challenge Packs</h1>
+                <p style="color: var(--text-secondary); max-width: 500px;">Practice with bite-sized challenges to sharpen your skills.</p>
+            </div>
+
+            <div class="filter-tabs" style="display: flex; gap: 12px; margin-bottom: 24px;">
+                <button class="filter-tab active" style="background: var(--neon-cyan); color: #000; padding: 10px 20px; border-radius: 8px; border: none; font-weight: 600; cursor: pointer;">All</button>
+                <button class="filter-tab" style="background: var(--bg-card); color: var(--text-secondary); padding: 10px 20px; border-radius: 8px; border: 1px solid var(--border-subtle); cursor: pointer;">Python</button>
+                <button class="filter-tab" style="background: var(--bg-card); color: var(--text-secondary); padding: 10px 20px; border-radius: 8px; border: 1px solid var(--border-subtle); cursor: pointer;">JavaScript</button>
+                <button class="filter-tab" style="background: var(--bg-card); color: var(--text-secondary); padding: 10px 20px; border-radius: 8px; border: 1px solid var(--border-subtle); cursor: pointer;">HTML/CSS</button>
+            </div>
+
+            <div class="challenge-grid" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px;">
+                ${CHALLENGE_PACKS.map(pack => `
+                    <div class="challenge-card" style="background: linear-gradient(135deg, ${pack.color}22, ${pack.color}11); border: 1px solid ${pack.color}44; border-radius: 16px; padding: 24px; cursor: pointer; transition: transform 0.2s, border-color 0.2s;">
+                        <div style="font-size: 40px; margin-bottom: 16px;">${pack.icon}</div>
+                        <h3 style="font-size: 18px; font-weight: 700; margin-bottom: 8px;">${pack.title}</h3>
+                        <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px;">
+                            ${pack.concepts.map(c => `<span style="background: ${pack.color}33; color: ${pack.color}; padding: 4px 10px; border-radius: 20px; font-size: 11px;">${c}</span>`).join('')}
+                        </div>
+                        <span class="course-pill" style="background: var(--bg-deep);">${pack.difficulty}</span>
+                    </div>
+                `).join('')}
+            </div>
+        </div>
+    `;
+
+    document.getElementById('main-content').innerHTML = html;
+}
+
+// BUILDS PAGE
+function renderBuildsPage() {
+    const mascotArt = "./assets/pixel_art/ChatGPT Image Dec 20, 2025, 09_42_03 AM.png";
+
+    const html = `
+        <div class="page-container" style="max-width: 1000px; margin: 0 auto; padding: 24px; text-align: center;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 32px;">
+                <h1 style="font-family: 'Press Start 2P'; font-size: 24px;">Builds</h1>
+                <button class="btn-home-cta" style="font-size: 12px; padding: 12px 24px;">+ New Build</button>
+            </div>
+
+            <div class="empty-state" style="padding: 80px 40px; background: var(--bg-card); border-radius: 24px; border: 1px dashed var(--border-subtle);">
+                <img src="${mascotArt}" alt="Build character" style="width: 150px; height: 150px; object-fit: contain; margin-bottom: 24px; filter: drop-shadow(0 8px 16px rgba(0,0,0,0.3));">
+                <h2 style="margin-bottom: 12px;">Build right here on MineCode</h2>
+                <p style="color: var(--text-muted); max-width: 400px; margin: 0 auto 24px;">Share your code snippets, projects, and ideas with the community.</p>
+                <button class="btn-cyber-primary" style="padding: 14px 32px;">Create Your First Build</button>
+            </div>
+        </div>
+    `;
+
+    document.getElementById('main-content').innerHTML = html;
+}
+
+// COMMUNITY PAGE (3-Column Layout)
+async function renderCommunityPage() {
+    // 1. Setup Skeleton Layout
+    const html = `
+        <div class="community-layout" style="display: grid; grid-template-columns: 250px 1fr 300px; gap: 24px; padding: 24px; max-width: 1400px; margin: 0 auto;">
+            <!-- Left Sidebar: Channels -->
+            <div class="community-channels" style="background: var(--bg-card); border-radius: 16px; padding: 20px; border: 1px solid var(--border-subtle);">
+                <h4 style="font-family: 'Press Start 2P'; font-size: 10px; color: var(--text-muted); margin-bottom: 16px;">CHANNELS</h4>
+                <div id="channel-list" style="display: flex; flex-direction: column; gap: 8px;">
+                    <!-- Channels injected here -->
+                    <div class="skeleton-text short"></div>
+                    <div class="skeleton-text short"></div>
+                    <div class="skeleton-text short"></div>
+                </div>
+            </div>
+
+            <!-- Center: Feed -->
+            <div class="community-feed">
+                <!-- Post Creator -->
+                <div class="cyber-card" style="padding: 16px; margin-bottom: 24px; border: 1px solid var(--border-subtle);">
+                    <textarea id="post-input" placeholder="Share your code or thoughts..." style="width: 100%; background: var(--bg-deep); border: 1px solid var(--border-subtle); border-radius: 8px; padding: 12px; color: white; font-family: 'Outfit'; font-size: 16px; margin-bottom: 12px; resize: none; min-height: 80px;"></textarea>
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <span style="font-size: 12px; color: var(--text-muted);">Markdown supported</span>
+                        <button id="post-btn" class="btn-cyber-primary" style="padding: 8px 24px;">POST</button>
+                    </div>
+                </div>
+
+                <!-- Feed Filter -->
+                <div style="display: flex; gap: 12px; margin-bottom: 24px;">
+                    <button class="filter-tab active" style="background: var(--neon-cyan); color: #000; padding: 8px 16px; border-radius: 8px; border: none; font-weight: 600;">Latest</button>
+                    <button class="filter-tab" style="background: var(--bg-card); color: var(--text-secondary); padding: 8px 16px; border-radius: 8px; border: 1px solid var(--border-subtle);">Top</button>
+                </div>
+
+                <!-- Post Stream -->
+                <div id="post-feed" class="post-list" style="display: flex; flex-direction: column; gap: 16px;">
+                    <!-- Posts injected here -->
+                    <div class="text-center" style="padding: 40px; color: var(--text-muted);">Loading feed...</div>
+                </div>
+            </div>
+
+            <!-- Right Sidebar: News & Events -->
+            <div class="community-sidebar">
+                <div class="sidebar-widget" style="background: var(--bg-card); border-radius: 16px; padding: 20px; margin-bottom: 16px; border: 1px solid var(--border-subtle);">
+                    <h4 style="font-family: 'Press Start 2P'; font-size: 10px; color: var(--text-muted); margin-bottom: 16px;">MINECODE NEWS</h4>
+                    <div style="color: var(--text-secondary); font-size: 14px;">
+                        <p style="margin-bottom: 12px;">🎉 Intermediate Python course is now live!</p>
+                        <p>🚀 New Challenge Packs coming next week.</p>
+                    </div>
+                </div>
+
+                <div class="sidebar-widget" style="background: var(--bg-card); border-radius: 16px; padding: 20px; border: 1px solid var(--border-subtle);">
+                    <h4 style="font-family: 'Press Start 2P'; font-size: 10px; color: var(--text-muted); margin-bottom: 16px;">UPCOMING EVENTS</h4>
+                    <div class="event-item" style="display: flex; gap: 12px; align-items: center; margin-bottom: 12px;">
+                        <div style="background: var(--bg-deep); padding: 8px 12px; border-radius: 8px; text-align: center;">
+                            <span style="display: block; font-size: 10px; color: var(--text-muted);">DEC</span>
+                            <span style="font-size: 18px; font-weight: 700;">30</span>
+                        </div>
+                        <div>
+                            <div style="font-weight: 600;">End of Year Jam</div>
+                            <div style="font-size: 12px; color: var(--text-muted);">All Day Event</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+
+    document.getElementById('main-content').innerHTML = html;
+
+    // 2. Fetch Data
+    if (window.DB) {
+        // Channels
+        const channels = await window.DB.getChannels();
+        renderChannels(channels);
+
+        // Default to General (id 1 usually) or first fetch
+        if (channels.length > 0) {
+            loadChannelFeed(channels[0].id);
+        } else {
+            // Fallback if no channels exist yet
+            document.getElementById('post-feed').innerHTML = '<div style="padding:20px;">No channels found. Please run seed script.</div>';
+        }
+
+        // Post Button Listener
+        document.getElementById('post-btn').addEventListener('click', async () => {
+            const content = document.getElementById('post-input').value;
+            if (!content.trim()) return;
+
+            // Assume active channel ID is stored or we default to the first one for now
+            // For MVP, lets just grab the ID from the active DOM element or variable
+            const activeChannelId = document.querySelector('.channel-item.active')?.dataset.id || 1;
+
+            // Optimistic UI update could go here
+            await window.DB.createPost(content, activeChannelId);
+            document.getElementById('post-input').value = '';
+        });
+    }
+}
+
+function renderChannels(channels) {
+    const container = document.getElementById('channel-list');
+    if (!channels.length) return;
+
+    container.innerHTML = channels.map(c => `
+        <a href="#" class="channel-item ${c.slug === 'general' ? 'active' : ''}" data-id="${c.id}" 
+           onclick="loadChannelFeed(${c.id}); selectChannel(this);"
+           style="display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 8px; text-decoration: none; transition: background 0.2s;">
+            <span>${c.icon || '#'}</span> 
+            <span style="text-transform: capitalize;">${c.name}</span>
+        </a>
+    `).join('');
+
+    // Simple inline style strategy for active/inactive
+    updateChannelStyles();
+}
+
+function selectChannel(el) {
+    document.querySelectorAll('.channel-item').forEach(e => e.classList.remove('active'));
+    el.classList.add('active');
+    updateChannelStyles();
+}
+
+function updateChannelStyles() {
+    document.querySelectorAll('.channel-item').forEach(el => {
+        if (el.classList.contains('active')) {
+            el.style.background = 'var(--neon-cyan)';
+            el.style.color = '#000';
+            el.style.fontWeight = '600';
+        } else {
+            el.style.background = 'transparent';
+            el.style.color = 'var(--text-secondary)';
+            el.style.fontWeight = '400';
+        }
+    });
+}
+
+async function loadChannelFeed(channelId) {
+    const feed = document.getElementById('post-feed');
+    feed.innerHTML = '<div style="padding: 20px; text-align: center; color: var(--text-muted);">Loading posts...</div>';
+
+    const posts = await window.DB.getChannelPosts(channelId);
+
+    if (posts.length === 0) {
+        feed.innerHTML = '<div style="padding: 40px; text-align: center; color: var(--text-muted);">No posts yet. Be the first!</div>';
+    } else {
+        feed.innerHTML = ''; // Clear loading
+        posts.forEach(post => renderPost(post));
+    }
+
+    // Subscribe to realtime
+    window.DB.subscribeToChannel(channelId, (newPost) => {
+        renderPost(newPost, true); // Prepend
+    });
+}
+
+function renderPost(post, prepend = false) {
+    const feed = document.getElementById('post-feed');
+    const date = new Date(post.created_at).toLocaleDateString();
+
+    const html = `
+        <div class="post-card cyber-card" style="background: var(--bg-card); border-radius: 16px; padding: 20px; border: 1px solid var(--border-subtle); animation: fadeIn 0.5s;">
+            <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
+                <div style="width: 40px; height: 40px; background: var(--bg-deep); border-radius: 50%; overflow: hidden;">
+                     <img src="${post.author?.avatar_url || 'assets/default.png'}" style="width:100%; height:100%;">
+                </div>
+                <div>
+                    <span style="font-weight: 600; color: var(--text-bright); display: block;">${post.author?.username || 'Unknown'}</span>
+                    <span style="font-size: 11px; color: var(--text-muted);">${date}</span>
+                </div>
+                ${post.author?.level ? `<span class="badge badge-primary" style="margin-left:auto;">LVL ${post.author.level}</span>` : ''}
+            </div>
+            <div style="margin-bottom: 16px; font-family: 'Outfit'; font-size: 15px; line-height: 1.5; color: var(--text-secondary);">
+                ${post.content}
+            </div>
+            <div style="display: flex; gap: 24px; color: var(--text-muted); font-size: 14px; border-top: 1px solid var(--border-subtle); padding-top: 12px;">
+                <button class="btn-icon" style="background:none; border:none; color:inherit; cursor:pointer;">❤️ ${post.likes_count || 0}</button>
+                <button class="btn-icon" style="background:none; border:none; color:inherit; cursor:pointer;">💬 Reply</button>
+            </div>
+        </div>
+    `;
+
+    const div = document.createElement('div');
+    div.innerHTML = html;
+
+    if (prepend) {
+        feed.prepend(div.firstElementChild);
+    } else {
+        feed.appendChild(div.firstElementChild);
+    }
+}
+
+// RENDERERS
+function renderDashboard() {
+    renderAllCourses(); // Ensure catalog is ready
+
+    // HERO CARD - Use Python Image
+    const heroVisual = document.querySelector('.hero-card-visual');
+    if (heroVisual) {
+        heroVisual.style.background = `url("${COURSES[0].image}")`;
+        heroVisual.style.backgroundSize = 'cover';
+        heroVisual.style.backgroundPosition = 'center';
+        // Remove old CSS art elements if any
+        heroVisual.innerHTML = `
+            <div class="hero-progress-bar">
+                <div class="progress-track">
+                    <div class="progress-fill" id="hero-progress" style="width: 44%"></div>
+                </div>
+                <span class="progress-text">44%</span>
+            </div>
+        `;
+    }
+
+    const progressContainer = document.getElementById('progress-cards');
+    if (progressContainer) {
+        progressContainer.innerHTML = COURSES.slice(0, 2).map(c => `
+            <div class="small-course-card cyber-card stagger-item" style="
+                background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('${c.image}');
+                background-size: cover;
+                background-position: center;
+                min-width: 220px; 
+                padding: 16px; 
+                border-radius: 12px; 
+                cursor: pointer;
+                border: 1px solid var(--border-subtle);
+                animation-delay: ${0.1 + (i * 0.1)}s;
+            " data-route="course-${c.id}">
+                <span style="font-size: 10px; background: rgba(0,0,0,0.6); padding: 2px 6px; border-radius: 4px; backdrop-filter:blur(4px);">COURSE</span>
+                <h4 style="font-family: 'Press Start 2P'; font-size: 12px; margin: 8px 0; color: white;">${c.title}</h4>
+                <div style="font-size: 12px; font-family: 'VT323'; color: rgba(255,255,255,0.9);">
+                    ${c.completed}/${c.lessons} COMPLETED
+                </div>
+            </div>
+        `).join('');
+    }
+
+    const tutorialsGrid = document.getElementById('tutorials-grid');
+    if (tutorialsGrid) {
+        tutorialsGrid.innerHTML = TUTORIALS.map(t => `
+            <div class="tutorial-card" style="background: var(--bg-card); border-radius: 12px; overflow: hidden; border: 1px solid var(--border-subtle);">
+                <div style="height: 100px; background: ${t.img}; background-size: cover; background-position: center;"></div>
+                <div style="padding: 12px;">
+                    <h4 style="font-size: 12px; font-family: 'Press Start 2P'; margin-bottom: 8px;">${t.title}</h4>
+                    <div style="display: flex; gap: 4px;">
+                        ${t.tags.map(tag => `<span style="font-size: 10px; background: rgba(0,245,255,0.1); color: var(--neon-cyan); padding: 2px 6px; border-radius: 4px;">${tag}</span>`).join('')}
+                    </div>
+                </div>
+            </div>
+        `).join('');
+    }
+}
+
+function renderAllCourses() {
+    const grid = document.getElementById('all-courses-grid');
+    if (!grid) return;
+
+    // Clear existing grid and set up for sections
+    grid.innerHTML = '';
+    // Override grid styling to allow block-level sections
+    grid.style.display = 'block';
+    grid.style.gridTemplateColumns = 'none';
+    grid.style.marginTop = '0';
+
+    // 1. HERO BANNER
+    // Check if hero exists to avoid unnecessary re-renders or dupes
+    if (!document.querySelector('.catalog-banner')) {
+        // We will create the banner structure within the grid container
+    }
+
+    // Helper to create card HTML
+    const createCard = (c, i) => {
+        // Sync with GameState
+        const state = GameState.data.progress[c.id];
+        const progressPercent = state ? Math.floor((state.completedLessons.length / c.lessons) * 100) : 0;
+
+        const bgStyle = c.image
+            ? `background-image: url('${c.image}'); background-size: cover; background-position: center;`
+            : `background: ${c.gradient}; display: flex; justify-content: center; align-items: center;`;
+
+        const contentOverlay = c.image
+            ? ''
+            : `<div style="font-size: 64px; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.3));">${c.icon}</div>`;
+
+        return `
+        <div class="course-card cyber-card stagger-item" data-route="course-${c.id}" onclick="navigateTo('course-${c.id}')" style="animation-delay: ${i * 0.1}s">
+             <div class="course-card-image" style="${bgStyle}">
+                ${contentOverlay}
+             </div>
+             <div class="course-card-content">
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                    <h3 style="font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 16px; color: var(--text-bright); margin: 0; letter-spacing: 0.5px;">${c.title}</h3>
+                </div>
+                <p style="font-family: 'Outfit', sans-serif; font-size: 13px; color: var(--text-secondary); line-height: 1.4; margin-top: 4px; height: 36px; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;">${c.desc}</p>
+                
+                <div style="margin-top: 12px; display: flex; align-items: center; justify-content: space-between;">
+                     <span class="course-pill">${c.difficulty}</span>
+                     ${progressPercent > 0 ? `<span style="font-size: 10px; color: var(--neon-green); font-weight: bold;">${progressPercent}%</span>` : ''}
+                </div>
+                ${progressPercent > 0 ? `<div class="course-progress-container"><div class="course-progress-bar" style="width: ${progressPercent}%; background: var(--neon-green);"></div></div>` : ''}
+            </div>
+        </div>
+        `;
+    };
+
+    // 2. Sections HTML Content
+    let html = '';
+
+    // SECTION: The Legend of Python
+    html += `
+        <div class="catalog-section">
+            <h2 class="section-title-large">🐍 The Legend of Python</h2>
+            <p class="section-subtitle">Get started with Python, a beginner-friendly programming language great for learning.</p>
+            <div class="section-grid-3">
+                ${COURSES.filter(c => c.category === 'python-legend').map(createCard).join('')}
+            </div>
+        </div>
+    `;
+
+    // SECTION: The Origins Trilogy
+    html += `
+        <div class="catalog-section">
+            <h2 class="section-title-large">🌐 The Origins Trilogy</h2>
+            <p class="section-subtitle">Want to create your own website? Learn the three core technologies that make up the web.</p>
+            <div class="section-grid-3">
+                ${COURSES.filter(c => c.category === 'origins').map(createCard).join('')}
+            </div>
+        </div>
+    `;
+
+    // SECTION: All Courses
+    const others = COURSES.filter(c => !c.category);
+    html += `
+        <div class="catalog-section">
+            <h2 class="section-title-large">📚 All Courses</h2>
+            <div class="section-grid-4">
+                ${others.map(createCard).join('')}
+            </div>
+        </div>
+    `;
+
+    // Combine Banner + Content
+    // Combine Banner + Content
+    grid.innerHTML = `
+        <div class="catalog-banner" style="position: relative; margin-bottom: 40px; border-radius: 16px; overflow: hidden; border: 1px solid var(--border-subtle); height: 260px;">
+            <img src="./assets/pixel_art/ChatGPT Image Dec 20, 2025, 09_38_38 AM.png" style="width: 100%; height: 100%; object-fit: cover; object-position: center;" alt="World Map">
+            <div style="position: absolute; inset: 0; background: linear-gradient(to bottom, transparent 30%, rgba(13, 17, 23, 0.9));"></div>
+            <div style="position: absolute; bottom: 24px; left: 32px; z-index: 2;">
+                 <h1 style="font-family: 'Press Start 2P'; font-size: 28px; color: white; text-shadow: 0 4px 8px black; margin-bottom: 8px;">MineCode</h1>
+                 <p style="font-family: 'Outfit'; color: #ccc; max-width: 600px;">Hack the system. Learn to code through immersive 16-bit adventures.</p>
+            </div>
+        </div>
+        ${html}
+    `;
+
+    // Initialize 3D Tilt
+    if (window.TiltEffect) {
+        window.TiltEffect.init('.course-card', { max: 8, speed: 400, scale: 1.02 });
+    }
+}
+
+function renderCourseRoadmap(id) {
+    const course = COURSES.find(c => c.id === id) || COURSES[0];
+    const content = document.getElementById('course-content');
+
+    // RPG Map Coordinates (Percent X, Percent Y) - Winding Path to Castle
+    const mapNodes = [
+        { id: 1, x: 15, y: 80, label: "The Awakening" },
+        { id: 2, x: 30, y: 65, label: "Data Stranding" },
+        { id: 3, x: 50, y: 55, label: "The Loop" },
+        { id: 4, x: 70, y: 40, label: "Function Peaks" },
+        { id: 5, x: 85, y: 20, label: "Object Castle" }
+    ];
+
+    // Get Progress
+    const state = GameState.data.progress[course.id] || { completedLessons: [] };
+    const completedIds = state.completedLessons;
+    const nextLevel = completedIds.length + 1; // Simplistic progress
+
+    // Generate Map HTML
+    const nodesHtml = mapNodes.map(node => {
+        const isCompleted = completedIds.includes(node.id);
+        const isUnlocked = node.id === 1 || completedIds.includes(node.id - 1);
+        const isCurrent = node.id === nextLevel;
+
+        let statusClass = 'locked';
+        if (isCompleted) statusClass = 'completed';
+        else if (isCurrent) statusClass = 'active-current unlocked';
+        else if (isUnlocked) statusClass = 'unlocked';
+
+        return `
+            <div class="map-node ${statusClass}" 
+                 style="left: ${node.x}%; top: ${node.y}%;"
+                 onclick="${isUnlocked ? `navigateTo('lesson')` : ''}"
+                 data-tilt data-tilt-scale="1.2">
+                
+                <div class="node-icon">
+                    ${isCompleted ? '✓' : node.id}
+                </div>
+                <div class="node-label">${node.label}</div>
+            </div>
+        `;
+    }).join('');
+
+    // Player Token Position (at current level)
+    const activeNode = mapNodes.find(n => n.id === nextLevel) || mapNodes[mapNodes.length - 1];
+    const tokenHtml = `
+        <div class="player-token" style="left: ${activeNode.x}%; top: ${activeNode.y}%;"></div>
+    `;
+
+    content.innerHTML = `
+        <div class="cyber-header" style="margin-bottom: 24px; text-align: center;">
+            <h1 style="font-family: var(--font-display); font-size: 32px; text-shadow: 0 4px 0 black; margin-bottom: 8px;">${course.title} World</h1>
+            <p style="font-family: var(--font-mono); color: var(--neon-cyan);">Make your way to the Object Castle.</p>
+        </div>
+
+        <div class="rpg-map-viewport">
+            <div class="rpg-map-overlay">
+                <!-- Map Image Layer -->
+                <img src="assets/gamification/map-forest.png" class="rpg-map-image" alt="RPG World Map">
+                
+                <!-- Interactive Nodes -->
+                ${nodesHtml}
+
+                <!-- Player Avatar -->
+                ${tokenHtml}
+            </div>
+        </div>
+        
+        <div style="margin-top: 24px; text-align: center;">
+             <button class="btn-cyber-outline" onclick="navigateTo('courses')">← BACK TO ORBIT</button>
+        </div>
+    `;
+
+    // Initialize Tilt on new nodes
+    if (window.TiltEffect && window.TiltEffect.init) {
+        window.TiltEffect.init('.map-node', { max: 15, speed: 400, scale: 1.2 });
+    }
+}
+
+// FEATURE: FUNCTIONAL LESSON EDITOR
+// FEATURE: FUNCTIONAL LESSON EDITOR
+function renderLessonWorkspace() {
+    const instructions = document.getElementById('lesson-instructions');
+    const editor = document.getElementById('code-editor');
+    const terminal = document.getElementById('terminal');
+    const nav = document.getElementById('lesson-nav');
+
+    // Current Lesson State (Mocking Lesson 2)
+    const currentLessonId = 2;
+    const isCompleted = GameState.data.progress.python.completedLessons.includes(currentLessonId);
+
+    instructions.innerHTML = `
+        <div class="fade-in-up">
+            <span style="background: var(--bg-elevated); color: var(--neon-cyan); padding: 4px 8px; border-radius: 4px; font-size: 10px; font-family: 'Press Start 2P';">LESSON ${currentLessonId}</span>
+            <h1 style="font-family: 'Press Start 2P'; font-size: 18px; margin: 16px 0; line-height: 1.5; color: var(--text-bright);">HELLO WORLD</h1>
+            <p style="font-family: 'VT323'; font-size: 20px; color: var(--text-secondary);">Your first standardized output.</p>
+        </div>
+        <div class="fade-in-up" style="animation-delay: 0.1s; font-family: 'VT323'; font-size: 18px; color: var(--text-primary);">
+            <p>Every cyber-agent starts here. Initializing the output stream.</p>
+            <br>
+            <p>TASK: Print the greeting signal.</p>
+            <div style="background: var(--bg-deep); padding: 12px; border-left: 2px solid var(--neon-green); margin: 16px 0; font-family: 'VT323';">
+                print("Hello, World!")
+            </div>
+            ${isCompleted ? '<div style="color: var(--neon-green);">✅ LESSON COMPLETE</div>' : ''}
+        </div>
+    `;
+
+    editor.innerHTML = `
+        <div style="background: var(--bg-panel); padding: 8px 16px; border-bottom: 1px solid var(--border-subtle); display: flex; justify-content: space-between; align-items: center;">
+            <span style="font-family: 'VT323'; color: var(--text-secondary);">main.py</span>
+            <button id="run-btn" class="btn-cyber-primary" style="padding: 6px 16px; font-size: 12px;">▶ RUN PROTOCOL</button>
+        </div>
+        <textarea id="code-input" spellcheck="false" style="width: 100%; height: 300px; background: rgba(13, 17, 23, 0.6); color: var(--text-bright); border: none; padding: 16px; font-family: 'VT323'; font-size: 18px; outline: none; resize: none; line-height: 1.5;">print("Hello, World!")</textarea>
+    `;
+
+    terminal.innerHTML = `
+        <div style="background: var(--bg-panel); padding: 8px 16px; border-bottom: 1px solid var(--border-subtle); font-family: 'VT323'; color: var(--text-muted); font-size: 14px;">TERMINAL OUTPUT</div>
+        <div id="terminal-out" style="padding: 16px; font-family: 'VT323'; font-size: 16px; color: var(--neon-green); height: 140px; overflow-y: auto; background: rgba(0,0,0,0.3);">
+            > System Ready...
+        </div>
+    `;
+
+    nav.innerHTML = `
+        <button class="btn-cyber-outline" style="width: auto;" onclick="navigateTo('course-python')">EXIT</button>
+        <button id="next-lesson-btn" class="btn-cyber-primary" style="display: ${isCompleted ? 'flex' : 'none'}; opacity: ${isCompleted ? 1 : 0}; transition: all 0.3s;" onclick="GameState.showToast('Next lesson locked in demo.', 'accent')">NEXT LESSON →</button>
+    `;
+
+    // RUN FUNCTIONALITY
+    document.getElementById('run-btn').addEventListener('click', () => {
+        const code = document.getElementById('code-input').value;
+        const term = document.getElementById('terminal-out');
+        const nextBtn = document.getElementById('next-lesson-btn');
+
+        term.innerHTML += `<div>> Running main.py...</div>`;
+        term.scrollTop = term.scrollHeight;
+
+        // Simulate Network Latency for realism
+        setTimeout(() => {
+            if (code.includes('print("') || code.includes("print('")) {
+                const text = code.match(/print\(["'](.+)["']\)/)[1];
+                term.innerHTML += `<div>${text}</div>`;
+
+                // Success Logic
+                term.innerHTML += `<div style="color: var(--neon-cyan); margin-top: 8px; text-shadow: 0 0 5px var(--neon-cyan);">[SUCCESS] PROTOCOL VERIFIED.</div>`;
+
+                // Update GameState
+                const firstTime = GameState.completeLesson('python', 2);
+
+                if (firstTime) {
+                    setTimeout(() => {
+                        GameState.showToast('LESSON COMPLETE! +100 XP', 'success');
+                        // Show Next Button
+                        if (nextBtn) {
+                            nextBtn.style.display = 'flex';
+                            setTimeout(() => nextBtn.style.opacity = '1', 10);
+                        }
+                    }, 500);
+                } else {
+                    GameState.showToast('Code Valid. (Already Completed)', 'info');
+                }
+
+            } else {
+                term.innerHTML += `<div style="color: var(--neon-orange);">[ERROR] SYNTAX INVALID. MISSING PRINT STATEMENT.</div>`;
+                GameState.showToast('Syntax Error: Check your code.', 'error');
+            }
+            term.scrollTop = term.scrollHeight;
+        }, 600);
+    });
+}
+
+
