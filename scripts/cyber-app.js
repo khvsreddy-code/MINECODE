@@ -342,80 +342,126 @@ function initNavigation() {
     });
 }
 
-// MINECODE LANDING PAGE (Logged Out View)
+// MINECODE LANDING PAGE (Logged Out View) - CODEDEX-INSPIRED ANIMATION
 function renderLandingPage() {
     const mainContent = document.getElementById('main-content');
     const sidebar = document.querySelector('.sidebar');
+    const rightSidebar = document.querySelector('.right-sidebar');
 
-    // Hide sidebar for landing page to give full screen feel
+    // Hide sidebars for full-screen landing
     if (sidebar) sidebar.style.display = 'none';
+    if (rightSidebar) rightSidebar.style.display = 'none';
 
-    // Use the World Map Banner for the hero background
-    const heroImage = "./assets/pixel_art/ChatGPT Image Dec 20, 2025, 09_38_38 AM.png";
+    // Helper to split text into animated spans
+    const animateText = (text, baseDelay = 0) => {
+        return text.split('').map((char, i) => {
+            if (char === ' ') return '&nbsp;';
+            const delay = (baseDelay + i * 0.08).toFixed(2);
+            return `<span style="animation-delay: ${delay}s">${char}</span>`;
+        }).join('');
+    };
 
     mainContent.innerHTML = `
-        <div class="landing-hero">
-            <video id="landing-video-bg" class="landing-bg" autoplay muted loop playsinline>
+        <div class="hero-pixel-scene">
+            <!-- Background Video -->
+            <video id="landing-video-bg" class="video-bg" autoplay muted loop playsinline>
                 <source src="./assets/_looped_video_1080p_202512201349.mp4" type="video/mp4">
             </video>
-            <div class="landing-content">
-                <h1 class="landing-title">Start Your<br>Coding Adventure</h1>
-                <p class="landing-subtitle">The most fun and beginner-friendly way to learn to code.</p>
-                <button class="btn-codedex-yellow" onclick="navigateTo('signup')">GET STARTED</button>
+            
+            <!-- Dark gradient overlay for readability -->
+            <div class="overlay-gradient"></div>
+            
+            <!-- Hero Content -->
+            <div class="hero-content-wrapper">
+                <!-- Small White Text on Top -->
+                <div class="hero-start-text">START YOUR</div>
+                
+                <!-- Main Animated Title -->
+                <div class="hero-adventure-container">
+                    <div class="hero-adventure-line">
+                        ${animateText('Coding', 0)}
+                    </div>
+                    <div class="hero-adventure-line">
+                        ${animateText('Adventure', 0.8)}
+                    </div>
+                </div>
+                
+                <p class="hero-subtitle">
+                    The most fun and beginner-friendly way to learn to code.
+                </p>
+                
+                <button class="btn-nes-primary" onclick="navigateTo('signup')">
+                    <img src="https://unpkg.com/pixelarticons@1.8.1/svg/play.svg" alt="" class="pixel-icon pixel-icon-sm" style="filter: brightness(0); margin-right: 8px;">
+                    GET STARTED
+                </button>
             </div>
         </div>
         
-        <div class="landing-courses-preview">
-            <div class="landing-section-header">
-                <h2 class="section-title-large" style="justify-content: center; font-size: 24px;">Journey through the world of programming</h2>
-                <p class="section-subtitle" style="margin: 0 auto; max-width: 600px;">Learn to code with fun, interactive courses handcrafted by industry experts.</p>
+        <!-- Courses Preview Section -->
+        <div class="landing-courses-preview" style="background: var(--bg-deep); padding: 80px 24px;">
+            <div class="landing-section-header" style="text-align: center; margin-bottom: 48px;">
+                <h2 style="font-family: 'Press Start 2P', monospace; font-size: 18px; color: var(--text-bright); margin-bottom: 16px;">
+                    Journey through the world of programming
+                </h2>
+                <p style="font-family: var(--font-body); color: var(--text-secondary); max-width: 500px; margin: 0 auto;">
+                    Learn to code with fun, interactive courses handcrafted by industry experts.
+                </p>
             </div>
             
-            <div id="landing-grid" class="section-grid-3">
-                <!-- Top 3 Courses will be injected here -->
+            <div id="landing-grid" class="section-grid-3" style="max-width: 1100px; margin: 0 auto;">
+                <!-- Courses injected here -->
             </div>
             
             <div style="text-align: center; margin-top: 48px;">
-                <button class="btn-cyber-primary" onclick="navigateTo('signup')" style="padding: 12px 32px;">Explore All Courses</button>
+                <button class="btn-nes-primary btn-nes-cyan" onclick="navigateTo('signup')">
+                    Explore All Courses
+                </button>
             </div>
         </div>
     `;
 
-    // Force play video to ensure it starts (Fix for autoplay inconsistencies)
+    // Play video
     const v = document.getElementById('landing-video-bg');
-    if (v) {
-        v.play().catch(e => console.log('Autoplay blocked:', e));
+    if (v) v.play().catch(e => console.log('Autoplay blocked:', e));
+
+    // Initialize Rain Effect
+    if (window.RainEffect) {
+        setTimeout(() => window.RainEffect.init(), 200);
     }
 
-    // Inject top 3 courses (Using Python and Origins for variety)
+    // Inject courses
     const featuredCourses = COURSES.filter(c => ['python', 'html', 'javascript'].includes(c.id));
     const grid = document.getElementById('landing-grid');
 
     if (grid) {
-        // Simple direct HTML generation to avoid dependencies on helper functions that might not be in scope if not careful
-        grid.innerHTML = featuredCourses.map((c, index) => {
+        grid.innerHTML = featuredCourses.map((c, i) => {
             const bgStyle = c.image
                 ? `background-image: url('${c.image}'); background-size: cover; background-position: center;`
-                : `background: ${c.gradient}; display: flex; justify-content: center; align-items: center;`;
+                : `background: ${c.gradient};`;
 
             return `
-            <div class="course-card cyber-card stagger-item" onclick="navigateTo('course-${c.id}')" style="cursor: pointer; animation-delay: ${0.1 * index}s">
-                <div class="course-card-image" style="${bgStyle}"></div>
-                <div class="course-card-content">
+            <div class="course-card cyber-card" onclick="navigateTo('course-${c.id}')" style="cursor: pointer; animation: fadeInUp 0.6s ease-out ${0.1 * i}s both;">
+                <div class="course-card-image" style="${bgStyle}; height: 180px; border-radius: 8px 8px 0 0;"></div>
+                <div class="course-card-content" style="padding: 16px;">
                     <div style="display:flex; justify-content:space-between; align-items:center;">
-                        <h3 style="font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 16px; color: var(--text-bright); margin: 0;">${c.title}</h3>
-                        <span class="course-pill">${c.difficulty}</span>
+                        <h3 style="font-family: 'Press Start 2P', monospace; font-size: 11px; color: var(--text-bright); margin: 0;">${c.title}</h3>
+                        <span class="course-pill" style="font-family: 'Press Start 2P'; font-size: 8px;">${c.difficulty}</span>
                     </div>
-                    <p style="font-family: 'Outfit', sans-serif; font-size: 13px; color: var(--text-secondary); margin-top: 4px;">${c.desc}</p>
+                    <p style="font-family: var(--font-body); font-size: 13px; color: var(--text-secondary); margin-top: 8px; line-height: 1.5;">${c.desc}</p>
                 </div>
             </div>
             `;
         }).join('');
 
-        // Initialize Tilt
-        if (window.TiltEffect) setTimeout(() => window.TiltEffect.init('.course-card', { max: 12, speed: 400 }), 100);
+        if (window.TiltEffect) setTimeout(() => window.TiltEffect.init('.course-card', { max: 8, speed: 400 }), 100);
+    }
+
+    // Show toast demo
+    if (window.showToast) {
+        setTimeout(() => showToast('Welcome to MineCode! 🎮', 'info'), 1500);
     }
 }
+
 
 // SIGN UP PAGE - CODEDEX INSPIRED
 function renderSignupPage() {
@@ -817,6 +863,12 @@ function navigateTo(route) {
         if (sidebar) sidebar.style.display = 'none';
         if (mainLayout) mainLayout.style.display = 'block';
         renderLandingPage();
+        // Initialize rain effect after DOM update
+        requestAnimationFrame(() => {
+            if (document.getElementById('rain-canvas')) {
+                new RainEffect();
+            }
+        });
     } else if (route === 'signup') {
         if (sidebar) sidebar.style.display = 'none';
         if (mainLayout) mainLayout.style.display = 'block';

@@ -1,0 +1,72 @@
+/**
+ * PIXEL ICONS UTILITY CSS
+ * Uses pixelarticons from unpkg CDN
+ * https://unpkg.com/pixelarticons@1.8.1/svg/[name].svg
+ */
+
+/* Base icon styling */
+.pixel-icon {
+    display: inline-block;
+    width: 24px;
+    height: 24px;
+    image-rendering: pixelated;
+    vertical-align: middle;
+}
+
+/* Size variants */
+.pixel-icon-sm {
+    width: 16px;
+    height: 16px;
+}
+
+.pixel-icon-md {
+    width: 24px;
+    height: 24px;
+}
+
+.pixel-icon-lg {
+    width: 32px;
+    height: 32px;
+}
+
+.pixel-icon-xl {
+    width: 48px;
+    height: 48px;
+}
+
+/* Color filters for tinting white SVG icons */
+.pixel-icon-cyan {
+    filter: brightness(0) saturate(100%) invert(87%) sepia(51%) saturate(1041%) hue-rotate(137deg) brightness(101%) contrast(101%);
+}
+
+.pixel-icon-yellow {
+    filter: brightness(0) saturate(100%) invert(86%) sepia(83%) saturate(533%) hue-rotate(354deg) brightness(103%) contrast(101%);
+}
+
+.pixel-icon-magenta {
+    filter: brightness(0) saturate(100%) invert(49%) sepia(95%) saturate(1654%) hue-rotate(283deg) brightness(97%) contrast(105%);
+}
+
+.pixel-icon-green {
+    filter: brightness(0) saturate(100%) invert(74%) sepia(67%) saturate(404%) hue-rotate(86deg) brightness(96%) contrast(91%);
+}
+
+.pixel-icon-orange {
+    filter: brightness(0) saturate(100%) invert(61%) sepia(77%) saturate(2069%) hue-rotate(343deg) brightness(99%) contrast(94%);
+}
+
+.pixel-icon-white {
+    filter: brightness(0) invert(1);
+}
+
+/* Hover glow effect */
+.pixel-icon-glow:hover {
+    filter: drop-shadow(0 0 4px rgba(0, 255, 255, 0.8));
+}
+
+/* Common icon mappings reference:
+   home, user, settings, search, bell, 
+   book-open, code, terminal, trophy, flame,
+   star, heart, check, x, arrow-right,
+   play, pause, chevron-down, menu, plus
+*/

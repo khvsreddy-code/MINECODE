@@ -1,0 +1,254 @@
+/**
+ * HERO EFFECTS CSS - CODEDEX EXACT STYLE
+ * Floating text animation matching Codedex's "Start Your Coding Adventure"
+ */
+
+/* ==========================================================
+   HERO SECTION - FULL SCREEN VIDEO BACKGROUND
+   ========================================================== */
+
+.hero-pixel-scene {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+
+/* Full video background */
+.hero-pixel-scene .video-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 0;
+}
+
+/* Optional dark gradient overlay - minimal to show video */
+.hero-pixel-scene .overlay-gradient {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to bottom,
+            rgba(0, 0, 0, 0.1) 0%,
+            rgba(0, 0, 0, 0.3) 50%,
+            rgba(0, 0, 0, 0.5) 100%);
+    z-index: 1;
+}
+
+/* ==========================================================
+   CODEDEX-STYLE ANIMATED TEXT
+   ========================================================== */
+
+.hero-content-wrapper {
+    position: relative;
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 20px;
+}
+
+/* "START YOUR" - Small white text on top */
+.hero-start-text {
+    font-family: 'Monocraft', monospace;
+    font-size: clamp(10px, 2vw, 14px);
+    color: #ffffff;
+    letter-spacing: 4px;
+    margin-bottom: 8px;
+    text-shadow: 2px 2px 0 #000;
+    animation: float-text 3s ease-in-out infinite;
+}
+
+/* Main "Coding Adventure" container */
+.hero-adventure-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+}
+
+/* Each line: Coding / Adventure */
+.hero-adventure-line {
+    display: flex;
+    justify-content: center;
+}
+
+/* Individual animated letters - CODEDEX YELLOW/ORANGE GRADIENT */
+.hero-adventure-line span {
+    display: inline-block;
+    font-family: 'Monocraft', monospace;
+    font-size: clamp(36px, 8vw, 72px);
+    font-weight: 400;
+    line-height: 1.1;
+
+    /* Yellow to Orange gradient like Codedex */
+    background: linear-gradient(180deg,
+            #FFD966 0%,
+            /* Light yellow top */
+            #F5A623 50%,
+            /* Orange middle */
+            #D4790A 100%
+            /* Darker orange bottom */
+        );
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+
+    /* Thick black outline using text-stroke + shadow */
+    -webkit-text-stroke: 3px #000;
+    paint-order: stroke fill;
+
+    /* Drop shadow for depth */
+    filter: drop-shadow(4px 4px 0 #000) drop-shadow(0 6px 0 rgba(0, 0, 0, 0.3));
+
+    /* Floating animation */
+    animation: float-letter 2s ease-in-out infinite;
+}
+
+/* Stagger animation delays for wave effect */
+.hero-adventure-line span:nth-child(1) {
+    animation-delay: 0s;
+}
+
+.hero-adventure-line span:nth-child(2) {
+    animation-delay: 0.1s;
+}
+
+.hero-adventure-line span:nth-child(3) {
+    animation-delay: 0.2s;
+}
+
+.hero-adventure-line span:nth-child(4) {
+    animation-delay: 0.3s;
+}
+
+.hero-adventure-line span:nth-child(5) {
+    animation-delay: 0.4s;
+}
+
+.hero-adventure-line span:nth-child(6) {
+    animation-delay: 0.5s;
+}
+
+.hero-adventure-line span:nth-child(7) {
+    animation-delay: 0.6s;
+}
+
+.hero-adventure-line span:nth-child(8) {
+    animation-delay: 0.7s;
+}
+
+.hero-adventure-line span:nth-child(9) {
+    animation-delay: 0.8s;
+}
+
+/* Keyframes */
+@keyframes float-letter {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-8px);
+    }
+}
+
+@keyframes float-text {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-4px);
+    }
+}
+
+/* ==========================================================
+   SUBTITLE
+   ========================================================== */
+
+.hero-subtitle {
+    font-family: var(--font-body);
+    font-size: 16px;
+    color: rgba(255, 255, 255, 0.9);
+    text-align: center;
+    max-width: 450px;
+    margin-top: 24px;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+    animation: fadeInUp 1s ease-out 0.8s both;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ==========================================================
+   NES-STYLE CTA BUTTON - CODEDEX YELLOW
+   ========================================================== */
+
+.btn-nes-primary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 11px;
+    padding: 16px 28px;
+    margin-top: 32px;
+
+    /* Yellow gradient like Codedex */
+    background: linear-gradient(180deg, #FFE066 0%, #F5A623 100%);
+    color: #000;
+
+    /* NES thick border */
+    border: 4px solid #000;
+    border-radius: 0;
+    cursor: pointer;
+
+    /* 3D depth */
+    box-shadow:
+        4px 4px 0 #000,
+        inset -3px -3px 0 rgba(0, 0, 0, 0.15);
+
+    transition: transform 0.1s, box-shadow 0.1s;
+    text-transform: uppercase;
+}
+
+.btn-nes-primary:hover {
+    transform: translate(-2px, -2px);
+    box-shadow:
+        6px 6px 0 #000,
+        inset -3px -3px 0 rgba(0, 0, 0, 0.15);
+}
+
+.btn-nes-primary:active {
+    transform: translate(2px, 2px);
+    box-shadow:
+        2px 2px 0 #000,
+        inset 3px 3px 0 rgba(0, 0, 0, 0.15);
+}
+
+/* Cyan variant */
+.btn-nes-cyan {
+    background: linear-gradient(180deg, #67E8F9 0%, #06B6D4 100%);
+    box-shadow:
+        4px 4px 0 #0891B2,
+        inset -3px -3px 0 rgba(0, 0, 0, 0.1);
+}

@@ -1,0 +1,340 @@
+/**
+ * UI COMPONENTS - Cyber Cozy Aesthetic
+ * Breadcrumbs, Tooltips, Modals, Dropdowns, Toasts
+ */
+
+/* ==========================================================
+   BREADCRUMBS
+   ========================================================== */
+
+.breadcrumbs {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 10px;
+    color: var(--text-muted);
+    padding: 8px 0;
+}
+
+.breadcrumbs a {
+    color: var(--neon-cyan);
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+.breadcrumbs a:hover {
+    color: #fff;
+    text-shadow: 0 0 8px var(--neon-cyan);
+}
+
+.breadcrumbs .separator {
+    color: var(--text-muted);
+    opacity: 0.5;
+}
+
+.breadcrumbs .current {
+    color: var(--text-secondary);
+}
+
+/* ==========================================================
+   TOOLTIPS - NES Speech Bubble Style
+   ========================================================== */
+
+[data-tooltip] {
+    position: relative;
+    cursor: help;
+}
+
+[data-tooltip]::before,
+[data-tooltip]::after {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s, transform 0.2s;
+    z-index: 1000;
+}
+
+[data-tooltip]::before {
+    content: attr(data-tooltip);
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%) translateY(8px);
+    padding: 8px 12px;
+    background: #0d1117;
+    border: 3px solid var(--neon-cyan);
+    color: #fff;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 9px;
+    line-height: 1.4;
+    white-space: nowrap;
+    box-shadow:
+        4px 4px 0 rgba(0, 255, 255, 0.3),
+        0 0 20px rgba(0, 255, 255, 0.2);
+}
+
+[data-tooltip]::after {
+    content: '';
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%) translateY(14px);
+    border: 8px solid transparent;
+    border-top-color: var(--neon-cyan);
+}
+
+[data-tooltip]:hover::before,
+[data-tooltip]:hover::after {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+}
+
+/* ==========================================================
+   MODAL
+   ========================================================== */
+
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(4px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s, visibility 0.3s;
+}
+
+.modal-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.modal-container {
+    background: var(--bg-card);
+    border: 4px solid var(--neon-cyan);
+    max-width: 500px;
+    width: 90%;
+    max-height: 80vh;
+    overflow-y: auto;
+    transform: scale(0.9) translateY(20px);
+    transition: transform 0.3s;
+    box-shadow:
+        8px 8px 0 rgba(0, 255, 255, 0.2),
+        0 0 60px rgba(0, 255, 255, 0.1);
+}
+
+.modal-overlay.active .modal-container {
+    transform: scale(1) translateY(0);
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 20px;
+    border-bottom: 2px solid var(--border-subtle);
+}
+
+.modal-title {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 12px;
+    color: var(--neon-cyan);
+}
+
+.modal-close {
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: 2px solid var(--border-subtle);
+    color: var(--text-muted);
+    cursor: pointer;
+    font-size: 16px;
+    transition: all 0.2s;
+}
+
+.modal-close:hover {
+    background: #ff4444;
+    border-color: #ff4444;
+    color: #fff;
+}
+
+.modal-body {
+    padding: 20px;
+    font-family: var(--font-body);
+    color: var(--text-secondary);
+    line-height: 1.6;
+}
+
+.modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    padding: 16px 20px;
+    border-top: 2px solid var(--border-subtle);
+}
+
+/* ==========================================================
+   DROPDOWN
+   ========================================================== */
+
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-trigger {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.dropdown-content {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    min-width: 180px;
+    background: var(--bg-card);
+    border: 3px solid var(--border-subtle);
+    box-shadow:
+        6px 6px 0 rgba(0, 0, 0, 0.4),
+        0 0 30px rgba(0, 255, 255, 0.1);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-8px);
+    transition: all 0.2s ease;
+    z-index: 100;
+}
+
+.dropdown:hover .dropdown-content,
+.dropdown.open .dropdown-content {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(4px);
+}
+
+.dropdown-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 16px;
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-family: var(--font-body);
+    font-size: 14px;
+    transition: background 0.2s;
+    border-bottom: 1px solid var(--border-subtle);
+}
+
+.dropdown-item:last-child {
+    border-bottom: none;
+}
+
+.dropdown-item:hover {
+    background: rgba(0, 255, 255, 0.1);
+    color: var(--neon-cyan);
+}
+
+/* ==========================================================
+   TOAST NOTIFICATIONS
+   ========================================================== */
+
+.toast-container {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    z-index: 10000;
+    pointer-events: none;
+}
+
+.toast {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 20px;
+    background: var(--bg-card);
+    border: 3px solid var(--border-subtle);
+    box-shadow:
+        4px 4px 0 rgba(0, 0, 0, 0.4),
+        0 0 20px rgba(0, 0, 0, 0.3);
+    font-family: var(--font-body);
+    font-size: 14px;
+    color: var(--text-bright);
+    pointer-events: auto;
+    animation: toast-slide-in 0.3s ease-out;
+    max-width: 350px;
+}
+
+.toast.toast-exit {
+    animation: toast-slide-out 0.3s ease-in forwards;
+}
+
+.toast-success {
+    border-color: #4ade80;
+}
+
+.toast-error {
+    border-color: #f87171;
+}
+
+.toast-warning {
+    border-color: #fbbf24;
+}
+
+.toast-info {
+    border-color: var(--neon-cyan);
+}
+
+.toast-icon {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+}
+
+.toast-success .toast-icon {
+    color: #4ade80;
+}
+
+.toast-error .toast-icon {
+    color: #f87171;
+}
+
+.toast-warning .toast-icon {
+    color: #fbbf24;
+}
+
+.toast-info .toast-icon {
+    color: var(--neon-cyan);
+}
+
+@keyframes toast-slide-in {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes toast-slide-out {
+    from {
+        transform: translateX(0);
+        opacity: 1;
+    }
+
+    to {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+}

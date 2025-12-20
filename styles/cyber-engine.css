@@ -1572,9 +1572,9 @@ a:hover {
     color: black;
     padding: 12px 20px;
     border-radius: 12px;
-    font-family: 'Outfit', sans-serif;
-    font-weight: 600;
-    font-size: 14px;
+    --font-display: 'Press Start 2P', cursive;
+    --font-body: 'Monocraft', monospace;
+    --font-ui: 'Monocraft', monospace;
     position: relative;
     box-shadow: 0 4px 0 rgba(0, 0, 0, 0.2);
 }
