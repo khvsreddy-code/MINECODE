@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MineCode - Dashboard</title>
+
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://unpkg.com/pixelarticons@1.8.1/css/pixelarticons.css" rel="stylesheet">
+    <link href="https://fonts.cdnfonts.com/css/monocraft" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles/cyber-engine.css">
+    <link rel="stylesheet" href="styles/hero-effects.css">
+    <link rel="stylesheet" href="styles/components.css">
+    <link rel="stylesheet" href="styles/pixel-icons.css">
+    <link rel="stylesheet" href="styles/gamification.css">
+
+    <!-- True Pixel Fonts from Google -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+
+    <!-- Anime.js for Creative Animations -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.2/anime.min.js"></script>
+
+    <!-- Ko-fi Support -->
+    <script type='text/javascript' src='https://storage.ko-fi.com/cdn/widget/Widget_2.js'></script>
+
+    <script>
+        // AUTH CHECK - Redirect to Landing if no user
+        (function () {
+            const saved = localStorage.getItem('minecode_save_v1');
+            if (!saved) {
+                window.location.href = 'index.html';
+            }
+        })();
+    </script>
+</head>
+
+<body>
+    <div id="app">
+
+        <!-- Animated Cyber Background -->
+        <div class="cyber-bg">
+            <canvas id="matrix-canvas"></canvas>
+            <div class="crt-overlay"></div> <!-- Vignette/Scanlines -->
+            <div class="grid-overlay"></div>
+            <div class="floating-particles"></div>
+        </div>
+
+        <!-- Top Navigation -->
+        <nav id="topnav" class="topnav">
+            <div class="nav-left">
+                <a href="#" class="nav-brand" data-route="home">
+                    <span class="brand-icon cyber-glow"><i data-lucide="zap"
+                            style="width:24px;height:24px;color:#ffc800;"></i></span>
+                    <span class="brand-text">MineCode</span>
+                </a>
+                <div class="nav-menu">
+                    <div class="nav-dropdown">
+                        <button class="nav-btn active">Learn ▾</button>
+                        <div class="dropdown-content">
+                            <a href="#" data-route="courses">All Courses</a>
+                            <a href="#" data-route="course-python">Python</a>
+                            <a href="#" data-route="course-html">HTML/CSS</a>
+                            <a href="#" data-route="course-js">JavaScript</a>
+                        </div>
+                    </div>
+                    <div class="nav-dropdown">
+                        <button class="nav-btn">Practice ▾</button>
+                        <div class="dropdown-content">
+                            <a href="#" data-route="practice">Challenge Packs</a>
+                            <a href="#" data-route="builds">Project Builds</a>
+                            <a href="#" data-route="practice">#30DaysOfCode</a>
+                        </div>
+                    </div>
+                    <button class="nav-btn" data-route="builds">Build</button>
+                    <button class="nav-btn" data-route="community">Community</button>
+                </div>
+            </div>
+            <div class="nav-right">
+                <button class="nav-icon" title="Search"><i data-lucide="search"
+                        style="width:20px;height:20px;"></i></button>
+                <button class="nav-icon notification-badge" title="Notifications"><i data-lucide="bell"
+                        style="width:20px;height:20px;"></i></button>
+                <div class="nav-avatar" id="nav-avatar" title="Profile">
+                    <i data-lucide="user" style="width:20px;height:20px;"></i>
+                </div>
+                <button class="btn-cyber-primary" id="join-club-btn">Join Club</button>
+            </div>
+        </nav>
+
+        <!-- Main Layout -->
+        <div id="main-layout" class="main-layout">
+
+            <main id="main-content" class="main-content">
+                <!-- Content injected by JS -->
+            </main>
+
+            <!-- Right Sidebar -->
+            <aside id="right-sidebar" class="right-sidebar">
+
+                <div class="profile-card cyber-card">
+                    <div class="profile-header">
+                        <div class="profile-avatar">
+                            <span id="user-avatar"><i data-lucide="user"
+                                    style="width:24px;height:24px;color:#22d3ee;"></i></span>
+                        </div>
+                        <div class="profile-info">
+                            <span class="profile-name" id="user-name">Guest</span>
+                            <span class="profile-level"
+                                style="color: var(--neon-cyan); font-family: var(--font-code);">LEVEL 1</span>
+                        </div>
+                    </div>
+                    <div class="profile-stats">
+                        <div class="stat-item">
+                            <span class="stat-icon glow-cyan"><i data-lucide="star"
+                                    style="width:16px;height:16px;"></i></span>
+                            <span class="stat-value" id="stat-xp">0</span>
+                            <span class="stat-label">XP</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-icon glow-magenta"><i data-lucide="trophy"
+                                    style="width:16px;height:16px;"></i></span>
+                            <span class="stat-value">Bronze</span>
+                            <span class="stat-label">RANK</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-icon glow-green"><i data-lucide="flame"
+                                    style="width:16px;height:16px;color:#f97316;"></i></span>
+                            <span class="stat-value" id="stat-streak">0</span>
+                            <span class="stat-label">STREAK</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-icon"><i data-lucide="medal" style="width:16px;height:16px;"></i></span>
+                            <span class="stat-value" id="stat-badges">0</span>
+                            <span class="stat-label">BADGES</span>
+                        </div>
+                    </div>
+                    <button class="btn-cyber-outline" data-route="profile">VIEW PROFILE</button>
+                </div>
+
+                <div class="sidebar-card cyber-card events-card">
+                    <h3 class="sidebar-title">UPCOMING EVENTS</h3>
+                    <div class="events-list" id="events-list">
+                        <div class="event-item">
+                            <div class="event-date">
+                                <span class="date-month">DEC</span>
+                                <span class="date-day">30</span>
+                            </div>
+                            <div class="event-info">
+                                <span class="event-name">End of Year Jam</span>
+                                <span class="event-time">2:00 PM EST</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </aside>
+
+        </div>
+
+        <!-- Ko-fi Button Bottom Right -->
+        <script>
+            kofiwidget2.init('Support me on Ko-fi', '#72a4f2', 'D1D81PRYTS');
+            kofiwidget2.draw();
+        </script>
+        <style>
+            .floating-chat-kofi-popup-iframe {
+                bottom: 20px !important;
+                right: 20px !important;
+            }
+        </style>
+
+        <!-- Views Container -->
+        <div id="courses-view" class="view hidden">
+            <div class="view-container">
+                <h1 class="view-title cyber-text" style="font-size: 24px;">COURSES CATALOG</h1>
+                <div class="courses-grid" id="all-courses-grid"></div>
+            </div>
+        </div>
+
+        <div id="course-view" class="view hidden">
+            <div class="course-layout" style="max-width: 1000px; margin: 0 auto;">
+                <div id="course-content"></div>
+                <div id="course-sidebar"></div>
+            </div>
+        </div>
+
+        <div id="lesson-view" class="view hidden">
+            <div class="workspace-layout">
+                <div class="workspace-left" id="lesson-instructions"></div>
+                <div class="workspace-right">
+                    <div class="editor-panel" id="code-editor"></div>
+                    <div class="terminal-panel" id="terminal"></div>
+                </div>
+            </div>
+            <div class="lesson-nav" id="lesson-nav"></div>
+        </div>
+
+        <div id="community-view" class="view hidden">
+            <div class="community-layout">
+                <div class="community-channels" id="channels-list"></div>
+                <div class="community-feed" id="posts-feed"></div>
+                <div class="community-aside" id="community-sidebar"></div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Supabase JS -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <!-- Scripts -->
+    <script src="scripts/effects/matrix-rain.js"></script>
+    <script src="scripts/effects/tilt-effect.js"></script>
+    <script src="scripts/effects/rain-effect.js"></script>
+    <script src="scripts/supabase-client.js"></script>
+    <script src="scripts/effects/reveal-text.js"></script>
+    <script src="scripts/modules/ui-utils.js"></script>
+    <script src="scripts/modules/auth.js"></script>
+    <script src="scripts/modules/components.js"></script>
+    <script src="scripts/core/nav.js"></script>
+    <script src="scripts/modules/topics.js"></script>
+    <script src="scripts/modules/challenges.js"></script>
+    <script src="scripts/modules/cyber-buttons.js"></script>
+    <script src="scripts/modules/gamification.js"></script>
+
+    <!-- Main App Logic -->
+    <script src="scripts/cyber-app.js"></script>
+
+
+    <!-- Initialize Lucide Icons on page load -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            if (window.lucide) {
+                window.lucide.createIcons();
+            }
+        });
+    </script>
+
+    <script src='https://storage.ko-fi.com/cdn/scripts/overlay-widget.js'></script>
+    <script>
+        kofiWidgetOverlay.draw('Support MineCode', {
+            'type': 'floating-chat',
+            'floating-chat.donateButton.text': 'Support',
+            'floating-chat.donateButton.background-color': '#00b9fe',
+            'floating-chat.donateButton.text-color': '#fff'
+        });
+    </script>
+</body>
+
+</html>

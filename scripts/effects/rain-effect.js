@@ -35,31 +35,32 @@ const RainEffect = {
     },
 
     resize() {
-        this.canvas.width = this.canvas.parentElement?.offsetWidth || window.innerWidth;
-        this.canvas.height = this.canvas.parentElement?.offsetHeight || window.innerHeight;
+        // This method is now largely handled by the resize listener in init
+        // but kept for consistency if other parts still call it.
+        this.width = this.canvas.parentElement?.offsetWidth || window.innerWidth;
+        this.height = this.canvas.parentElement?.offsetHeight || window.innerHeight;
+        this.canvas.width = this.width;
+        this.canvas.height = this.height;
     },
 
     createParticles() {
-        // Rain drops
-        const rainCount = Math.floor(this.canvas.width / 8);
         this.raindrops = [];
-        for (let i = 0; i < rainCount; i++) {
-            this.raindrops.push({
-                x: Math.random() * this.canvas.width,
-                y: Math.random() * this.canvas.height - this.canvas.height,
-                length: Math.random() * 20 + 10,
-                speed: Math.random() * 4 + 8,
-                opacity: Math.random() * 0.3 + 0.2
-            });
+        this.fireflies = [];
+        this.splashes = []; // NEW: Splashes array
+
+        this.particleCount = Math.floor(this.width / 10); // Balanced rain count
+        this.fireflyCount = 20;
+
+        // Rain drops
+        for (let i = 0; i < this.particleCount; i++) {
+            this.raindrops.push(this.createRaindrop());
         }
 
         // Fireflies
-        const fireflyCount = 15;
-        this.fireflies = [];
-        for (let i = 0; i < fireflyCount; i++) {
+        for (let i = 0; i < this.fireflyCount; i++) {
             this.fireflies.push({
-                x: Math.random() * this.canvas.width,
-                y: Math.random() * this.canvas.height,
+                x: Math.random() * this.width,
+                y: Math.random() * this.height,
                 radius: Math.random() * 2 + 1,
                 dx: (Math.random() - 0.5) * 0.5,
                 dy: (Math.random() - 0.5) * 0.5,
@@ -69,15 +70,59 @@ const RainEffect = {
         }
     },
 
+    createRaindrop() {
+        return {
+            x: Math.random() * this.width,
+            y: Math.random() * this.height - this.height,
+            length: Math.random() * 20 + 10,
+            speed: Math.random() * 10 + 15, // Fast speed
+            opacity: Math.random() * 0.3 + 0.1,
+            color: 'rgba(100, 240, 255, 0.3)' // Cyan tint
+        };
+    },
+
+    createSplash(x, y) {
+        const splashCount = Math.floor(Math.random() * 3) + 2;
+        for (let i = 0; i < splashCount; i++) {
+            this.splashes.push({
+                x: x,
+                y: y,
+                dx: (Math.random() - 0.5) * 4,
+                dy: (Math.random() * -3) - 1, // Upwards
+                life: 1.0,
+                decay: Math.random() * 0.05 + 0.05
+            });
+        }
+    },
+
     update() {
-        // Update rain
+        // Update Rain
         this.raindrops.forEach(drop => {
             drop.y += drop.speed;
+
+            // Check collision with bottom or random splash chance
             if (drop.y > this.canvas.height) {
+                // Splash at bottom
+                this.createSplash(drop.x, this.canvas.height);
+
+                // Reset drop
                 drop.y = -drop.length;
                 drop.x = Math.random() * this.canvas.width;
             }
         });
+
+        // Update Splashes
+        for (let i = this.splashes.length - 1; i >= 0; i--) {
+            let s = this.splashes[i];
+            s.x += s.dx;
+            s.y += s.dy;
+            s.dy += 0.2; // Gravity
+            s.life -= s.decay;
+
+            if (s.life <= 0) {
+                this.splashes.splice(i, 1);
+            }
+        }
 
         // Update fireflies
         this.fireflies.forEach(ff => {
@@ -100,15 +145,25 @@ const RainEffect = {
     draw() {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
-        // Draw rain
-        this.ctx.strokeStyle = 'rgba(150, 200, 255, 0.4)';
-        this.ctx.lineWidth = 1;
+        // Draw Rain
+        this.ctx.strokeStyle = 'rgba(164, 235, 255, 0.4)';
+        this.ctx.lineWidth = 1.5;
+        this.ctx.beginPath();
         this.raindrops.forEach(drop => {
-            this.ctx.globalAlpha = drop.opacity;
-            this.ctx.beginPath();
             this.ctx.moveTo(drop.x, drop.y);
             this.ctx.lineTo(drop.x, drop.y + drop.length);
-            this.ctx.stroke();
+        });
+        this.ctx.stroke();
+
+        // Draw Splashes
+        this.ctx.fillStyle = 'rgba(200, 250, 255, 0.6)';
+        this.splashes.forEach(s => {
+            if (s.life > 0) {
+                this.ctx.globalAlpha = s.life;
+                this.ctx.beginPath();
+                this.ctx.arc(s.x, s.y, 1.5, 0, Math.PI * 2);
+                this.ctx.fill();
+            }
         });
         this.ctx.globalAlpha = 1;
 

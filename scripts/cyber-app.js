@@ -9,7 +9,7 @@ const COURSES = [
     {
         id: 'python',
         title: 'PYTHON',
-        icon: '🐍',
+        icon: 'pixel-icon-script',
         desc: 'Learn programming fundamentals: syntax, variables, control flow, and loops.',
         lessons: 30,
         completed: 13,
@@ -21,7 +21,7 @@ const COURSES = [
     {
         id: 'intermediate-python',
         title: 'INTERMEDIATE PYTHON',
-        icon: '🐍',
+        icon: 'pixel-icon-script',
         desc: 'Begin learning interwoven Python with data structures.',
         lessons: 25,
         completed: 0,
@@ -33,7 +33,7 @@ const COURSES = [
     {
         id: 'numpy',
         title: 'NUMPY',
-        icon: '🔢',
+        icon: 'pixel-icon-chart-bar',
         desc: 'Learn the fundamentals of data manipulation using NumPy.',
         lessons: 15,
         completed: 0,
@@ -47,7 +47,7 @@ const COURSES = [
     {
         id: 'html',
         title: 'HTML',
-        icon: '🌐',
+        icon: 'pixel-icon-code',
         desc: 'Create your first website with HTML, the building blocks of the web.',
         lessons: 15,
         completed: 0,
@@ -59,7 +59,7 @@ const COURSES = [
     {
         id: 'css',
         title: 'CSS',
-        icon: '🎨',
+        icon: 'pixel-icon-paint-bucket',
         desc: 'Learn to use CSS selectors and properties to style your HTML pages.',
         lessons: 20,
         completed: 0,
@@ -71,7 +71,7 @@ const COURSES = [
     {
         id: 'js',
         title: 'JAVASCRIPT',
-        icon: '⚡',
+        icon: 'pixel-icon-zap',
         desc: 'Learn variables, loops, functions, and events to start building interactive apps.',
         lessons: 35,
         completed: 0,
@@ -85,7 +85,7 @@ const COURSES = [
     {
         id: 'react',
         title: 'REACT',
-        icon: '⚛️',
+        icon: 'pixel-icon-grid',
         desc: 'Build powerful user interfaces',
         lessons: 40,
         completed: 0,
@@ -96,7 +96,7 @@ const COURSES = [
     {
         id: 'sql',
         title: 'SQL',
-        icon: '💾',
+        icon: 'pixel-icon-database',
         desc: 'Manage and query databases',
         lessons: 25,
         completed: 0,
@@ -118,7 +118,7 @@ const COURSES = [
     {
         id: 'cpp',
         title: 'C++',
-        icon: '⚙️',
+        icon: 'pixel-icon-settings',
         desc: 'High-performance system programming',
         lessons: 50,
         completed: 0,
@@ -129,7 +129,7 @@ const COURSES = [
     {
         id: 'java',
         title: 'JAVA',
-        icon: '☕',
+        icon: 'pixel-icon-coffee',
         desc: 'Object-oriented programming mastery',
         lessons: 45,
         completed: 0,
@@ -140,7 +140,7 @@ const COURSES = [
     {
         id: 'git',
         title: 'GIT',
-        icon: '📦',
+        icon: 'pixel-icon-git-merge',
         desc: 'Version control for everyone',
         lessons: 10,
         completed: 0,
@@ -151,7 +151,7 @@ const COURSES = [
     {
         id: 'csharp',
         title: 'C#',
-        icon: '#️⃣',
+        icon: 'pixel-icon-grid',
         desc: 'Build Windows apps and games',
         lessons: 40,
         completed: 0,
@@ -162,7 +162,7 @@ const COURSES = [
     {
         id: 'go',
         title: 'GO',
-        icon: '🐹',
+        icon: 'pixel-icon-zap',
         desc: 'Scalable cloud software',
         lessons: 30,
         completed: 0,
@@ -173,7 +173,7 @@ const COURSES = [
     {
         id: 'rust',
         title: 'RUST',
-        icon: '🦀',
+        icon: 'pixel-icon-shield',
         desc: 'Safety and performance',
         lessons: 55,
         completed: 0,
@@ -184,7 +184,7 @@ const COURSES = [
     {
         id: 'ml',
         title: 'MACHINE LEARNING',
-        icon: '🧠',
+        icon: 'pixel-icon-human',
         desc: 'Learn the foundations of ML.',
         lessons: 45,
         completed: 0,
@@ -195,7 +195,7 @@ const COURSES = [
     {
         id: 'copilot',
         title: 'GITHUB COPILOT',
-        icon: '🤖',
+        icon: 'pixel-icon-android',
         desc: 'Learn to code with AI assistance.',
         lessons: 10,
         completed: 0,
@@ -328,9 +328,115 @@ const GameState = {
 document.addEventListener('DOMContentLoaded', () => {
     GameState.init(); // Load save data
     initNavigation();
-    // Start at Landing Page to simulate new user flow
-    navigateTo('landing');
+    if (window.UIComponents && window.UIComponents.initTooltips) {
+        window.UIComponents.initTooltips();
+    }
+
+    const path = window.location.pathname;
+
+    // Multi-page Routing Logic
+    if (path.includes('dashboard.html')) {
+        // App / Dashboard Logic
+        console.log(" [SYSTEM] Initializing Dashboard...");
+        renderHomeDashboard();
+
+        // Default to 'courses' or 'home' view if not specified
+        const urlParams = new URLSearchParams(window.location.search);
+        const view = urlParams.get('view');
+        if (view) {
+            navigateTo(view);
+        } else {
+            // Init defaults 
+            if (window.UIComponents) UIComponents.renderBreadcrumbs([{ label: 'Home', route: 'home' }]);
+        }
+    } else {
+        // Landing / Index Logic
+        console.log(" [SYSTEM] Initializing Landing Sequence...");
+        renderLandingPage();
+    }
 });
+
+// GLOBAL: Guest Login
+window.loginAsGuest = function () {
+    console.log(" [AUTH] Logging in as Guest...");
+    // Ensure default data is saved
+    if (!localStorage.getItem('minecode_save_v1')) {
+        GameState.save();
+    }
+    window.location.href = 'dashboard.html';
+};
+
+// GLOBAL: Navigation Handler
+window.navigateTo = function (route) {
+    console.log(` [NAV] Extracting to sector: ${route}`);
+
+    // Handle Page Redirection
+    if (route === 'landing' || route === 'logout') {
+        localStorage.removeItem('minecode_save_v1'); // Clear session on logout
+        window.location.href = 'index.html';
+        return;
+    }
+    if (route === 'signup') {
+        renderSignupPage(); // Render locally on index.html
+        return;
+    }
+    if (route === 'home' && !window.location.pathname.includes('dashboard.html')) {
+        window.location.href = 'dashboard.html';
+        return;
+    }
+
+    // Handle Internal Dashboard Routing (SPA-like)
+    // Hide all views
+    document.querySelectorAll('.view').forEach(el => el.classList.add('hidden'));
+    document.getElementById('main-content').innerHTML = ''; // Clear main content if needed
+
+    // Update URL without reload (for bookmarking)
+    const url = new URL(window.location);
+    url.searchParams.set('view', route);
+    window.history.pushState({}, '', url);
+
+    // Route Dispatch & Breadcrumbs
+    let breadcrumbs = [{ label: 'Home', route: 'home' }];
+
+    if (route.startsWith('course-')) {
+        // Course Detail
+        const courseId = route.replace('course-', '');
+        renderCourseView(courseId);
+        breadcrumbs.push({ label: 'Courses', route: 'courses' });
+        breadcrumbs.push({ label: courseId.toUpperCase(), route: route });
+    } else if (route === 'courses') {
+        renderCoursesCatalog();
+        breadcrumbs.push({ label: 'Catalog', route: 'courses' });
+    } else if (route === 'practice') {
+        // Simple Practice View
+        document.getElementById('main-content').innerHTML = `<h1>Practice Area (Work in Progress)</h1>`;
+        breadcrumbs.push({ label: 'Practice', route: 'practice' });
+    } else if (route === 'builds') {
+        // Builds View
+        document.getElementById('main-content').innerHTML = `<h1>Builds Gallery (Work in Progress)</h1>`;
+        breadcrumbs.push({ label: 'Builds', route: 'builds' });
+    } else if (route === 'community') {
+        renderCommunityHub();
+        breadcrumbs.push({ label: 'Community', route: 'community' });
+    } else if (route === 'profile') {
+        // Profile View
+        document.getElementById('main-content').innerHTML = `<h1>Profile (Work in Progress)</h1>`;
+        breadcrumbs.push({ label: 'Profile', route: 'profile' });
+    } else {
+        // Default: Home Dashboard
+        renderHomeDashboard();
+    }
+
+    // Render Breadcrumbs
+    if (window.UIComponents && window.UIComponents.renderBreadcrumbs) {
+        UIComponents.renderBreadcrumbs(breadcrumbs);
+    }
+
+    // Update Active Nav State
+    document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+    const activeBtn = document.querySelector(`[data-route="${route}"]`);
+    if (activeBtn) activeBtn.classList.add('active');
+};
 
 function initNavigation() {
     document.addEventListener('click', (e) => {
@@ -614,6 +720,24 @@ function renderSignupPage() {
                     Sign Up Free
                 </button>
 
+                <!-- Guest Access -->
+                <button onclick="loginAsGuest()" style="
+                    width: 100%;
+                    padding: 12px;
+                    margin-top: 12px;
+                    background: transparent;
+                    color: #8b949e;
+                    border: 2px dashed #30363d;
+                    border-radius: 8px;
+                    font-family: var(--font-body);
+                    font-size: 12px;
+                    cursor: pointer;
+                    transition: all 0.2s;
+                " onmouseover="this.style.borderColor='#8b949e'; this.style.color='white'" onmouseout="this.style.borderColor='#30363d'; this.style.color='#8b949e'">
+                    <i data-lucide="ghost" style="width: 14px; height: 14px; vertical-align: middle; margin-right: 6px; display: inline-block;"></i>
+                    Continue as Guest
+                </button>
+
                 <!-- Footer -->
                 <div style="text-align: center; margin-top: 20px; font-size: 14px; color: #6e7681;">
                     Already have an account? <a href="#" onclick="navigateTo('home')" style="color: #58a6ff; text-decoration: none; font-weight: 500;">Log in</a>
@@ -646,6 +770,9 @@ function renderHomeDashboard() {
         <div class="cyber-dashboard">
             <!-- MAIN CONTENT AREA -->
             <div class="dash-main">
+                <!-- BREADCRUMBS -->
+                <div id="dashboard-breadcrumbs" class="breadcrumbs" style="margin-bottom: 20px;"></div>
+
                 <!-- MASCOT TIP BAR -->
                 <div class="cyber-tip-bar">
                     <div class="tip-mascot"><i data-lucide="bot" style="width:28px;height:28px;color:#22d3ee;"></i></div>
@@ -653,7 +780,7 @@ function renderHomeDashboard() {
                         <span class="tip-badge">NEW</span>
                         <span>Intermediate Python is out now! Start your journey deeper into the code.</span>
                     </div>
-                    <button class="tip-dismiss">✕</button>
+                    <button class="tip-dismiss" data-tooltip="Dismiss Tip">✕</button>
                 </div>
 
                 <!-- HERO WELCOME BANNER -->
@@ -832,6 +959,14 @@ function renderHomeDashboard() {
         window.TiltEffect.init('.cyber-widget', { max: 2, scale: 1.01 });
     }
 
+    // Initialize Breadcrumbs
+    if (window.UIComponents) {
+        window.UIComponents.renderBreadcrumbs(
+            [{ label: 'Home', route: 'landing' }, { label: 'Dashboard', route: 'home' }],
+            'dashboard-breadcrumbs'
+        );
+    }
+
     // Initialize Lucide Icons
     if (window.lucide) {
         window.lucide.createIcons();
@@ -881,7 +1016,7 @@ function navigateTo(route) {
     } else if (route === 'courses') {
         document.getElementById('main-layout').style.display = 'grid';
         document.getElementById('courses-view').classList.remove('hidden');
-        renderAllCourses();
+        renderCoursesCatalog();
     } else if (route === 'lesson') {
         document.getElementById('lesson-view').classList.remove('hidden');
         renderLessonWorkspace();
@@ -910,12 +1045,12 @@ function navigateTo(route) {
 
 // CHALLENGE PACKS DATA
 const CHALLENGE_PACKS = [
-    { id: 'py-basics', title: 'Python Basics', icon: '🐍', color: '#3572A5', concepts: ['Variables', 'Print', 'Input'], difficulty: 'BEGINNER' },
-    { id: 'py-control', title: 'Control Flow', icon: '🔀', color: '#3572A5', concepts: ['If/Else', 'Loops', 'Break'], difficulty: 'BEGINNER' },
-    { id: 'py-functions', title: 'Functions', icon: '⚙️', color: '#3572A5', concepts: ['Def', 'Return', 'Parameters'], difficulty: 'INTERMEDIATE' },
-    { id: 'js-basics', title: 'JavaScript Basics', icon: '📦', color: '#f7df1e', concepts: ['Variables', 'Console', 'Types'], difficulty: 'BEGINNER' },
-    { id: 'js-dom', title: 'DOM Manipulation', icon: '🌐', color: '#f7df1e', concepts: ['Select', 'Events', 'Modify'], difficulty: 'INTERMEDIATE' },
-    { id: 'html-struct', title: 'HTML Structure', icon: '🏗️', color: '#e34c26', concepts: ['Tags', 'Attributes', 'Semantic'], difficulty: 'BEGINNER' },
+    { id: 'py-basics', title: 'Python Basics', icon: 'pixel-icon-script', color: '#3572A5', concepts: ['Variables', 'Print', 'Input'], difficulty: 'BEGINNER' },
+    { id: 'py-control', title: 'Control Flow', icon: 'pixel-icon-sliders', color: '#3572A5', concepts: ['If/Else', 'Loops', 'Break'], difficulty: 'BEGINNER' },
+    { id: 'py-functions', title: 'Functions', icon: 'pixel-icon-zap', color: '#3572A5', concepts: ['Def', 'Return', 'Parameters'], difficulty: 'INTERMEDIATE' },
+    { id: 'js-basics', title: 'JavaScript Basics', icon: 'pixel-icon-coffee', color: '#f7df1e', concepts: ['Variables', 'Console', 'Types'], difficulty: 'BEGINNER' },
+    { id: 'js-dom', title: 'DOM Manipulation', icon: 'pixel-icon-globe', color: '#f7df1e', concepts: ['Select', 'Events', 'Modify'], difficulty: 'INTERMEDIATE' },
+    { id: 'html-struct', title: 'HTML Structure', icon: 'pixel-icon-layout', color: '#e34c26', concepts: ['Tags', 'Attributes', 'Semantic'], difficulty: 'BEGINNER' },
 ];
 
 // PRACTICE PAGE
@@ -937,16 +1072,20 @@ function renderPracticePage() {
             </div>
 
             <div class="challenge-grid" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px;">
-                ${CHALLENGE_PACKS.map(pack => `
+                ${CHALLENGE_PACKS.map(pack => {
+        const iconHtml = pack.icon.startsWith('pixel-icon-')
+            ? `<img src="https://unpkg.com/pixelarticons@1.8.1/svg/${pack.icon.replace('pixel-icon-', '')}.svg" style="width: 40px; height: 40px; filter: brightness(0) invert(1);" alt="${pack.title}">`
+            : pack.icon;
+        return `
                     <div class="challenge-card" style="background: linear-gradient(135deg, ${pack.color}22, ${pack.color}11); border: 1px solid ${pack.color}44; border-radius: 16px; padding: 24px; cursor: pointer; transition: transform 0.2s, border-color 0.2s;">
-                        <div style="font-size: 40px; margin-bottom: 16px;">${pack.icon}</div>
+                        <div style="font-size: 40px; margin-bottom: 16px;">${iconHtml}</div>
                         <h3 style="font-size: 18px; font-weight: 700; margin-bottom: 8px;">${pack.title}</h3>
                         <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px;">
                             ${pack.concepts.map(c => `<span style="background: ${pack.color}33; color: ${pack.color}; padding: 4px 10px; border-radius: 20px; font-size: 11px;">${c}</span>`).join('')}
                         </div>
                         <span class="course-pill" style="background: var(--bg-deep);">${pack.difficulty}</span>
                     </div>
-                `).join('')}
+                `}).join('')}
             </div>
         </div>
     `;
@@ -1170,7 +1309,7 @@ function renderPost(post, prepend = false) {
 
 // RENDERERS
 function renderDashboard() {
-    renderAllCourses(); // Ensure catalog is ready
+    renderCoursesCatalog(); // Ensure catalog is ready
 
     // HERO CARD - Use Python Image
     const heroVisual = document.querySelector('.hero-card-visual');
@@ -1228,7 +1367,7 @@ function renderDashboard() {
     }
 }
 
-function renderAllCourses() {
+function renderCoursesCatalog() {
     const grid = document.getElementById('all-courses-grid');
     if (!grid) return;
 
@@ -1255,9 +1394,15 @@ function renderAllCourses() {
             ? `background-image: url('${c.image}'); background-size: cover; background-position: center;`
             : `background: ${c.gradient}; display: flex; justify-content: center; align-items: center;`;
 
-        const contentOverlay = c.image
-            ? ''
-            : `<div style="font-size: 64px; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.3));">${c.icon}</div>`;
+        let contentOverlay = '';
+        if (!c.image) {
+            if (c.icon && c.icon.startsWith('pixel-icon-')) {
+                const iconName = c.icon.replace('pixel-icon-', '');
+                contentOverlay = `<img src="https://unpkg.com/pixelarticons@1.8.1/svg/${iconName}.svg" style="width: 64px; height: 64px; filter: brightness(0) invert(1);" alt="${c.title}">`;
+            } else {
+                contentOverlay = `<div style="font-size: 64px; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.3));">${c.icon}</div>`;
+            }
+        }
 
         return `
         <div class="course-card cyber-card stagger-item" data-route="course-${c.id}" onclick="navigateTo('course-${c.id}')" style="animation-delay: ${i * 0.1}s">

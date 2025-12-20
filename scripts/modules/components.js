@@ -106,21 +106,74 @@ const UIComponents = {
     },
 
     // ==========================================================
+    // TOOLTIPS
+    // ==========================================================
+
+    initTooltips() {
+        // Create tooltip element if not exists
+        if (!document.getElementById('cyber-tooltip')) {
+            const tooltip = document.createElement('div');
+            tooltip.id = 'cyber-tooltip';
+            tooltip.className = 'cyber-tooltip';
+            document.body.appendChild(tooltip);
+        }
+
+        document.addEventListener('mouseover', (e) => {
+            const target = e.target.closest('[data-tooltip]');
+            if (target) {
+                this.showTooltip(target, target.dataset.tooltip);
+            }
+        });
+
+        document.addEventListener('mouseout', (e) => {
+            const target = e.target.closest('[data-tooltip]');
+            if (target) {
+                this.hideTooltip();
+            }
+        });
+    },
+
+    showTooltip(element, text) {
+        const tooltip = document.getElementById('cyber-tooltip');
+        tooltip.textContent = text;
+        tooltip.classList.add('visible');
+
+        const rect = element.getBoundingClientRect();
+        const tooltipRect = tooltip.getBoundingClientRect();
+
+        let top = rect.top - tooltipRect.height - 8;
+        let left = rect.left + (rect.width / 2) - (tooltipRect.width / 2);
+
+        // Boundary checks
+        if (top < 0) top = rect.bottom + 8;
+        if (left < 0) left = 8;
+        if (left + tooltipRect.width > window.innerWidth) left = window.innerWidth - tooltipRect.width - 8;
+
+        tooltip.style.top = `${top}px`;
+        tooltip.style.left = `${left}px`;
+    },
+
+    hideTooltip() {
+        const tooltip = document.getElementById('cyber-tooltip');
+        tooltip.classList.remove('visible');
+    },
+
+    // ==========================================================
     // BREADCRUMBS
     // ==========================================================
 
-    renderBreadcrumbs(items, containerId = 'breadcrumbs') {
+    renderBreadcrumbs(items, containerId = 'dashboard-breadcrumbs') {
         const container = document.getElementById(containerId);
         if (!container) return;
 
         container.innerHTML = items.map((item, i) => {
             const isLast = i === items.length - 1;
             if (isLast) {
-                return `<span class="current">${item.label}</span>`;
+                return `<span class="current" style="font-family: var(--font-code); color: var(--neon-cyan);">${item.label}</span>`;
             }
             return `
-                <a href="#" data-route="${item.route}">${item.label}</a>
-                <span class="separator">›</span>
+                <a href="#" data-route="${item.route}" style="font-family: var(--font-code); color: var(--text-secondary);">${item.label}</a>
+                <span class="separator" style="margin: 0 8px; color: var(--text-muted);">/</span>
             `;
         }).join('');
     }

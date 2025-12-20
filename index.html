@@ -14,11 +14,6 @@
     <link rel="stylesheet" href="styles/hero-effects.css">
     <link rel="stylesheet" href="styles/components.css">
     <link rel="stylesheet" href="styles/pixel-icons.css">
-    <link rel="stylesheet" href="styles/gamification.css">
-    <link rel="stylesheet" href="styles/hero-effects.css">
-    <link rel="stylesheet" href="styles/pixel-icons.css">
-    <link rel="stylesheet" href="styles/components.css">
-
 
     <!-- True Pixel Fonts from Google -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -30,8 +25,18 @@
     <!-- Anime.js for Creative Animations -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.2/anime.min.js"></script>
 
-    <!-- Lucide Icons - Clean, aesthetic SVG icons -->
-    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Ko-fi Support -->
+    <script type='text/javascript' src='https://storage.ko-fi.com/cdn/widget/Widget_2.js'></script>
+
+    <script>
+        // AUTH CHECK - Redirect to Dashboard if user exists
+        (function () {
+            const saved = localStorage.getItem('minecode_save_v1');
+            if (saved) {
+                window.location.href = 'dashboard.html';
+            }
+        })();
+    </script>
 </head>
 
 <body>
@@ -45,45 +50,17 @@
             <div class="floating-particles"></div>
         </div>
 
-        <!-- Top Navigation -->
+        <!-- Top Navigation (Simplified for Landing) -->
         <nav id="topnav" class="topnav">
             <div class="nav-left">
-                <a href="#" class="nav-brand" data-route="home">
+                <a href="#" class="nav-brand" data-route="landing">
                     <span class="brand-icon cyber-glow"><i data-lucide="zap"
                             style="width:24px;height:24px;color:#ffc800;"></i></span>
                     <span class="brand-text">MineCode</span>
                 </a>
-                <div class="nav-menu">
-                    <div class="nav-dropdown">
-                        <button class="nav-btn active">Learn ▾</button>
-                        <div class="dropdown-content">
-                            <a href="#" data-route="courses">All Courses</a>
-                            <a href="#" data-route="course-python">Python</a>
-                            <a href="#" data-route="course-html">HTML/CSS</a>
-                            <a href="#" data-route="course-js">JavaScript</a>
-                        </div>
-                    </div>
-                    <div class="nav-dropdown">
-                        <button class="nav-btn">Practice ▾</button>
-                        <div class="dropdown-content">
-                            <a href="#" data-route="practice">Challenge Packs</a>
-                            <a href="#" data-route="builds">Project Builds</a>
-                            <a href="#" data-route="practice">#30DaysOfCode</a>
-                        </div>
-                    </div>
-                    <button class="nav-btn" data-route="builds">Build</button>
-                    <button class="nav-btn" data-route="community">Community</button>
-                </div>
             </div>
             <div class="nav-right">
-                <button class="nav-icon" title="Search"><i data-lucide="search"
-                        style="width:20px;height:20px;"></i></button>
-                <button class="nav-icon notification-badge" title="Notifications"><i data-lucide="bell"
-                        style="width:20px;height:20px;"></i></button>
-                <div class="nav-avatar" id="nav-avatar" title="Profile">
-                    <i data-lucide="user" style="width:20px;height:20px;"></i>
-                </div>
-                <button class="btn-cyber-primary" id="join-club-btn">Join Club</button>
+                <button class="btn-cyber-primary" onclick="window.location.href='dashboard.html'">Login</button>
             </div>
         </nav>
 
@@ -91,226 +68,31 @@
         <div id="main-layout" class="main-layout">
 
             <main id="main-content" class="main-content">
-
-                <!-- Welcome Section -->
-                <section class="welcome-section animate-in">
-                    <div class="welcome-avatar">
-                        <div class="pixel-robot"><i data-lucide="bot" style="width:48px;height:48px;color:#22d3ee;"></i>
-                        </div>
-                    </div>
-                    <div class="welcome-bubble">
-                        <span class="typing-effect">Welcome back, Coder! Let's hack the future.</span>
-                    </div>
-                </section>
-
-                <!-- Jump Back In (Hero) -->
-                <section class="content-section">
-                    <div class="section-header">
-                        <h2 class="section-title"> > JUMP BACK IN</h2>
-                    </div>
-                    <div class="hero-card cyber-card" id="hero-course-card">
-                        <div class="hero-card-visual">
-                            <div class="neon-city"></div>
-                            <div class="hero-progress-bar">
-                                <div class="progress-track">
-                                    <div class="progress-fill" id="hero-progress" style="width: 44%"></div>
-                                </div>
-                                <span class="progress-text">44%</span>
-                            </div>
-                        </div>
-                        <div class="hero-card-info">
-                            <span class="card-badge">PYTHON COURSE</span>
-                            <h3 class="card-title">PYTHON FUNDAMENTALS</h3>
-                            <p class="card-subtitle">Next: Variables & Data Types</p>
-                        </div>
-                        <div class="hero-card-actions">
-                            <button class="btn-cyber-primary" data-route="lesson">
-                                CONTINUE LEARNING
-                            </button>
-                            <a href="#" class="btn-cyber-link" data-route="course-python">VIEW COURSE</a>
-                        </div>
-                    </div>
-                </section>
-
-                <!-- Continue Progress -->
-                <section class="content-section">
-                    <h2 class="section-title"> > CONTINUE PROGRESS</h2>
-                    <div class="course-cards-row" id="progress-cards">
-                        <!-- JS Rendered -->
-                    </div>
-                </section>
-
-                <!-- Explore Grid -->
-                <section class="content-section">
-                    <h2 class="section-title"> > EXPLORE MORE</h2>
-                    <div class="explore-grid">
-                        <div class="explore-card cyber-card" data-route="challenges">
-                            <div class="explore-icon"><i data-lucide="target"
-                                    style="width:28px;height:28px;color:#22d3ee;"></i></div>
-                            <div class="explore-info">
-                                <h4>CHALLENGE PACKS</h4>
-                                <p>Bite-sized coding puzzles.</p>
-                            </div>
-                        </div>
-                        <div class="explore-card cyber-card" data-route="projects">
-                            <div class="explore-icon"><i data-lucide="rocket"
-                                    style="width:28px;height:28px;color:#a855f7;"></i></div>
-                            <div class="explore-info">
-                                <h4>PROJECT TUTORIALS</h4>
-                                <p>Build real apps step-by-step.</p>
-                            </div>
-                        </div>
-                        <div class="explore-card cyber-card" data-route="30days">
-                            <div class="explore-icon"><i data-lucide="flame"
-                                    style="width:28px;height:28px;color:#f97316;"></i></div>
-                            <div class="explore-info">
-                                <h4>#30DaysOfCode</h4>
-                                <p>Daily coding streak challenge.</p>
-                            </div>
-                        </div>
-                        <div class="explore-card cyber-card" data-route="builds">
-                            <div class="explore-icon"><i data-lucide="wrench"
-                                    style="width:28px;height:28px;color:#4ade80;"></i></div>
-                            <div class="explore-info">
-                                <h4>BUILDS</h4>
-                                <p>Share your code snippets.</p>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-
-                <!-- Tutorials -->
-                <section class="content-section">
-                    <div class="section-header">
-                        <h2 class="section-title"> > NEW TUTORIALS</h2>
-                        <a href="#" class="section-link">SEE ALL -></a>
-                    </div>
-                    <div class="tutorial-grid" id="tutorials-grid">
-                        <!-- JS Rendered -->
-                    </div>
-                </section>
-
+                <!-- Landing Page Content Injected by JS -->
             </main>
 
-            <!-- Right Sidebar -->
-            <aside id="right-sidebar" class="right-sidebar">
-
-                <div class="profile-card cyber-card">
-                    <div class="profile-header">
-                        <div class="profile-avatar">
-                            <span id="user-avatar"><i data-lucide="user"
-                                    style="width:24px;height:24px;color:#22d3ee;"></i></span>
-                        </div>
-                        <div class="profile-info">
-                            <span class="profile-name" id="user-name">Guest</span>
-                            <span class="profile-level"
-                                style="color: var(--neon-cyan); font-family: var(--font-code);">LEVEL 1</span>
-                        </div>
-                    </div>
-                    <div class="profile-stats">
-                        <div class="stat-item">
-                            <span class="stat-icon glow-cyan"><i data-lucide="star"
-                                    style="width:16px;height:16px;"></i></span>
-                            <span class="stat-value" id="stat-xp">0</span>
-                            <span class="stat-label">XP</span>
-                        </div>
-                        <div class="stat-item">
-                            <span class="stat-icon glow-magenta"><i data-lucide="trophy"
-                                    style="width:16px;height:16px;"></i></span>
-                            <span class="stat-value">Bronze</span>
-                            <span class="stat-label">RANK</span>
-                        </div>
-                        <div class="stat-item">
-                            <span class="stat-icon glow-green"><i data-lucide="flame"
-                                    style="width:16px;height:16px;color:#f97316;"></i></span>
-                            <span class="stat-value" id="stat-streak">0</span>
-                            <span class="stat-label">STREAK</span>
-                        </div>
-                        <div class="stat-item">
-                            <span class="stat-icon"><i data-lucide="medal" style="width:16px;height:16px;"></i></span>
-                            <span class="stat-value" id="stat-badges">0</span>
-                            <span class="stat-label">BADGES</span>
-                        </div>
-                    </div>
-                    <button class="btn-cyber-outline" data-route="profile">VIEW PROFILE</button>
-                </div>
-
-                <div class="sidebar-card cyber-card events-card">
-                    <h3 class="sidebar-title">UPCOMING EVENTS</h3>
-                    <div class="events-list" id="events-list">
-                        <div class="event-item">
-                            <div class="event-date">
-                                <span class="date-month">DEC</span>
-                                <span class="date-day">30</span>
-                            </div>
-                            <div class="event-info">
-                                <span class="event-name">End of Year Jam</span>
-                                <span class="event-time">2:00 PM EST</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-            </aside>
-
-        </div>
-
-        <!-- Views Container -->
-        <div id="courses-view" class="view hidden">
-            <div class="view-container">
-                <h1 class="view-title cyber-text" style="font-size: 24px;">COURSES CATALOG</h1>
-                <div class="courses-grid" id="all-courses-grid"></div>
-            </div>
-        </div>
-
-        <div id="course-view" class="view hidden">
-            <div class="course-layout" style="max-width: 1000px; margin: 0 auto;">
-                <div id="course-content"></div>
-                <div id="course-sidebar"></div>
-            </div>
-        </div>
-
-        <div id="lesson-view" class="view hidden">
-            <div class="workspace-layout">
-                <div class="workspace-left" id="lesson-instructions"></div>
-                <div class="workspace-right">
-                    <div class="editor-panel" id="code-editor"></div>
-                    <div class="terminal-panel" id="terminal"></div>
-                </div>
-            </div>
-            <div class="lesson-nav" id="lesson-nav"></div>
-        </div>
-
-        <div id="community-view" class="view hidden">
-            <div class="community-layout">
-                <div class="community-channels" id="channels-list"></div>
-                <div class="community-feed" id="posts-feed"></div>
-                <div class="community-aside" id="community-sidebar"></div>
-            </div>
         </div>
 
     </div>
 
-    <!-- Supabase JS -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <!-- Ko-fi Button Bottom Right -->
+    <script>
+        kofiwidget2.init('Support me on Ko-fi', '#72a4f2', 'D1D81PRYTS');
+        kofiwidget2.draw();
+    </script>
 
     <!-- Scripts -->
     <script src="scripts/effects/matrix-rain.js"></script>
     <script src="scripts/effects/tilt-effect.js"></script>
     <script src="scripts/effects/rain-effect.js"></script>
-    <script src="scripts/supabase-client.js"></script>
+
+    <script src="scripts/effects/reveal-text.js"></script>
     <script src="scripts/modules/ui-utils.js"></script>
-    <script src="scripts/modules/auth.js"></script>
     <script src="scripts/modules/components.js"></script>
-    <script src="scripts/core/nav.js"></script>
-    <script src="scripts/modules/auth.js"></script>
-    <script src="scripts/modules/topics.js"></script>
-    <script src="scripts/modules/challenges.js"></script>
-    <script src="scripts/modules/components.js"></script>
-    <script src="scripts/effects/rain-effect.js"></script>
-    <script src="scripts/cyber-app.js"></script>
     <script src="scripts/modules/cyber-buttons.js"></script>
-    <script src="scripts/modules/gamification.js"></script>
+
+    <!-- Main App Logic -->
+    <script src="scripts/cyber-app.js"></script>
 
 
     <!-- Initialize Lucide Icons on page load -->

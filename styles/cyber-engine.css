@@ -67,13 +67,15 @@
     --border-card: rgba(255, 255, 255, 0.08);
 
     /* Typography - CUSTOM MINECRAFT OVERHAUL */
-    --font-pixel: 'Minecraft Bold', 'Press Start 2P', cursive;
+    --font-pixel: 'Press Start 2P', cursive;
     /* Headings */
-    --font-display: 'Minecraft Bold', 'Press Start 2P', cursive;
+    --font-display: 'Press Start 2P', cursive;
     /* Main Display */
-    --font-body: 'Inter', 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
-    /* BODY: Clean sans-serif for readability (Codedex-style) */
-    --font-code: 'Minecraft', 'VT323', monospace;
+    --font-body: 'Monocraft', monospace;
+    /* BODY: Minecraft Font ONLY */
+    --font-ui: 'Monocraft', monospace;
+    /* UI Elements */
+    --font-code: 'Monocraft', monospace;
 
     /* Spacing */
     --space-xs: 4px;
@@ -501,24 +503,26 @@ a:hover {
 }
 
 /* === TOP NAVIGATION === */
+/* === TOP NAVIGATION - CYBER COZY UPDATE === */
 .topnav {
     position: fixed;
     top: 0;
     left: 0;
     right: 0;
-    height: 64px;
-    height: 64px;
-    background: rgba(1, 4, 9, 0.7);
-    /* More Transparent */
-    backdrop-filter: blur(20px);
-    /* Heavy Blur */
-    -webkit-backdrop-filter: blur(20px);
-    border-bottom: 1px solid var(--border-subtle);
+    height: 72px;
+    background: rgba(8, 12, 22, 0.6);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 2px solid rgba(34, 211, 238, 0.15);
+    /* Subtle cyan border */
     display: flex;
     align-items: center;
     justify-content: space-between;
     padding: 0 32px;
     z-index: 1000;
+    box-shadow:
+        0 4px 30px rgba(0, 0, 0, 0.4),
+        0 1px 0 rgba(255, 255, 255, 0.05) inset;
 }
 
 .nav-left {
