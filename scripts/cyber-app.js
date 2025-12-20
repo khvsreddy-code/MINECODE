@@ -792,6 +792,10 @@ function renderSignupPage() {
 // HOME DASHBOARD (Logged In) - CYBER FUTURISTIC CODEDEX STYLE
 function renderHomeDashboard() {
     document.querySelector('.right-sidebar').style.display = 'none';
+    const mainLayout = document.getElementById('main-layout');
+    if (mainLayout) {
+        mainLayout.style.gridTemplateColumns = '1fr'; // Fix empty right space
+    }
 
     // ASSETS
     const bannerArt = "./assets/pixel_art/cyber_cozy_lofi_lounge_panoramic.png";
@@ -826,8 +830,9 @@ function renderHomeDashboard() {
                     
                     <div class="hero-overlay"></div>
                     <div class="hero-content">
-                        <h1 class="cyber-title cyber-glitch-text" data-text="Start Your Coding Adventure">Start Your Coding Adventure</h1>
-                        <p class="cyber-subtitle">Your coding journey awaits. Choose your path and start building.</p>
+                        <!-- CHANGED: Use hero-title and removed glitch effect for clarity -->
+                        <h1 class="hero-title">Start Your Coding Adventure</h1>
+                        <p class="cyber-subtitle" style="font-size: 18px; max-width: 600px; margin: 0 auto 32px auto; color: var(--text-secondary);">Your coding journey awaits. Choose your path and start building.</p>
                         <div class="hero-actions">
                             <button class="nes-btn nes-btn-primary" onclick="navigateTo('courses')">
                                 <i data-lucide="rocket" style="width:18px;height:18px;"></i> Start Learning
@@ -837,33 +842,33 @@ function renderHomeDashboard() {
                             </button>
                         </div>
                     </div>
-                    <div class="hero-decor"></div>
                 </div>
 
                 <!-- EXPLORE SECTION -->
                 <div class="section-header">
                     <h2 class="section-title"><span class="title-accent">//</span> EXPLORE</h2>
                 </div>
-                <div class="cyber-explore-grid">
-                    <div class="cyber-cozy-card" onclick="navigateTo('practice')" style="--card-accent: #00f5ff;">
+                <!-- CHANGED: Use section-grid-4 for responsive full-width layout -->
+                <div class="section-grid-4">
+                    <div class="cyber-cozy-card" onclick="navigateTo('practice')" style="--card-accent: #00f5ff; width: 100%;">
                         <div class="card-icon"><i data-lucide="zap" style="width:32px;height:32px;"></i></div>
                         <div class="card-label">PRACTICE</div>
                         <h3>Challenge Packs</h3>
                         <p>Sharpen your skills with coding challenges</p>
                     </div>
-                    <div class="cyber-cozy-card" onclick="navigateTo('builds')" style="--card-accent: #a855f7;">
+                    <div class="cyber-cozy-card" onclick="navigateTo('builds')" style="--card-accent: #a855f7; width: 100%;">
                         <div class="card-icon"><i data-lucide="wrench" style="width:32px;height:32px;"></i></div>
                         <div class="card-label">BUILD</div>
                         <h3>Project Tutorials</h3>
                         <p>Create real-world applications step by step</p>
                     </div>
-                    <div class="cyber-cozy-card" onclick="navigateTo('community')" style="--card-accent: #4ade80;">
+                    <div class="cyber-cozy-card" onclick="navigateTo('community')" style="--card-accent: #4ade80; width: 100%;">
                         <div class="card-icon"><i data-lucide="moon" style="width:32px;height:32px;"></i></div>
                         <div class="card-label">COMMIT</div>
                         <h3>#30NitesOfCode</h3>
                         <p>Join the coding streak challenge</p>
                     </div>
-                    <div class="cyber-cozy-card" onclick="navigateTo('community')" style="--card-accent: #ffc800;">
+                    <div class="cyber-cozy-card" onclick="navigateTo('community')" style="--card-accent: #ffc800; width: 100%;">
                         <div class="card-icon"><i data-lucide="globe" style="width:32px;height:32px;"></i></div>
                         <div class="card-label">COMMUNITY</div>
                         <h3>Builds Gallery</h3>
