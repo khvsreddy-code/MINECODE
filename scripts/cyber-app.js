@@ -834,10 +834,10 @@ function renderHomeDashboard() {
                         <h1 class="hero-title">Start Your Coding Adventure</h1>
                         <p class="cyber-subtitle" style="font-size: 18px; max-width: 600px; margin: 0 auto 32px auto; color: var(--text-secondary);">Your coding journey awaits. Choose your path and start building.</p>
                         <div class="hero-actions">
-                            <button class="nes-btn nes-btn-primary" onclick="navigateTo('courses')">
+                            <button class="btn-cyber-primary" onclick="navigateTo('courses')">
                                 <i data-lucide="rocket" style="width:18px;height:18px;"></i> Start Learning
                             </button>
-                            <button class="nes-btn" onclick="navigateTo('practice')">
+                            <button class="btn-cyber-outline" onclick="navigateTo('practice')">
                                 <i data-lucide="swords" style="width:18px;height:18px;"></i> Practice Now
                             </button>
                         </div>
@@ -1240,90 +1240,7 @@ function renderBuildsPage() {
     document.getElementById('main-content').innerHTML = html;
 }
 
-// PROFILE PAGE
-function renderProfilePage() {
-    const user = GameState.data.user;
-    const nextLevelXP = user.level * 1000;
-    const progressPercent = Math.min(100, Math.floor((user.xp / nextLevelXP) * 100));
 
-    // Mock Badges Data
-    const badges = [
-        { id: 'b1', icon: 'pixel-icon-zap', title: 'First Code', unlocked: true },
-        { id: 'b2', icon: 'pixel-icon-fire', title: 'On Fire', unlocked: user.streak > 2 },
-        { id: 'b3', icon: 'pixel-icon-trophy', title: 'Champion', unlocked: user.level >= 5 },
-        { id: 'b4', icon: 'pixel-icon-heart', title: 'Community', unlocked: false },
-        { id: 'b5', icon: 'pixel-icon-script', title: 'Pythonista', unlocked: true },
-        { id: 'b6', icon: 'pixel-icon-device-laptop', title: 'Builder', unlocked: false }
-    ];
-
-    const html = `
-        <div class="profile-container">
-            <div class="profile-header-large cyber-card">
-                <div class="profile-avatar-large">
-                    <img src="./assets/avatars/avatar-1.png" style="width: 80%; opacity: 0.8;" onerror="this.src=''; this.style.display='none'">
-                    <i data-lucide="user" style="width: 48px; height: 48px; color: var(--neon-cyan); display: ${user.avatar ? 'none' : 'block'};"></i>
-                </div>
-                <div class="profile-info-large">
-                    <h1>${user.name}</h1>
-                    <span class="profile-role">${user.title}</span>
-                    <div class="level-progress-large">
-                        <div style="display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 4px; color: var(--text-secondary);">
-                            <span>LVL ${user.level}</span>
-                            <span>${user.xp} / ${nextLevelXP} XP</span>
-                        </div>
-                        <div class="progress-bar-bg">
-                            <div class="progress-fill" style="width: ${progressPercent}%"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <h2 class="section-title">BADGES</h2>
-            <div class="badge-grid">
-                ${badges.map(b => {
-        const iconHtml = b.icon.startsWith('pixel-icon-')
-            ? `<img src="https://unpkg.com/pixelarticons@1.8.1/svg/${b.icon.replace('pixel-icon-', '')}.svg" style="width: 32px; height: 32px; filter: brightness(0) invert(1);" alt="${b.title}">`
-            : `<i data-lucide="${b.icon}" style="width: 32px; height: 32px;"></i>`;
-
-        return `
-                    <div class="badge-item ${b.unlocked ? '' : 'locked'}">
-                        <div class="badge-icon" style="color: ${b.unlocked ? 'var(--neon-gold)' : 'var(--text-muted)'}">
-                           ${iconHtml}
-                        </div>
-                        <span style="font-size: 12px; font-weight: 600; color: ${b.unlocked ? 'white' : 'var(--text-muted)'}">${b.title}</span>
-                    </div>
-                `}).join('')}
-            </div>
-
-            <div style="margin-top: 48px; display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
-                 <div class="cyber-card" style="padding: 24px;">
-                    <h3>STATS</h3>
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 16px;">
-                        <div>
-                            <div style="color: var(--text-secondary); font-size: 12px;">LESSONS</div>
-                            <div style="font-size: 24px; color: var(--text-bright);">13</div>
-                        </div>
-                        <div>
-                            <div style="color: var(--text-secondary); font-size: 12px;">STREAK</div>
-                            <div style="font-size: 24px; color: var(--neon-orange);">${user.streak} 🔥</div>
-                        </div>
-                    </div>
-                 </div>
-                 <div class="cyber-card" style="padding: 24px;">
-                    <h3>ACTIVITY</h3>
-                    <ul style="list-style: none; padding: 0; margin-top: 16px; font-size: 13px; color: var(--text-secondary);">
-                        <li style="margin-bottom: 8px;">Completed <strong>Python Basics</strong> lesson.</li>
-                        <li style="margin-bottom: 8px;">Earned <strong>First Code</strong> badge.</li>
-                        <li>Joined <strong>MineCode</strong>.</li>
-                    </ul>
-                 </div>
-            </div>
-        </div>
-    `;
-
-    document.getElementById('main-content').innerHTML = html;
-    if (window.lucide) window.lucide.createIcons();
-}
 
 // COMMUNITY PAGE (3-Column Layout)
 async function renderCommunityPage() {

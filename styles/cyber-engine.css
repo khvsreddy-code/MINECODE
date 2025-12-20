@@ -3835,15 +3835,37 @@ html {
     border-left: 2px solid var(--neon-cyan);
 }
 
-/* Club Badge */
-.club-badge {
-    background: linear-gradient(135deg, #FFD700, #FFA500);
-    color: black;
-    font-size: 9px;
-    font-weight: 800;
-    padding: 2px 6px;
-    border-radius: 4px;
-    margin-left: auto;
-    font-family: 'Storeop', sans-serif;
-    box-shadow: 0 2px 5px rgba(255, 215, 0, 0.3);
+/* 4. HERO BUTTON POLISH (Glow Effect) */
+.btn-cyber-primary {
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    box-shadow: 0 0 15px rgba(34, 211, 238, 0.4);
+}
+
+.btn-cyber-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0 25px rgba(34, 211, 238, 0.7);
+}
+
+.btn-cyber-primary::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+    transform: rotate(45deg);
+    animation: buttonShine 3s infinite;
+}
+
+@keyframes buttonShine {
+    0% {
+        transform: translateX(-100%) rotate(45deg);
+    }
+
+    100% {
+        transform: translateX(100%) rotate(45deg);
+    }
 }

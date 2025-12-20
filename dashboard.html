@@ -77,8 +77,7 @@
                                             style="filter: invert(1);"> Python</a>
                                     <a href="#" class="mega-link"><img
                                             src="https://unpkg.com/pixelarticons@1.8.1/svg/chart-bar.svg" width="16"
-                                            style="filter: invert(1);"> Intermediate Python <span
-                                            class="club-badge">CLUB</span></a>
+                                            style="filter: invert(1);"> Intermediate Python</a>
                                     <a href="#" class="mega-link"><img
                                             src="https://unpkg.com/pixelarticons@1.8.1/svg/grid.svg" width="16"
                                             style="filter: invert(1);"> NumPy</a>
@@ -87,8 +86,7 @@
                                             style="filter: invert(1);"> SQL</a>
                                     <a href="#" class="mega-link featured"><img
                                             src="https://unpkg.com/pixelarticons@1.8.1/svg/brain.svg" width="16"
-                                            style="filter: invert(1);"> Machine Learning <span
-                                            class="club-badge">CLUB</span></a>
+                                            style="filter: invert(1);"> Machine Learning</a>
                                 </div>
 
                                 <!-- Column 2: Web Development -->
@@ -108,7 +106,7 @@
                                             style="filter: invert(1);"> React</a>
                                     <a href="#" class="mega-link"><img
                                             src="https://unpkg.com/pixelarticons@1.8.1/svg/server.svg" width="16"
-                                            style="filter: invert(1);"> Node.js <span class="club-badge">CLUB</span></a>
+                                            style="filter: invert(1);"> Node.js</a>
                                 </div>
 
                                 <!-- Column 3: Tools -->
@@ -136,8 +134,7 @@
                                             style="filter: invert(1);"> Java</a>
                                     <a href="#" class="mega-link"><img
                                             src="https://unpkg.com/pixelarticons@1.8.1/svg/device-gamepad.svg"
-                                            width="16" style="filter: invert(1);"> Game Dev <span
-                                            class="club-badge">CLUB</span></a>
+                                            width="16" style="filter: invert(1);"> Game Dev</a>
                                     <a href="#" class="mega-link"
                                         style="margin-top: 16px; color: var(--neon-cyan); font-weight: 700; font-size: 13px;">VIEW
                                         ALL COURSES →</a>
@@ -165,78 +162,90 @@
                 <div class="nav-avatar" id="nav-avatar" title="Profile">
                     <i data-lucide="user" style="width:20px;height:20px;"></i>
                 </div>
-                <button class="btn-cyber-primary" id="join-club-btn">Join Club</button>
             </div>
         </nav>
 
         <!-- Main Layout -->
-        <div id="main-layout" class="main-layout">
+        <div id="main-layout" class="main-layout"
+            style="display: grid; grid-template-columns: 1fr 320px; gap: 32px; max-width: 1600px; margin: 0 auto; padding: 100px 32px 32px 32px;">
 
-            <main id="main-content" class="main-content">
-                <!-- Content injected by JS -->
-            </main>
+            <!-- CONTENT AREA -->
+            <div id="main-content" style="min-height: 80vh;">
+                <!-- DYNAMIC CONTENT LOADED HERE -->
+            </div>
 
-            <!-- Right Sidebar -->
-            <aside id="right-sidebar" class="right-sidebar">
-
-                <div class="profile-card cyber-card">
+            <!-- RIGHT SIDEBAR (Desktop Only) -->
+            <aside class="right-sidebar">
+                <!-- User Stats Card -->
+                <div class="cyber-card profile-mini">
                     <div class="profile-header">
-                        <div class="profile-avatar">
-                            <span id="user-avatar"><i data-lucide="user"
-                                    style="width:24px;height:24px;color:#22d3ee;"></i></span>
+                        <div class="avatar-circle">
+                            <i data-lucide="user"></i>
                         </div>
-                        <div class="profile-info">
-                            <span class="profile-name" id="user-name">Guest</span>
-                            <span class="profile-level"
-                                style="color: var(--neon-cyan); font-family: var(--font-code);">LEVEL 1</span>
+                        <div class="profile-text">
+                            <h3 id="stat-name">Guest</h3>
+                            <div class="profile-level">
+                                <span class="level-badge">LVL 1</span>
+                                <span class="xp-text"><span id="stat-xp">0</span> XP</span>
+                            </div>
                         </div>
                     </div>
-                    <div class="profile-stats">
+
+                    <div class="stats-row">
                         <div class="stat-item">
-                            <span class="stat-icon glow-cyan"><i data-lucide="star"
-                                    style="width:16px;height:16px;"></i></span>
-                            <span class="stat-value" id="stat-xp">0</span>
-                            <span class="stat-label">XP</span>
-                        </div>
-                        <div class="stat-item">
-                            <span class="stat-icon glow-magenta"><i data-lucide="trophy"
-                                    style="width:16px;height:16px;"></i></span>
-                            <span class="stat-value">Bronze</span>
-                            <span class="stat-label">RANK</span>
-                        </div>
-                        <div class="stat-item">
-                            <span class="stat-icon glow-green"><i data-lucide="flame"
-                                    style="width:16px;height:16px;color:#f97316;"></i></span>
-                            <span class="stat-value" id="stat-streak">0</span>
+                            <i data-lucide="flame" class="stat-icon-sm" style="color: var(--neon-orange);"></i>
+                            <span class="stat-val" id="stat-streak">0</span>
                             <span class="stat-label">STREAK</span>
                         </div>
                         <div class="stat-item">
-                            <span class="stat-icon"><i data-lucide="medal" style="width:16px;height:16px;"></i></span>
-                            <span class="stat-value" id="stat-badges">0</span>
+                            <i data-lucide="award" class="stat-icon-sm" style="color: var(--neon-cyan);"></i>
+                            <span class="stat-val">0</span>
                             <span class="stat-label">BADGES</span>
                         </div>
-                    </div>
-                    <button class="btn-cyber-outline" data-route="profile">VIEW PROFILE</button>
-                </div>
-
-                <div class="sidebar-card cyber-card events-card">
-                    <h3 class="sidebar-title">UPCOMING EVENTS</h3>
-                    <div class="events-list" id="events-list">
-                        <div class="event-item">
-                            <div class="event-date">
-                                <span class="date-month">DEC</span>
-                                <span class="date-day">30</span>
-                            </div>
-                            <div class="event-info">
-                                <span class="event-name">End of Year Jam</span>
-                                <span class="event-time">2:00 PM EST</span>
-                            </div>
+                        <div class="stat-item">
+                            <i data-lucide="code" class="stat-icon-sm" style="color: var(--neon-purple);"></i>
+                            <span class="stat-val">0</span>
+                            <span class="stat-label">PROJECTS</span>
                         </div>
                     </div>
+
+                    <button class="btn-cyber-outline" style="width: 100%; margin-top: 16px;"
+                        onclick="navigateTo('profile')">VIEW PROFILE</button>
+                </div>
+                <!-- Events Card -->
+                <div class="cyber-card">
+                    <div class="card-title"><i data-lucide="calendar" style="margin-right: 8px;"></i> Upcoming Events
+                    </div>
+                    <div class="event-item">
+                        <div class="event-date">
+                            <span class="month">DEC</span>
+                            <span class="day">22</span>
+                        </div>
+                        <div class="event-info">
+                            <h4>Game Jam 2025</h4>
+                            <span>10:00 AM EST</span>
+                        </div>
+                    </div>
+                    <div class="event-item">
+                        <div class="event-date">
+                            <span class="month">JAN</span>
+                            <span class="day">05</span>
+                        </div>
+                        <div class="event-info">
+                            <h4>Python Workshop</h4>
+                            <span>2:00 PM EST</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Footer / Credits -->
+                <div
+                    style="margin-top: 24px; text-align: center; color: var(--text-muted); font-size: 12px; font-family: var(--font-code);">
+                    <p>MineCode v0.9.5 (Alpha)</p>
+                    <p style="margin-top: 4px;">© 2025 MineCode Inc.</p>
                 </div>
 
             </aside>
-
         </div>
 
         <!-- Ko-fi Button Bottom Right -->
