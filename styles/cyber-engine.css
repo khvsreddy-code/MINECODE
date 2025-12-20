@@ -71,8 +71,8 @@
     /* Headings */
     --font-display: 'Minecraft Bold', 'Press Start 2P', cursive;
     /* Main Display */
-    --font-body: 'Minecraft', 'Inter', 'Outfit', sans-serif;
-    /* Body text - FULL RETRO */
+    --font-body: 'Inter', 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
+    /* BODY: Clean sans-serif for readability (Codedex-style) */
     --font-code: 'Minecraft', 'VT323', monospace;
 
     /* Spacing */
@@ -91,13 +91,15 @@
     --radius-2xl: 24px;
 }
 
-/* === GLOW FRAME (IMMERSIVE HUD) === */
+/* === CRISP NEON FRAME (CODEDEX PREMIUM) === */
 body::before {
     content: '';
     position: fixed;
     inset: 0;
-    border: 2px solid rgba(34, 211, 238, 0.1);
-    box-shadow: inset 0 0 100px rgba(0, 0, 0, 0.8);
+    /* Solid 3px neon borders - ZERO BLUR */
+    border: 3px solid rgba(0, 188, 255, 0.75);
+    /* Only outer glow, no inner vignette */
+    box-shadow: 0 0 6px rgba(0, 188, 255, 0.5);
     z-index: 9999;
     pointer-events: none;
     border-radius: 0;
@@ -214,16 +216,16 @@ a:hover {
     /* Subtle background */
 }
 
-/* CRT Vignette & Curve Effect */
+/* CRT Subtle Vignette - Reduced for Crisp Border */
 .crt-overlay {
     position: absolute;
     inset: 0;
     background: radial-gradient(circle at center,
-            transparent 50%,
-            rgba(0, 0, 0, 0.4) 90%,
-            rgba(0, 0, 0, 0.8) 100%);
+            transparent 60%,
+            rgba(0, 0, 0, 0.2) 85%,
+            rgba(0, 0, 0, 0.4) 100%);
     z-index: 2;
-    box-shadow: inset 0 0 100px rgba(0, 0, 0, 0.9);
+    box-shadow: inset 0 0 40px rgba(0, 0, 0, 0.4);
 }
 
 .grid-overlay {
@@ -383,8 +385,10 @@ a:hover {
 
 .cyber-card:hover {
     border-color: var(--neon-cyan);
-    box-shadow: 0 12px 24px -8px rgba(0, 0, 0, 0.5);
-    transform: translateY(-4px);
+    box-shadow:
+        0 0 20px rgba(0, 188, 255, 0.3),
+        0 12px 32px -8px rgba(0, 0, 0, 0.5);
+    transform: translateY(-6px) scale(1.02);
 }
 
 .cyber-border {
@@ -3323,23 +3327,23 @@ html {
 .nes-btn {
     position: relative;
     display: inline-block;
-    padding: 12px 24px;
+    padding: 14px 28px;
     font-family: var(--font-pixel), 'Press Start 2P', cursive;
     font-size: 12px;
     text-transform: uppercase;
     text-decoration: none;
     color: var(--codedex-cyan);
-    background: rgba(15, 23, 42, 0.8);
-    /* Dark Glass */
+    background: rgba(15, 23, 42, 0.9);
     border: 4px solid var(--codedex-cyan);
     border-radius: 0;
     cursor: pointer;
+    /* DEEP 3D SHADOW - CODEDEX TACTILE FEEL */
     box-shadow:
-        0 0 10px rgba(34, 211, 238, 0.3),
-        inset 0 0 20px rgba(34, 211, 238, 0.1);
-    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        0 6px 0 rgba(0, 80, 120, 0.9),
+        0 8px 12px rgba(0, 0, 0, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
     image-rendering: pixelated;
-    backdrop-filter: blur(4px);
 }
 
 .nes-btn::before {
@@ -3355,17 +3359,20 @@ html {
 }
 
 .nes-btn:hover {
-    transform: translateY(-2px);
-    background: rgba(34, 211, 238, 0.1);
+    transform: translateY(-3px);
+    background: rgba(34, 211, 238, 0.15);
     box-shadow:
-        0 0 20px rgba(34, 211, 238, 0.6),
-        inset 0 0 30px rgba(34, 211, 238, 0.2);
+        0 8px 0 rgba(0, 80, 120, 0.9),
+        0 12px 20px rgba(0, 0, 0, 0.4),
+        0 0 15px rgba(34, 211, 238, 0.4);
     text-shadow: 0 0 8px var(--codedex-cyan);
 }
 
 .nes-btn:active {
-    transform: translateY(1px);
-    box-shadow: 0 0 5px rgba(34, 211, 238, 0.4);
+    transform: translateY(4px);
+    box-shadow:
+        0 2px 0 rgba(0, 80, 120, 0.9),
+        0 3px 6px rgba(0, 0, 0, 0.3);
 }
 
 /* Hybrid Primary (Cyan Neon) */
@@ -3452,11 +3459,12 @@ html {
 }
 
 .cyber-cozy-card:hover {
-    transform: translateY(-4px);
+    transform: translateY(-8px) scale(1.03);
     border-color: var(--card-accent, var(--codedex-cyan));
     box-shadow:
-        0 10px 40px rgba(0, 0, 0, 0.5),
-        inset 0 0 20px rgba(255, 255, 255, 0.02);
+        0 0 25px rgba(var(--card-accent-rgb, 0, 188, 255), 0.4),
+        0 16px 48px rgba(0, 0, 0, 0.5),
+        inset 0 0 20px rgba(255, 255, 255, 0.03);
 }
 
 .cyber-cozy-card:hover::after {
