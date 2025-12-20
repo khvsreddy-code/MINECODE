@@ -270,7 +270,19 @@ const GameState = {
         const newLevel = Math.floor(xp / 1000) + 1;
         if (newLevel > this.data.user.level) {
             this.data.user.level = newLevel;
-            this.showToast(`LEVEL UP! You are now Level ${newLevel}`, 'accent');
+
+            // Visual Level Up
+            const overlay = document.createElement('div');
+            overlay.className = 'level-up-overlay active';
+            overlay.innerHTML = `
+                <div class="level-up-box">
+                    <div class="level-title">LEVEL UP!</div>
+                    <div class="xp-gain">You reached Level ${newLevel}</div>
+                    <button class="level-btn" onclick="this.parentElement.parentElement.remove()">CONTINUE</button>
+                </div>
+            `;
+            document.body.appendChild(overlay);
+
             // Play sound/animation here in future
         }
     },
@@ -420,7 +432,9 @@ window.navigateTo = function (route) {
         breadcrumbs.push({ label: 'Community', route: 'community' });
     } else if (route === 'profile') {
         // Profile View
-        document.getElementById('main-content').innerHTML = `<h1>Profile (Work in Progress)</h1>`;
+        if (sidebar) sidebar.style.display = 'block';
+        if (mainLayout) mainLayout.style.display = 'grid'; // Enable sidebar
+        renderProfilePage();
         breadcrumbs.push({ label: 'Profile', route: 'profile' });
     } else {
         // Default: Home Dashboard
@@ -439,11 +453,29 @@ window.navigateTo = function (route) {
 };
 
 function initNavigation() {
+    // Mobile Menu Toggle
+    const mobileBtn = document.getElementById('mobile-menu-btn');
+    if (mobileBtn) {
+        mobileBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            document.querySelector('.nav-menu').classList.toggle('active');
+        });
+
+        // Close menu when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.nav-menu') && !e.target.closest('#mobile-menu-btn')) {
+                document.querySelector('.nav-menu').classList.remove('active');
+            }
+        });
+    }
+
     document.addEventListener('click', (e) => {
         const routeEl = e.target.closest('[data-route]');
         if (routeEl) {
             e.preventDefault();
             navigateTo(routeEl.dataset.route);
+            // Close mobile menu on navigation
+            document.querySelector('.nav-menu').classList.remove('active');
         }
     });
 }
@@ -1014,10 +1046,11 @@ function navigateTo(route) {
         if (mainLayout) mainLayout.style.display = 'block'; // Full width container
         renderHomeDashboard();
     } else if (route === 'courses') {
-        document.getElementById('main-layout').style.display = 'grid';
+        if (mainLayout) mainLayout.style.display = 'none';
         document.getElementById('courses-view').classList.remove('hidden');
         renderCoursesCatalog();
     } else if (route === 'lesson') {
+        if (mainLayout) mainLayout.style.display = 'none';
         document.getElementById('lesson-view').classList.remove('hidden');
         renderLessonWorkspace();
     } else if (route === 'practice') {
@@ -1036,6 +1069,7 @@ function navigateTo(route) {
         if (mainLayout) mainLayout.style.display = 'block';
         renderCommunityPage();
     } else if (route.startsWith('course-')) {
+        if (mainLayout) mainLayout.style.display = 'none';
         document.getElementById('course-view').classList.remove('hidden');
         renderCourseRoadmap(route.replace('course-', ''));
     }
@@ -1093,6 +1127,91 @@ function renderPracticePage() {
     document.getElementById('main-content').innerHTML = html;
 }
 
+// PROFILE PAGE
+function renderProfilePage() {
+    const user = GameState.data.user;
+    const nextLevelXP = user.level * 1000;
+    const progressPercent = Math.min(100, Math.floor((user.xp / nextLevelXP) * 100));
+
+    // Mock Badges Data
+    const badges = [
+        { id: 'b1', icon: 'pixel-icon-zap', title: 'First Code', unlocked: true },
+        { id: 'b2', icon: 'pixel-icon-fire', title: 'On Fire', unlocked: user.streak > 2 },
+        { id: 'b3', icon: 'pixel-icon-trophy', title: 'Champion', unlocked: user.level >= 5 },
+        { id: 'b4', icon: 'pixel-icon-heart', title: 'Community', unlocked: false },
+        { id: 'b5', icon: 'pixel-icon-script', title: 'Pythonista', unlocked: true },
+        { id: 'b6', icon: 'pixel-icon-device-laptop', title: 'Builder', unlocked: false }
+    ];
+
+    const html = `
+        <div class="profile-container">
+            <div class="profile-header-large cyber-card">
+                <div class="profile-avatar-large">
+                    <img src="./assets/avatars/avatar-1.png" style="width: 80%; opacity: 0.8;" onerror="this.src=''; this.style.display='none'">
+                    <i data-lucide="user" style="width: 48px; height: 48px; color: var(--neon-cyan); display: ${user.avatar ? 'none' : 'block'};"></i>
+                </div>
+                <div class="profile-info-large">
+                    <h1>${user.name}</h1>
+                    <span class="profile-role">${user.title}</span>
+                    <div class="level-progress-large">
+                        <div style="display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 4px; color: var(--text-secondary);">
+                            <span>LVL ${user.level}</span>
+                            <span>${user.xp} / ${nextLevelXP} XP</span>
+                        </div>
+                        <div class="progress-bar-bg">
+                            <div class="progress-fill" style="width: ${progressPercent}%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <h2 class="section-title">BADGES</h2>
+            <div class="badge-grid">
+                ${badges.map(b => {
+        const iconHtml = b.icon.startsWith('pixel-icon-')
+            ? `<img src="https://unpkg.com/pixelarticons@1.8.1/svg/${b.icon.replace('pixel-icon-', '')}.svg" style="width: 32px; height: 32px; filter: brightness(0) invert(1);" alt="${b.title}">`
+            : `<i data-lucide="${b.icon}" style="width: 32px; height: 32px;"></i>`;
+
+        return `
+                    <div class="badge-item ${b.unlocked ? '' : 'locked'}">
+                        <div class="badge-icon" style="color: ${b.unlocked ? 'var(--neon-gold)' : 'var(--text-muted)'}">
+                           ${iconHtml}
+                        </div>
+                        <span style="font-size: 12px; font-weight: 600; color: ${b.unlocked ? 'white' : 'var(--text-muted)'}">${b.title}</span>
+                    </div>
+                `}).join('')}
+            </div>
+
+            <div style="margin-top: 48px; display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+                 <div class="cyber-card" style="padding: 24px;">
+                    <h3>STATS</h3>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 16px;">
+                        <div>
+                            <div style="color: var(--text-secondary); font-size: 12px;">LESSONS</div>
+                            <div style="font-size: 24px; color: var(--text-bright);">13</div>
+                        </div>
+                        <div>
+                            <div style="color: var(--text-secondary); font-size: 12px;">STREAK</div>
+                            <div style="font-size: 24px; color: var(--neon-orange);">${user.streak} 🔥</div>
+                        </div>
+                    </div>
+                 </div>
+                 <div class="cyber-card" style="padding: 24px;">
+                    <h3>ACTIVITY</h3>
+                    <ul style="list-style: none; padding: 0; margin-top: 16px; font-size: 13px; color: var(--text-secondary);">
+                        <li style="margin-bottom: 8px;">Completed <strong>Python Basics</strong> lesson.</li>
+                        <li style="margin-bottom: 8px;">Earned <strong>First Code</strong> badge.</li>
+                        <li>Joined <strong>MineCode</strong>.</li>
+                    </ul>
+                 </div>
+            </div>
+        </div>
+    `;
+
+    document.getElementById('main-content').innerHTML = html;
+    if (window.lucide) window.lucide.createIcons();
+}
+
 // BUILDS PAGE
 function renderBuildsPage() {
     const mascotArt = "./assets/pixel_art/ChatGPT Image Dec 20, 2025, 09_42_03 AM.png";
@@ -1114,6 +1233,91 @@ function renderBuildsPage() {
     `;
 
     document.getElementById('main-content').innerHTML = html;
+}
+
+// PROFILE PAGE
+function renderProfilePage() {
+    const user = GameState.data.user;
+    const nextLevelXP = user.level * 1000;
+    const progressPercent = Math.min(100, Math.floor((user.xp / nextLevelXP) * 100));
+
+    // Mock Badges Data
+    const badges = [
+        { id: 'b1', icon: 'pixel-icon-zap', title: 'First Code', unlocked: true },
+        { id: 'b2', icon: 'pixel-icon-fire', title: 'On Fire', unlocked: user.streak > 2 },
+        { id: 'b3', icon: 'pixel-icon-trophy', title: 'Champion', unlocked: user.level >= 5 },
+        { id: 'b4', icon: 'pixel-icon-heart', title: 'Community', unlocked: false },
+        { id: 'b5', icon: 'pixel-icon-script', title: 'Pythonista', unlocked: true },
+        { id: 'b6', icon: 'pixel-icon-device-laptop', title: 'Builder', unlocked: false }
+    ];
+
+    const html = `
+        <div class="profile-container">
+            <div class="profile-header-large cyber-card">
+                <div class="profile-avatar-large">
+                    <img src="./assets/avatars/avatar-1.png" style="width: 80%; opacity: 0.8;" onerror="this.src=''; this.style.display='none'">
+                    <i data-lucide="user" style="width: 48px; height: 48px; color: var(--neon-cyan); display: ${user.avatar ? 'none' : 'block'};"></i>
+                </div>
+                <div class="profile-info-large">
+                    <h1>${user.name}</h1>
+                    <span class="profile-role">${user.title}</span>
+                    <div class="level-progress-large">
+                        <div style="display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 4px; color: var(--text-secondary);">
+                            <span>LVL ${user.level}</span>
+                            <span>${user.xp} / ${nextLevelXP} XP</span>
+                        </div>
+                        <div class="progress-bar-bg">
+                            <div class="progress-fill" style="width: ${progressPercent}%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <h2 class="section-title">BADGES</h2>
+            <div class="badge-grid">
+                ${badges.map(b => {
+        const iconHtml = b.icon.startsWith('pixel-icon-')
+            ? `<img src="https://unpkg.com/pixelarticons@1.8.1/svg/${b.icon.replace('pixel-icon-', '')}.svg" style="width: 32px; height: 32px; filter: brightness(0) invert(1);" alt="${b.title}">`
+            : `<i data-lucide="${b.icon}" style="width: 32px; height: 32px;"></i>`;
+
+        return `
+                    <div class="badge-item ${b.unlocked ? '' : 'locked'}">
+                        <div class="badge-icon" style="color: ${b.unlocked ? 'var(--neon-gold)' : 'var(--text-muted)'}">
+                           ${iconHtml}
+                        </div>
+                        <span style="font-size: 12px; font-weight: 600; color: ${b.unlocked ? 'white' : 'var(--text-muted)'}">${b.title}</span>
+                    </div>
+                `}).join('')}
+            </div>
+
+            <div style="margin-top: 48px; display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+                 <div class="cyber-card" style="padding: 24px;">
+                    <h3>STATS</h3>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 16px;">
+                        <div>
+                            <div style="color: var(--text-secondary); font-size: 12px;">LESSONS</div>
+                            <div style="font-size: 24px; color: var(--text-bright);">13</div>
+                        </div>
+                        <div>
+                            <div style="color: var(--text-secondary); font-size: 12px;">STREAK</div>
+                            <div style="font-size: 24px; color: var(--neon-orange);">${user.streak} 🔥</div>
+                        </div>
+                    </div>
+                 </div>
+                 <div class="cyber-card" style="padding: 24px;">
+                    <h3>ACTIVITY</h3>
+                    <ul style="list-style: none; padding: 0; margin-top: 16px; font-size: 13px; color: var(--text-secondary);">
+                        <li style="margin-bottom: 8px;">Completed <strong>Python Basics</strong> lesson.</li>
+                        <li style="margin-bottom: 8px;">Earned <strong>First Code</strong> badge.</li>
+                        <li>Joined <strong>MineCode</strong>.</li>
+                    </ul>
+                 </div>
+            </div>
+        </div>
+    `;
+
+    document.getElementById('main-content').innerHTML = html;
+    if (window.lucide) window.lucide.createIcons();
 }
 
 // COMMUNITY PAGE (3-Column Layout)
@@ -1594,13 +1798,21 @@ function renderLessonWorkspace() {
             <span style="font-family: 'VT323'; color: var(--text-secondary);">main.py</span>
             <button id="run-btn" class="btn-cyber-primary" style="padding: 6px 16px; font-size: 12px;">▶ RUN PROTOCOL</button>
         </div>
-        <textarea id="code-input" spellcheck="false" style="width: 100%; height: 300px; background: rgba(13, 17, 23, 0.6); color: var(--text-bright); border: none; padding: 16px; font-family: 'VT323'; font-size: 18px; outline: none; resize: none; line-height: 1.5;">print("Hello, World!")</textarea>
+        <div class="code-editor-container" style="display: flex; height: 300px; background: rgba(13, 17, 23, 0.6); font-family: 'VT323'; font-size: 18px;">
+            <div class="line-numbers" style="padding: 16px 8px; color: var(--text-muted); text-align: right; border-right: 1px solid var(--border-subtle); user-select: none; background: rgba(0,0,0,0.2);">1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10</div>
+            <textarea id="code-input" spellcheck="false" style="flex: 1; background: transparent; color: var(--text-bright); border: none; padding: 16px; outline: none; resize: none; line-height: 1.5;">print("Hello, World!")</textarea>
+        </div>
     `;
 
     terminal.innerHTML = `
         <div style="background: var(--bg-panel); padding: 8px 16px; border-bottom: 1px solid var(--border-subtle); font-family: 'VT323'; color: var(--text-muted); font-size: 14px;">TERMINAL OUTPUT</div>
         <div id="terminal-out" style="padding: 16px; font-family: 'VT323'; font-size: 16px; color: var(--neon-green); height: 140px; overflow-y: auto; background: rgba(0,0,0,0.3);">
-            > System Ready...
+            > System Ready...<br>
+            > Type 'help' for commands.<br>
+        </div>
+        <div style="display: flex; border-top: 1px solid var(--border-subtle); background: rgba(0,0,0,0.2);">
+            <span style="padding: 8px 0 8px 16px; color: var(--neon-cyan); font-family: 'VT323'; display: flex; align-items: center;">></span>
+            <input id="term-input" type="text" autocomplete="off" spellcheck="false" style="flex: 1; background: transparent; border: none; color: white; font-family: 'VT323'; font-size: 16px; padding: 8px; outline: none;" placeholder="_">
         </div>
     `;
 
@@ -1650,6 +1862,38 @@ function renderLessonWorkspace() {
             term.scrollTop = term.scrollHeight;
         }, 600);
     });
+
+    // FAKE TERMINAL INPUT
+    const termInput = document.getElementById('term-input');
+    if (termInput) {
+        termInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                const val = e.target.value.trim();
+                const termOut = document.getElementById('terminal-out');
+
+                if (val) {
+                    termOut.innerHTML += `<div style="color: var(--text-secondary);">> ${val}</div>`;
+
+                    if (val === 'help') {
+                        termOut.innerHTML += `<div style="color: white;">COMMANDS: help, clear, run, ls, print</div>`;
+                    } else if (val === 'clear') {
+                        termOut.innerHTML = '';
+                    } else if (val === 'run') {
+                        document.getElementById('run-btn').click();
+                    } else if (val === 'ls') {
+                        termOut.innerHTML += `<div>main.py  assets/  config.json</div>`;
+                    } else if (val.startsWith('print ')) {
+                        termOut.innerHTML += `<div>${val.substring(6)}</div>`;
+                    } else {
+                        termOut.innerHTML += `<div style="color: var(--neon-orange);">Command not found: ${val}</div>`;
+                    }
+                }
+
+                e.target.value = '';
+                termOut.scrollTop = termOut.scrollHeight;
+            }
+        });
+    }
 }
 
 

@@ -15,6 +15,7 @@
     <link rel="stylesheet" href="styles/components.css">
     <link rel="stylesheet" href="styles/pixel-icons.css">
     <link rel="stylesheet" href="styles/gamification.css">
+    <link rel="stylesheet" href="styles/mobile.css">
 
     <!-- True Pixel Fonts from Google -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -26,8 +27,7 @@
     <!-- Anime.js for Creative Animations -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.2/anime.min.js"></script>
 
-    <!-- Ko-fi Support -->
-    <script type='text/javascript' src='https://storage.ko-fi.com/cdn/widget/Widget_2.js'></script>
+
 
     <script>
         // AUTH CHECK - Redirect to Landing if no user
@@ -54,19 +54,78 @@
         <!-- Top Navigation -->
         <nav id="topnav" class="topnav">
             <div class="nav-left">
+                <button class="nav-burger" id="mobile-menu-btn"
+                    style="display: none; background: none; border: none; color: white; margin-right: 12px; cursor: pointer;">
+                    <i data-lucide="menu"></i>
+                </button>
                 <a href="#" class="nav-brand" data-route="home">
                     <span class="brand-icon cyber-glow"><i data-lucide="zap"
                             style="width:24px;height:24px;color:#ffc800;"></i></span>
                     <span class="brand-text">MineCode</span>
                 </a>
                 <div class="nav-menu">
-                    <div class="nav-dropdown">
-                        <button class="nav-btn active">Learn ▾</button>
-                        <div class="dropdown-content">
-                            <a href="#" data-route="courses">All Courses</a>
-                            <a href="#" data-route="course-python">Python</a>
-                            <a href="#" data-route="course-html">HTML/CSS</a>
-                            <a href="#" data-route="course-js">JavaScript</a>
+                    <div class="nav-item has-dropdown">
+                        <button class="nav-btn active" data-route="courses" onclick="navigateTo('courses')">Learn
+                            ▾</button>
+                        <div class="mega-menu">
+                            <!-- Column 1: Data Science -->
+                            <div class="mega-column">
+                                <h4>DATA SCIENCE</h4>
+                                <a href="#" class="mega-link" onclick="navigateTo('course-python')"><img
+                                        src="https://unpkg.com/pixelarticons@1.8.1/svg/script.svg" width="16"
+                                        style="filter: invert(1);"> Python</a>
+                                <a href="#" class="mega-link"><img
+                                        src="https://unpkg.com/pixelarticons@1.8.1/svg/chart-bar.svg" width="16"
+                                        style="filter: invert(1);"> Intermediate Python <span
+                                        class="club-badge">CLUB</span></a>
+                                <a href="#" class="mega-link"><img
+                                        src="https://unpkg.com/pixelarticons@1.8.1/svg/grid.svg" width="16"
+                                        style="filter: invert(1);"> NumPy</a>
+                                <a href="#" class="mega-link"><img
+                                        src="https://unpkg.com/pixelarticons@1.8.1/svg/database.svg" width="16"
+                                        style="filter: invert(1);"> SQL</a>
+                                <a href="#" class="mega-link featured"><img
+                                        src="https://unpkg.com/pixelarticons@1.8.1/svg/brain.svg" width="16"
+                                        style="filter: invert(1);"> Machine Learning <span
+                                        class="club-badge">CLUB</span></a>
+                            </div>
+
+                            <!-- Column 2: Web Development -->
+                            <div class="mega-column">
+                                <h4>WEB DEVELOPMENT</h4>
+                                <a href="#" class="mega-link" onclick="navigateTo('course-html')"><img
+                                        src="https://unpkg.com/pixelarticons@1.8.1/svg/layout.svg" width="16"
+                                        style="filter: invert(1);"> HTML</a>
+                                <a href="#" class="mega-link"><img
+                                        src="https://unpkg.com/pixelarticons@1.8.1/svg/art-text.svg" width="16"
+                                        style="filter: invert(1);"> CSS</a>
+                                <a href="#" class="mega-link" onclick="navigateTo('course-js')"><img
+                                        src="https://unpkg.com/pixelarticons@1.8.1/svg/code.svg" width="16"
+                                        style="filter: invert(1);"> JavaScript</a>
+                                <a href="#" class="mega-link"><img
+                                        src="https://unpkg.com/pixelarticons@1.8.1/svg/zap.svg" width="16"
+                                        style="filter: invert(1);"> React</a>
+                                <a href="#" class="mega-link"><img
+                                        src="https://unpkg.com/pixelarticons@1.8.1/svg/server.svg" width="16"
+                                        style="filter: invert(1);"> Node.js <span class="club-badge">CLUB</span></a>
+                            </div>
+
+                            <!-- Column 3: Tools -->
+                            <div class="mega-column">
+                                <h4>TOOLS</h4>
+                                <a href="#" class="mega-link"><img
+                                        src="https://unpkg.com/pixelarticons@1.8.1/svg/terminal.svg" width="16"
+                                        style="filter: invert(1);"> Command Line</a>
+                                <a href="#" class="mega-link"><img
+                                        src="https://unpkg.com/pixelarticons@1.8.1/svg/git-merge.svg" width="16"
+                                        style="filter: invert(1);"> Git & GitHub</a>
+                                <a href="#" class="mega-link featured"><img
+                                        src="https://unpkg.com/pixelarticons@1.8.1/svg/android.svg" width="16"
+                                        style="filter: invert(1);"> GitHub Copilot</a>
+                                <a href="#" class="mega-link"
+                                    style="margin-top: 24px; color: var(--neon-cyan); font-weight: 700;">View All
+                                    Courses →</a>
+                            </div>
                         </div>
                     </div>
                     <div class="nav-dropdown">
@@ -164,10 +223,7 @@
         </div>
 
         <!-- Ko-fi Button Bottom Right -->
-        <script>
-            kofiwidget2.init('Support me on Ko-fi', '#72a4f2', 'D1D81PRYTS');
-            kofiwidget2.draw();
-        </script>
+
         <style>
             .floating-chat-kofi-popup-iframe {
                 bottom: 20px !important;

@@ -3708,3 +3708,123 @@ html {
     font-size: 16px;
     font-weight: 600;
 }
+
+/* === PHASE 9: UI POLISH & MEGA MENU ================= */
+
+/* 1. TEXT GLITCH FIX */
+.hero-title {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 40px;
+    /* Reduced from 64px to fit better */
+    line-height: 1.6;
+    /* Increased line height to prevent overlap */
+    color: var(--text-bright);
+    margin-bottom: 24px;
+    text-shadow: 0 4px 0 #000;
+    max-width: 900px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Ensure animated spans don't break layout */
+.hero-title span {
+    display: inline-block;
+    transition: transform 0.2s;
+}
+
+.hero-title span:hover {
+    transform: translateY(-4px);
+    color: var(--neon-cyan);
+}
+
+/* 2. EXPLORE LAYOUT FIX */
+.section-grid-4 {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 24px;
+    width: 100%;
+}
+
+/* 3. MEGA MENU IMPLEMENTATION */
+.nav-item.has-dropdown {
+    position: relative;
+    height: 100%;
+    display: flex;
+    align-items: center;
+}
+
+.mega-menu {
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%) translateY(10px);
+    width: 800px;
+    background: rgba(15, 23, 42, 0.95);
+    border: 1px solid var(--border-subtle);
+    border-top: 2px solid var(--neon-cyan);
+    border-radius: 0 0 16px 16px;
+    /* Codedex style rounded bottom */
+    padding: 32px;
+    display: none;
+    /* Hidden by default */
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 32px;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(20px);
+    z-index: 1000;
+    opacity: 0;
+    transition: opacity 0.2s, transform 0.2s;
+}
+
+/* Separate Trigger for Hover */
+.nav-item.has-dropdown:hover .mega-menu {
+    display: grid;
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+}
+
+.mega-column h4 {
+    font-family: 'Press Start 2P';
+    color: var(--text-muted);
+    font-size: 10px;
+    margin-bottom: 16px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+.mega-link {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 12px;
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-family: 'Outfit', sans-serif;
+    font-size: 14px;
+    border-radius: 8px;
+    transition: all 0.2s;
+    margin-bottom: 4px;
+}
+
+.mega-link:hover {
+    background: rgba(34, 211, 238, 0.1);
+    color: var(--text-bright);
+    transform: translateX(4px);
+}
+
+.mega-link.featured {
+    background: linear-gradient(90deg, rgba(34, 211, 238, 0.1), transparent);
+    border-left: 2px solid var(--neon-cyan);
+}
+
+/* Club Badge */
+.club-badge {
+    background: linear-gradient(135deg, #FFD700, #FFA500);
+    color: black;
+    font-size: 9px;
+    font-weight: 800;
+    padding: 2px 6px;
+    border-radius: 4px;
+    margin-left: auto;
+    font-family: 'Storeop', sans-serif;
+}

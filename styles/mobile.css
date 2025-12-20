@@ -1,0 +1,87 @@
+/* ============================================
+   MOBILE RESPONSIVENESS
+   ============================================ */
+
+@media (max-width: 768px) {
+
+    /* --- NAVIGATION --- */
+    .topnav {
+        padding: 0 16px;
+        height: 60px;
+    }
+
+    .nav-menu {
+        display: none;
+        /* Hide standard menu */
+        position: absolute;
+        top: 60px;
+        left: 0;
+        right: 0;
+        background: rgba(15, 23, 42, 0.95);
+        backdrop-filter: blur(20px);
+        flex-direction: column;
+        padding: 20px;
+        gap: 16px;
+        border-bottom: 1px solid var(--border-subtle);
+        z-index: 1000;
+        animation: slideDown 0.3s ease-out;
+    }
+
+    .nav-menu.active {
+        display: flex;
+    }
+
+    .nav-burger {
+        display: block !important;
+    }
+
+    /* --- LAYOUTS --- */
+    .main-layout {
+        grid-template-columns: 1fr !important;
+        /* Stack columns */
+        padding-top: 70px;
+    }
+
+    .right-sidebar {
+        display: none;
+        /* Hide sidebar by default on mobile */
+    }
+
+    .section-grid-3,
+    .courses-grid,
+    .challenge-grid {
+        grid-template-columns: 1fr !important;
+        /* Single column grids */
+    }
+
+    .community-layout {
+        grid-template-columns: 1fr !important;
+    }
+
+    .community-aside,
+    .community-channels {
+        display: none;
+        /* Simplified community view */
+    }
+
+    /* --- TYPOGRAPHY --- */
+    h1 {
+        font-size: 24px !important;
+    }
+
+    h2 {
+        font-size: 20px !important;
+    }
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

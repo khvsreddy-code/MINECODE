@@ -240,6 +240,104 @@
     transition: transform 0.2s;
 }
 
-.level-btn:hover {
-    transform: scale(1.05);
+
+
+/* === PROFILE PAGE STYLES === */
+.profile-container {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 32px;
+}
+
+.profile-header-large {
+    display: flex;
+    align-items: center;
+    gap: 32px;
+    margin-bottom: 48px;
+    background: linear-gradient(90deg, var(--bg-card) 0%, transparent 100%);
+    padding: 32px;
+    border-radius: 24px;
+    border-left: 4px solid var(--neon-cyan);
+}
+
+.profile-avatar-large {
+    width: 120px;
+    height: 120px;
+    background: var(--bg-deep);
+    border: 3px solid var(--neon-cyan);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 0 30px rgba(34, 211, 238, 0.2);
+}
+
+.profile-info-large h1 {
+    font-size: 32px;
+    margin-bottom: 8px;
+    color: var(--text-bright);
+}
+
+.profile-role {
+    font-family: var(--font-code);
+    color: var(--neon-purple);
+    background: rgba(168, 85, 247, 0.1);
+    padding: 4px 12px;
+    border-radius: 12px;
+    border: 1px solid rgba(168, 85, 247, 0.3);
+}
+
+.level-progress-large {
+    margin-top: 16px;
+    width: 300px;
+}
+
+.progress-bar-bg {
+    height: 12px;
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 6px;
+    overflow: hidden;
+    position: relative;
+    border: 1px solid var(--border-subtle);
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--neon-cyan), var(--neon-purple));
+    width: 0%;
+    transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.badge-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    gap: 24px;
+    margin-top: 32px;
+}
+
+.badge-item {
+    background: var(--bg-card);
+    border: 1px solid var(--border-subtle);
+    border-radius: 16px;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    transition: all 0.3s;
+}
+
+.badge-item.locked {
+    filter: grayscale(1) opacity(0.5);
+}
+
+.badge-item:hover {
+    transform: translateY(-5px);
+    border-color: var(--neon-cyan);
+    box-shadow: 0 0 15px rgba(34, 211, 238, 0.2);
+}
+
+.badge-icon {
+    font-size: 32px;
+    margin-bottom: 8px;
 }
