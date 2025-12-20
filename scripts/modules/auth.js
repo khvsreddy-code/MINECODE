@@ -135,7 +135,7 @@ const Auth = {
             body.classList.remove('logged-in');
             body.classList.add('logged-out');
 
-            if (navAvatar) navAvatar.innerHTML = '👤';
+            if (navAvatar) navAvatar.innerHTML = '<i data-lucide="user" style="width:20px;height:20px;color:#22d3ee;"></i>'; if (window.lucide) window.lucide.createIcons();
             if (welcomeMsg) welcomeMsg.textContent = 'Welcome, Guest. Please Initialize Link.';
             if (loginBtn) {
                 loginBtn.textContent = 'Login / Sign Up';

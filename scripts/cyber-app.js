@@ -707,7 +707,7 @@ function renderHomeDashboard() {
                 <div class="cyber-widget cyber-profile">
                     <div class="profile-header">
                         <div class="profile-avatar">
-                            <span>👤</span>
+                            <i data-lucide="user" style="width:24px;height:24px;color:#22d3ee;"></i>
                             <div class="avatar-ring"></div>
                         </div>
                         <div class="profile-info">
@@ -724,7 +724,7 @@ function renderHomeDashboard() {
                     <div class="profile-stats">
                         <div class="stat-item">
                             <span class="stat-value" id="stat-streak">${GameState.data.user.streak}</span>
-                            <span class="stat-label">Streak 🔥</span>
+                            <span class="stat-label">Streak <i data-lucide="flame" style="width:14px;height:14px;color:#f97316;"></i></span>
                         </div>
                         <div class="stat-item">
                             <span class="stat-value">0</span>
@@ -743,7 +743,7 @@ function renderHomeDashboard() {
                 <!-- EVENTS WIDGET -->
                 <div class="cyber-widget">
                     <h4 class="widget-title">
-                        <span class="title-icon">📅</span> Upcoming Events
+                        <i data-lucide="calendar" style="width:18px;height:18px;color:#a855f7;"></i> Upcoming Events
                     </h4>
                     <div class="cyber-event">
                         <div class="event-date-box">
