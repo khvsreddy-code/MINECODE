@@ -4,206 +4,7 @@
  */
 
 // DATA
-const COURSES = [
-    // === THE LEGEND OF PYTHON ===
-    {
-        id: 'python',
-        title: 'PYTHON',
-        icon: 'pixel-icon-script',
-        desc: 'Learn programming fundamentals: syntax, variables, control flow, and loops.',
-        lessons: 30,
-        completed: 13,
-        image: './assets/pixel_art/python.png',
-        gradient: 'linear-gradient(135deg, #306998, #ffe873)',
-        difficulty: 'BEGINNER',
-        category: 'python-legend'
-    },
-    {
-        id: 'intermediate-python',
-        title: 'INTERMEDIATE PYTHON',
-        icon: 'pixel-icon-script',
-        desc: 'Begin learning interwoven Python with data structures.',
-        lessons: 25,
-        completed: 0,
-        image: './assets/pixel_art/python.png', // Reusing Python asset
-        gradient: 'linear-gradient(135deg, #4B8BBE, #FFD43B)',
-        difficulty: 'INTERMEDIATE',
-        category: 'python-legend'
-    },
-    {
-        id: 'numpy',
-        title: 'NUMPY',
-        icon: 'pixel-icon-chart-bar',
-        desc: 'Learn the fundamentals of data manipulation using NumPy.',
-        lessons: 15,
-        completed: 0,
-        image: null,
-        gradient: 'linear-gradient(135deg, #013243, #4d05e8)',
-        difficulty: 'INTERMEDIATE',
-        category: 'python-legend'
-    },
-
-    // === THE ORIGINS TRILOGY ===
-    {
-        id: 'html',
-        title: 'HTML',
-        icon: 'pixel-icon-code',
-        desc: 'Create your first website with HTML, the building blocks of the web.',
-        lessons: 15,
-        completed: 0,
-        image: './assets/pixel_art/web.png',
-        gradient: 'linear-gradient(135deg, #e34c26, #f06529)',
-        difficulty: 'BEGINNER',
-        category: 'origins'
-    },
-    {
-        id: 'css',
-        title: 'CSS',
-        icon: 'pixel-icon-paint-bucket',
-        desc: 'Learn to use CSS selectors and properties to style your HTML pages.',
-        lessons: 20,
-        completed: 0,
-        image: null,
-        gradient: 'linear-gradient(135deg, #264de4, #2965f1)',
-        difficulty: 'BEGINNER',
-        category: 'origins'
-    },
-    {
-        id: 'js',
-        title: 'JAVASCRIPT',
-        icon: 'pixel-icon-zap',
-        desc: 'Learn variables, loops, functions, and events to start building interactive apps.',
-        lessons: 35,
-        completed: 0,
-        image: './assets/pixel_art/js.png',
-        gradient: 'linear-gradient(135deg, #f0db4f, #d4bf28)',
-        difficulty: 'BEGINNER',
-        category: 'origins'
-    },
-
-    // === ALL COURSES ===
-    {
-        id: 'react',
-        title: 'REACT',
-        icon: 'pixel-icon-grid',
-        desc: 'Build powerful user interfaces',
-        lessons: 40,
-        completed: 0,
-        image: null,
-        gradient: 'linear-gradient(135deg, #61dbfb, #38a5c4)',
-        difficulty: 'ADVANCED'
-    },
-    {
-        id: 'sql',
-        title: 'SQL',
-        icon: 'pixel-icon-database',
-        desc: 'Manage and query databases',
-        lessons: 25,
-        completed: 0,
-        image: 'C:/Users/harin/.gemini/antigravity/brain/848c9a17-8c76-4202-b319-cfbcb0039c4b/cyber_cozy_sql_1766205759320.png',
-        gradient: 'linear-gradient(135deg, #00758f, #005c70)',
-        difficulty: 'INTERMEDIATE'
-    },
-    {
-        id: 'lua',
-        title: 'LUA',
-        icon: '🌙',
-        desc: 'Learn programming fundamentals with Lua in Roblox.',
-        lessons: 20,
-        completed: 0,
-        image: null,
-        gradient: 'linear-gradient(135deg, #000080, #0000cd)',
-        difficulty: 'BEGINNER'
-    },
-    {
-        id: 'cpp',
-        title: 'C++',
-        icon: 'pixel-icon-settings',
-        desc: 'High-performance system programming',
-        lessons: 50,
-        completed: 0,
-        image: './assets/pixel_art/cpp.png',
-        gradient: 'linear-gradient(135deg, #00599c, #004482)',
-        difficulty: 'HARD'
-    },
-    {
-        id: 'java',
-        title: 'JAVA',
-        icon: 'pixel-icon-coffee',
-        desc: 'Object-oriented programming mastery',
-        lessons: 45,
-        completed: 0,
-        image: './assets/pixel_art/java.png',
-        gradient: 'linear-gradient(135deg, #5382a1, #f89820)',
-        difficulty: 'INTERMEDIATE'
-    },
-    {
-        id: 'git',
-        title: 'GIT',
-        icon: 'pixel-icon-git-merge',
-        desc: 'Version control for everyone',
-        lessons: 10,
-        completed: 0,
-        image: null,
-        gradient: 'linear-gradient(135deg, #f1502f, #3e2c00)',
-        difficulty: 'BEGINNER'
-    },
-    {
-        id: 'csharp',
-        title: 'C#',
-        icon: 'pixel-icon-grid',
-        desc: 'Build Windows apps and games',
-        lessons: 40,
-        completed: 0,
-        image: null,
-        gradient: 'linear-gradient(135deg, #6a1577, #9e58aa)',
-        difficulty: 'INTERMEDIATE'
-    },
-    {
-        id: 'go',
-        title: 'GO',
-        icon: 'pixel-icon-zap',
-        desc: 'Scalable cloud software',
-        lessons: 30,
-        completed: 0,
-        image: null,
-        gradient: 'linear-gradient(135deg, #00add8, #007d9c)',
-        difficulty: 'INTERMEDIATE'
-    },
-    {
-        id: 'rust',
-        title: 'RUST',
-        icon: 'pixel-icon-shield',
-        desc: 'Safety and performance',
-        lessons: 55,
-        completed: 0,
-        image: null,
-        gradient: 'linear-gradient(135deg, #dea584, #b7410e)',
-        difficulty: 'HARD'
-    },
-    {
-        id: 'ml',
-        title: 'MACHINE LEARNING',
-        icon: 'pixel-icon-human',
-        desc: 'Learn the foundations of ML.',
-        lessons: 45,
-        completed: 0,
-        image: null,
-        gradient: 'linear-gradient(135deg, #111111, #333333)',
-        difficulty: 'ADVANCED'
-    },
-    {
-        id: 'copilot',
-        title: 'GITHUB COPILOT',
-        icon: 'pixel-icon-android',
-        desc: 'Learn to code with AI assistance.',
-        lessons: 10,
-        completed: 0,
-        image: null,
-        gradient: 'linear-gradient(135deg, #000000, #4078c0)',
-        difficulty: 'BEGINNER'
-    }
-];
+// COURSES data moved to scripts/data/courses-data.js
 
 const TUTORIALS = [
     {
@@ -272,10 +73,98 @@ const GameState = {
 
     addXP(amount) {
         this.data.user.xp += amount;
-        this.checkLevelUp();
+
+        // Simple linear leveling: 100 * level
+        const nextLevelXp = this.data.user.level * 100;
+        let leveledUp = false;
+
+        if (this.data.user.xp >= nextLevelXp) {
+            this.data.user.level++;
+            this.data.user.xp -= nextLevelXp;
+            leveledUp = true;
+        }
+
         this.save();
-        this.showXPPopup(amount);
-        this.showToast(`+${amount} XP Gained!`, 'success');
+
+        if (leveledUp) {
+            this.triggerLevelUpModal(this.data.user.level);
+        } else {
+            this.showXPPopup(amount);
+        }
+    },
+
+    completeLesson(courseId, lessonId, xpReward = 50) {
+        if (!this.data.progress[courseId]) {
+            this.data.progress[courseId] = { completedLessons: [] };
+        }
+
+        const courseProgress = this.data.progress[courseId];
+
+        if (!courseProgress.completedLessons.includes(lessonId)) {
+            courseProgress.completedLessons.push(lessonId);
+            this.addXP(xpReward);
+            this.updateUI();
+
+            // Check if we need to unlock next chapter/lesson
+            // (Simplified: Logic handled in renderCourseRoadmap mostly)
+        }
+    },
+
+    triggerLevelUpModal(newLevel) {
+        const modal = document.createElement('div');
+        modal.className = 'levelup-modal-overlay';
+        modal.innerHTML = `
+            <div class="levelup-card">
+                <div class="confetti-burst">🎉</div>
+                <h2 class="levelup-title">LEVEL UP!</h2>
+                <div class="levelup-badge">${newLevel}</div>
+                <p>You are now Level ${newLevel}</p>
+                <button onclick="this.closest('.levelup-modal-overlay').remove()">CONTINUE</button>
+            </div>
+            <style>
+                .levelup-modal-overlay {
+                    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+                    background: rgba(0,0,0,0.8);
+                    display: flex; align-items: center; justify-content: center;
+                    z-index: 9999;
+                    animation: fadeIn 0.3s forwards;
+                }
+                .levelup-card {
+                    background: var(--bg-panel);
+                    border: 2px solid var(--neon-cyan);
+                    padding: 40px;
+                    text-align: center;
+                    border-radius: 20px;
+                    box-shadow: 0 0 50px var(--neon-cyan);
+                    animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+                }
+                .levelup-title {
+                    font-family: 'Press Start 2P';
+                    color: var(--neon-cyan);
+                    font-size: 24px;
+                    margin: 20px 0;
+                }
+                .levelup-badge {
+                    font-size: 60px;
+                    font-weight: 900;
+                    color: white;
+                    text-shadow: 4px 4px 0 var(--codedex-purple);
+                    margin-bottom: 20px;
+                }
+                button {
+                    background: var(--codedex-cyan);
+                    color: black;
+                    border: none;
+                    padding: 12px 32px;
+                    font-family: 'Press Start 2P';
+                    font-size: 12px;
+                    cursor: pointer;
+                    margin-top: 20px;
+                }
+                @keyframes popIn { from { transform: scale(0.5); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+            </style>
+        `;
+        document.body.appendChild(modal);
     },
 
     showXPPopup(amount) {
@@ -944,25 +833,27 @@ function renderSignupPage() {
 // HOME DASHBOARD (Logged In) - CYBER FUTURISTIC CODEDEX STYLE
 // HOME DASHBOARD (Logged In) - CYBER FUTURISTIC CODEDEX STYLE
 function renderHomeDashboard() {
-    // Force 1-column layout for dashboard to allow breakout hero
-    const mainLayout = document.getElementById('main-layout');
-    if (mainLayout) {
-        mainLayout.style.display = 'block';
-        mainLayout.style.maxWidth = 'none';
-        mainLayout.style.margin = '0';
-        mainLayout.style.padding = '72px 0 0 0';
-        // We removed the 100vw hack - the container will handle alignment now
-    }
+    console.log(" [SYSTEM] renderHomeDashboard called");
+    try {
+        // Force 1-column layout for dashboard to allow breakout hero
+        const mainLayout = document.getElementById('main-layout');
+        if (mainLayout) {
+            mainLayout.style.display = 'block';
+            mainLayout.style.maxWidth = 'none';
+            mainLayout.style.margin = '0';
+            mainLayout.style.padding = '72px 0 0 0';
+            // We removed the 100vw hack - the container will handle alignment now
+        }
 
-    const rightSidebar = document.querySelector('.right-sidebar');
-    if (rightSidebar) rightSidebar.style.display = 'none';
+        const rightSidebar = document.querySelector('.right-sidebar');
+        if (rightSidebar) rightSidebar.style.display = 'none';
 
-    // ASSETS
-    const bannerArt = "./assets/pixel_art/cyber_cozy_lofi_lounge_panoramic.png";
-    const pythonArt = "./assets/pixel_art/python.png";
-    const jsArt = "./assets/pixel_art/js.png";
+        // ASSETS
+        const bannerArt = "./assets/pixel_art/cyber_cozy_lofi_lounge_panoramic.png";
+        const pythonArt = "./assets/pixel_art/python.png";
+        const jsArt = "./assets/pixel_art/js.png";
 
-    const dashboardHTML = `
+        const dashboardHTML = `
         <!-- TOP ZONE: FULL WIDTH -->
         <div class="dashboard-top-zone fade-in-up" style="width: 100%; overflow: hidden;">
             <!-- BREADCRUMBS -->
@@ -1159,26 +1050,29 @@ function renderHomeDashboard() {
         </div>
     `;
 
-    document.getElementById('main-content').innerHTML = dashboardHTML;
+        document.getElementById('main-content').innerHTML = dashboardHTML;
 
-    // Initialize 3D Tilt on Home Cards
-    if (window.TiltEffect) {
-        window.TiltEffect.init('.cyber-cozy-card', { max: 10, speed: 400 });
-        window.TiltEffect.init('.cyber-course-card', { max: 5, speed: 400 });
-        window.TiltEffect.init('.cyber-widget', { max: 2, scale: 1.01 });
-    }
+        // Initialize 3D Tilt on Home Cards
+        if (window.TiltEffect) {
+            window.TiltEffect.init('.cyber-cozy-card', { max: 10, speed: 400 });
+            window.TiltEffect.init('.cyber-course-card', { max: 5, speed: 400 });
+            window.TiltEffect.init('.cyber-widget', { max: 2, scale: 1.01 });
+        }
 
-    // Initialize Breadcrumbs
-    if (window.UIComponents) {
-        window.UIComponents.renderBreadcrumbs(
-            [{ label: 'Home', route: 'landing' }, { label: 'Dashboard', route: 'home' }],
-            'dashboard-breadcrumbs'
-        );
-    }
+        // Initialize Breadcrumbs
+        if (window.UIComponents) {
+            window.UIComponents.renderBreadcrumbs(
+                [{ label: 'Home', route: 'landing' }, { label: 'Dashboard', route: 'home' }],
+                'dashboard-breadcrumbs'
+            );
+        }
 
-    // Initialize Lucide Icons
-    if (window.lucide) {
-        window.lucide.createIcons();
+        // Initialize Lucide Icons
+        if (window.lucide) {
+            window.lucide.createIcons();
+        }
+    } catch (e) {
+        console.error(" [FATAL] renderHomeDashboard CRASHED:", e);
     }
 }
 
@@ -1200,10 +1094,16 @@ function navigateTo(route) {
     }
 
     // Hide all views first
-    document.querySelectorAll('.view').forEach(v => v.classList.add('hidden'));
+    document.querySelectorAll('.view, #courses-view, #course-view, #profile-view').forEach(v => v.classList.add('hidden'));
 
     // Handle Routes
-    if (route === 'landing') {
+    if (route === 'profile') {
+        const profileView = document.getElementById('profile-view');
+        if (profileView) {
+            profileView.classList.remove('hidden');
+            renderProfile();
+        }
+    } else if (route === 'landing') {
         if (sidebar) sidebar.style.display = 'none';
         if (mainLayout) mainLayout.style.display = 'block';
         renderLandingPage();
@@ -1226,10 +1126,6 @@ function navigateTo(route) {
         if (mainLayout) mainLayout.style.display = 'none';
         document.getElementById('courses-view').classList.remove('hidden');
         renderCoursesCatalog();
-    } else if (route === 'lesson') {
-        if (mainLayout) mainLayout.style.display = 'none';
-        document.getElementById('lesson-view').classList.remove('hidden');
-        renderLessonWorkspace();
     } else if (route === 'practice') {
         // PRACTICE PAGE (Challenge Packs)
         if (sidebar) sidebar.style.display = 'none';
@@ -1249,6 +1145,10 @@ function navigateTo(route) {
         if (mainLayout) mainLayout.style.display = 'none';
         document.getElementById('course-view').classList.remove('hidden');
         renderCourseRoadmap(route.replace('course-', ''));
+    } else if (route.startsWith('lesson-')) {
+        if (sidebar) sidebar.style.display = 'none';
+        if (mainLayout) mainLayout.style.display = 'block';
+        renderLessonView(route.replace('lesson-', ''));
     }
 }
 
@@ -1269,7 +1169,7 @@ function renderPracticePage() {
     const bannerArt = "./assets/pixel_art/ChatGPT Image Dec 20, 2025, 09_33_16 AM.png";
 
     const html = `
-        < div class="page-container" style = "max-width: 1200px; margin: 0 auto; padding: 24px;" >
+        <div class="page-container" style="max-width: 1200px; margin: 0 auto; padding: 24px;">
             <div class="page-banner" style="background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('${bannerArt}'); background-size: cover; background-position: center; border-radius: 24px; padding: 60px 40px; margin-bottom: 32px;">
                 <h1 style="font-family: 'Press Start 2P'; font-size: 28px; margin-bottom: 16px;">Challenge Packs</h1>
                 <p style="color: var(--text-secondary); max-width: 500px;">Practice with bite-sized challenges to sharpen your skills.</p>
@@ -1298,7 +1198,7 @@ function renderPracticePage() {
                     </div>
                 `}).join('')}
             </div>
-        </div >
+        </div>
         `;
 
     document.getElementById('main-content').innerHTML = html;
@@ -1321,7 +1221,7 @@ function renderProfilePage() {
     ];
 
     const html = `
-        < div class="profile-container" >
+        <div class="profile-container">
             <div class="profile-header-large cyber-card">
                 <div class="profile-avatar-large">
                     <img src="./assets/avatars/avatar-1.png" style="width: 80%; opacity: 0.8;" onerror="this.src=''; this.style.display='none'">
@@ -1382,7 +1282,7 @@ function renderProfilePage() {
                     </ul>
                  </div>
             </div>
-        </div >
+        </div>
         `;
 
     document.getElementById('main-content').innerHTML = html;
@@ -1394,7 +1294,7 @@ function renderBuildsPage() {
     const mascotArt = "./assets/pixel_art/ChatGPT Image Dec 20, 2025, 09_42_03 AM.png";
 
     const html = `
-        < div class="page-container" style = "max-width: 1000px; margin: 0 auto; padding: 24px; text-align: center;" >
+        <div class="page-container" style="max-width: 1000px; margin: 0 auto; padding: 24px; text-align: center;">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 32px;">
                 <h1 style="font-family: 'Press Start 2P'; font-size: 24px;">Builds</h1>
                 <button class="btn-home-cta" style="font-size: 12px; padding: 12px 24px;">+ New Build</button>
@@ -1406,7 +1306,7 @@ function renderBuildsPage() {
                 <p style="color: var(--text-muted); max-width: 400px; margin: 0 auto 24px;">Share your code snippets, projects, and ideas with the community.</p>
                 <button class="btn-cyber-primary" style="padding: 14px 32px;">Create Your First Build</button>
             </div>
-        </div >
+        </div>
         `;
 
     document.getElementById('main-content').innerHTML = html;
@@ -1418,8 +1318,8 @@ function renderBuildsPage() {
 async function renderCommunityPage() {
     // 1. Setup Skeleton Layout
     const html = `
-        < div class="community-layout" style = "display: grid; grid-template-columns: 250px 1fr 300px; gap: 24px; padding: 24px; max-width: 1400px; margin: 0 auto;" >
-            < !--Left Sidebar: Channels-- >
+        <div class="community-layout" style="display: grid; grid-template-columns: 250px 1fr 300px; gap: 24px; padding: 24px; max-width: 1400px; margin: 0 auto;">
+            <!--Left Sidebar: Channels-->
             <div class="community-channels" style="background: var(--bg-card); border-radius: 16px; padding: 20px; border: 1px solid var(--border-subtle);">
                 <h4 style="font-family: 'Press Start 2P'; font-size: 10px; color: var(--text-muted); margin-bottom: 16px;">CHANNELS</h4>
                 <div id="channel-list" style="display: flex; flex-direction: column; gap: 8px;">
@@ -1430,7 +1330,7 @@ async function renderCommunityPage() {
                 </div>
             </div>
 
-            <!--Center: Feed-- >
+            <!--Center: Feed-->
             <div class="community-feed">
                 <!-- Post Creator -->
                 <div class="cyber-card" style="padding: 16px; margin-bottom: 24px; border: 1px solid var(--border-subtle);">
@@ -1454,7 +1354,7 @@ async function renderCommunityPage() {
                 </div>
             </div>
 
-            <!--Right Sidebar: News & Events-- >
+            <!--Right Sidebar: News & Events-->
         <div class="community-sidebar">
             <div class="sidebar-widget" style="background: var(--bg-card); border-radius: 16px; padding: 20px; margin-bottom: 16px; border: 1px solid var(--border-subtle);">
                 <h4 style="font-family: 'Press Start 2P'; font-size: 10px; color: var(--text-muted); margin-bottom: 16px;">MINECODE NEWS</h4>
@@ -1478,7 +1378,7 @@ async function renderCommunityPage() {
                 </div>
             </div>
         </div>
-        </div >
+        </div>
         `;
 
     document.getElementById('main-content').innerHTML = html;
@@ -1518,12 +1418,12 @@ function renderChannels(channels) {
     if (!channels.length) return;
 
     container.innerHTML = channels.map(c => `
-        < a href = "#" class="channel-item ${c.slug === 'general' ? 'active' : ''}" data - id="${c.id}"
-    onclick = "loadChannelFeed(${c.id}); selectChannel(this);"
-    style = "display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 8px; text-decoration: none; transition: background 0.2s;" >
+        <a href="#" class="channel-item ${c.slug === 'general' ? 'active' : ''}" data-id="${c.id}"
+    onclick="loadChannelFeed(${c.id}); selectChannel(this);"
+    style="display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 8px; text-decoration: none; transition: background 0.2s;">
             <span>${c.icon || '#'}</span> 
             <span style="text-transform: capitalize;">${c.name}</span>
-        </a >
+        </a>
         `).join('');
 
     // Simple inline style strategy for active/inactive
@@ -1574,7 +1474,7 @@ function renderPost(post, prepend = false) {
     const date = new Date(post.created_at).toLocaleDateString();
 
     const html = `
-        < div class="post-card cyber-card" style = "background: var(--bg-card); border-radius: 16px; padding: 20px; border: 1px solid var(--border-subtle); animation: fadeIn 0.5s;" >
+        <div class="post-card cyber-card" style="background: var(--bg-card); border-radius: 16px; padding: 20px; border: 1px solid var(--border-subtle); animation: fadeIn 0.5s;">
             <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
                 <div style="width: 40px; height: 40px; background: var(--bg-deep); border-radius: 50%; overflow: hidden;">
                      <img src="${post.author?.avatar_url || 'assets/default.png'}" style="width:100%; height:100%;">
@@ -1592,7 +1492,7 @@ function renderPost(post, prepend = false) {
                 <button class="btn-icon" style="background:none; border:none; color:inherit; cursor:pointer;">❤️ ${post.likes_count || 0}</button>
                 <button class="btn-icon" style="background:none; border:none; color:inherit; cursor:pointer;">💬 Reply</button>
             </div>
-        </div >
+        </div>
         `;
 
     const div = document.createElement('div');
@@ -1626,14 +1526,14 @@ function renderCommunityHub() {
     ];
 
     const channelsHtml = CHANNELS.map(ch => `
-        < div class="channel-item" onclick = "GameState.showToast('${ch.name} channel coming soon!', 'info')" >
+        <div class="channel-item" onclick="GameState.showToast('${ch.name} channel coming soon!', 'info')">
             <span class="channel-name">${ch.name}</span>
             <span class="channel-meta">${ch.members} members</span>
-        </div >
+        </div>
         `).join('');
 
     const postsHtml = RECENT_POSTS.map(post => `
-        < div class="community-post cyber-card" >
+        <div class="community-post cyber-card">
             <div class="post-header">
                 <div class="post-avatar">${post.avatar}</div>
                 <div class="post-author">
@@ -1648,16 +1548,16 @@ function renderCommunityHub() {
                 <button class="post-btn">💬 Reply</button>
                 <button class="post-btn">🔗 Share</button>
             </div>
-        </div >
+        </div>
         `).join('');
 
     mainContent.innerHTML = `
-        < div class="community-header" style = "text-align: center; margin-bottom: 48px;" >
+        <div class="community-header" style="text-align: center; margin-bottom: 48px;">
             <h1 style="font-family: 'Press Start 2P'; font-size: 24px; color: white; margin-bottom: 16px;">Community Hub</h1>
             <p style="color: var(--text-secondary); max-width: 500px; margin: 0 auto;">
                 Connect with fellow coders, share your projects, and get help from the community.
             </p>
-        </div >
+        </div>
 
         <div class="community-layout" style="display: grid; grid-template-columns: 280px 1fr; gap: 32px;">
             <!-- Channels Sidebar -->
@@ -1730,42 +1630,42 @@ function renderDashboard() {
         heroVisual.style.backgroundPosition = 'center';
         // Remove old CSS art elements if any
         heroVisual.innerHTML = `
-        < div class="hero-progress-bar" >
+        <div class="hero-progress-bar">
                 <div class="progress-track">
                     <div class="progress-fill" id="hero-progress" style="width: 44%"></div>
                 </div>
                 <span class="progress-text">44%</span>
-            </div >
+            </div>
         `;
     }
 
     const progressContainer = document.getElementById('progress-cards');
     if (progressContainer) {
         progressContainer.innerHTML = COURSES.slice(0, 2).map(c => `
-        < div class="small-course-card cyber-card stagger-item" style = "
-    background: linear - gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('${c.image}');
-    background - size: cover;
-    background - position: center;
-    min - width: 220px;
+        <div class="small-course-card cyber-card stagger-item" style="
+    background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('${c.image}');
+    background-size: cover;
+    background-position: center;
+    min-width: 220px;
     padding: 16px;
-    border - radius: 12px;
+    border-radius: 12px;
     cursor: pointer;
-    border: 1px solid var(--border - subtle);
-    animation - delay: ${0.1 + (i * 0.1)} s;
-    " data-route="course - ${c.id} ">
-        < span style = "font-size: 10px; background: rgba(0,0,0,0.6); padding: 2px 6px; border-radius: 4px; backdrop-filter:blur(4px);" > COURSE</span >
+    border: 1px solid var(--border-subtle);
+    animation-delay: ${0.1 + (i * 0.1)}s;
+    " data-route="course-${c.id}">
+        <span style="font-size: 10px; background: rgba(0,0,0,0.6); padding: 2px 6px; border-radius: 4px; backdrop-filter:blur(4px);">COURSE</span>
                 <h4 style="font-family: 'Press Start 2P'; font-size: 12px; margin: 8px 0; color: white;">${c.title}</h4>
                 <div style="font-size: 12px; font-family: 'VT323'; color: rgba(255,255,255,0.9);">
                     ${c.completed}/${c.lessons} COMPLETED
                 </div>
-            </div >
+            </div>
         `).join('');
     }
 
     const tutorialsGrid = document.getElementById('tutorials-grid');
     if (tutorialsGrid) {
         tutorialsGrid.innerHTML = TUTORIALS.map(t => `
-        < div class="tutorial-card" style = "background: var(--bg-card); border-radius: 12px; overflow: hidden; border: 1px solid var(--border-subtle);" >
+        <div class="tutorial-card" style="background: var(--bg-card); border-radius: 12px; overflow: hidden; border: 1px solid var(--border-subtle);">
                 <div style="height: 100px; background: ${t.img}; background-size: cover; background-position: center;"></div>
                 <div style="padding: 12px;">
                     <h4 style="font-size: 12px; font-family: 'Press Start 2P'; margin-bottom: 8px;">${t.title}</h4>
@@ -1773,12 +1673,12 @@ function renderDashboard() {
                         ${t.tags.map(tag => `<span style="font-size: 10px; background: rgba(0,245,255,0.1); color: var(--neon-cyan); padding: 2px 6px; border-radius: 4px;">${tag}</span>`).join('')}
                     </div>
                 </div>
-            </div >
+            </div>
         `).join('');
     }
 }
 
-function renderCoursesCatalog() {
+window.renderCoursesCatalog = function (filter = 'all') {
     const grid = document.getElementById('all-courses-grid');
     if (!grid) return;
 
@@ -1786,22 +1686,22 @@ function renderCoursesCatalog() {
     grid.innerHTML = '';
     grid.style.display = 'block';
 
-    // 1. HEADER BANNER (Codedex Style)
+    // 1. HEADER BANNER
     const headerHTML = `
-        < div class="catalog-header" style = "text-align: center; margin-bottom: 60px; padding-top: 20px;" >
+        <div class="catalog-header" style="text-align: center; margin-bottom: 60px; padding-top: 20px;">
             <h1 style="font-family: 'Press Start 2P'; font-size: 28px; margin-bottom: 16px; color: white;">Course Catalog</h1>
             <p style="font-family: 'Outfit'; color: var(--text-secondary); font-size: 16px; max-width: 600px; margin: 0 auto;">
                 Browse our full curriculum of interactive coding courses. From Python to Web Development, start your journey today.
             </p>
             
             <div class="catalog-filters" style="display: flex; justify-content: center; gap: 12px; margin-top: 32px;">
-                <button class="filter-btn active">All</button>
-                <button class="filter-btn">Python</button>
-                <button class="filter-btn">Web Dev</button>
-                <button class="filter-btn">CS</button>
+                <button class="filter-btn ${filter === 'all' ? 'active' : ''}" onclick="renderCoursesCatalog('all')">All</button>
+                <button class="filter-btn ${filter === 'python' ? 'active' : ''}" onclick="renderCoursesCatalog('python')">Python</button>
+                <button class="filter-btn ${filter === 'web' ? 'active' : ''}" onclick="renderCoursesCatalog('web')">Web Dev</button>
+                <button class="filter-btn ${filter === 'misc' ? 'active' : ''}" onclick="renderCoursesCatalog('misc')">Electives</button>
             </div>
-        </div >
-        `;
+        </div>
+    `;
 
     // 2. Card Creator Helper
     const createCodedexCard = (c) => {
@@ -1811,69 +1711,83 @@ function renderCoursesCatalog() {
         // Icon/Image Logic
         let visualContent = '';
         if (c.image) {
-            visualContent = `< div class="card-visual" style = "background-image: url('${c.image}');" ></div > `;
+            visualContent = `<div class="card-visual" style="background-image: url('${c.image}');"></div>`;
         } else {
-            // Fallback gradient/icon
             const iconHtml = c.icon.startsWith('pixel-icon-')
-                ? `< img src = "https://unpkg.com/pixelarticons@1.8.1/svg/${c.icon.replace('pixel-icon-', '')}.svg" style = "filter: brightness(0) invert(1); width: 40px;" > `
-                : `< span style = "font-size: 40px;" > ${c.icon}</span > `;
-            visualContent = `< div class="card-visual" style = "background: ${c.gradient}; display: flex; align-items: center; justify-content: center;" > ${iconHtml}</div > `;
+                ? `<img src="https://unpkg.com/pixelarticons@1.8.1/svg/${c.icon.replace('pixel-icon-', '')}.svg" style="filter: brightness(0) invert(1); width: 40px;">`
+                : `<span style="font-size: 40px;">${c.icon}</span>`;
+            visualContent = `<div class="card-visual" style="background: ${c.gradient}; display: flex; align-items: center; justify-content: center;">${iconHtml}</div>`;
         }
 
         return `
-        < div class="codedex-card" onclick = "navigateTo('course-${c.id}')" >
+        <div class="codedex-card" onclick="navigateTo('course-${c.id}')">
             ${visualContent}
-    <div class="card-body">
-        <div class="card-top">
-            <span class="lang-badge">${c.id.toUpperCase()}</span>
-            <span class="level-badge-simple">${c.difficulty}</span>
-        </div>
-        <h3>${c.title}</h3>
-        <p>${c.desc}</p>
-        <div class="card-footer">
-            <div class="progress-wrap">
-                <div class="progress-bar-thin"><div class="fill" style="width: ${progressPercent}%"></div></div>
-                <span>${progressPercent}%</span>
+            <div class="card-body">
+                <div class="card-top">
+                    <span class="lang-badge">${c.id.toUpperCase()}</span>
+                    <span class="level-badge-simple">${c.difficulty}</span>
+                </div>
+                <h3>${c.title}</h3>
+                <p>${c.desc}</p>
+                <div class="card-footer">
+                    <div class="progress-wrap">
+                        <div class="progress-bar-thin"><div class="fill" style="width: ${progressPercent}%"></div></div>
+                        <span>${progressPercent}%</span>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
-        </div >
         `;
     };
 
-    // 3. Render Sections
+    // 3. Render Sections based on Filter
     let html = headerHTML;
+    const wrapGrid = (cards) => `<div class="codedex-grid">${cards}</div>`;
 
-    // Helper for grid wrapper
-    const wrapGrid = (cards) => `< div class="codedex-grid" > ${cards}</div > `;
+    if (filter === 'all') {
+        // Render Sections
+        const pythonCourses = COURSES.filter(c => c.category === 'python-legend');
+        if (pythonCourses.length) {
+            html += `
+            <div class="course-section">
+                <h2 class="section-heading"><span class="icon">🐍</span> The Legend of Python</h2>
+                ${wrapGrid(pythonCourses.map(createCodedexCard).join(''))}
+            </div>`;
+        }
 
-    // The Legend of Python
-    html += `
-        < div class="course-section" >
-            <h2 class="section-heading"><span class="icon">🐍</span> The Legend of Python</h2>
-            ${wrapGrid(COURSES.filter(c => c.category === 'python-legend').map(createCodedexCard).join(''))}
-        </div >
-        `;
+        const originCourses = COURSES.filter(c => c.category === 'origins');
+        if (originCourses.length) {
+            html += `
+            <div class="course-section">
+                <h2 class="section-heading"><span class="icon">🌐</span> The Origins Trilogy</h2>
+                ${wrapGrid(originCourses.map(createCodedexCard).join(''))}
+            </div>`;
+        }
 
-    // The Origins Trilogy
-    html += `
-        < div class="course-section" >
-            <h2 class="section-heading"><span class="icon">🌐</span> The Origins Trilogy</h2>
-            ${wrapGrid(COURSES.filter(c => c.category === 'origins').map(createCodedexCard).join(''))}
-        </div >
-        `;
+        const otherCourses = COURSES.filter(c => !c.category);
+        if (otherCourses.length) {
+            html += `
+            <div class="course-section">
+                <h2 class="section-heading"><span class="icon">📚</span> Electives & More</h2>
+                ${wrapGrid(otherCourses.map(createCodedexCard).join(''))}
+            </div>`;
+        }
+    } else {
+        // Flat filtered list
+        let filtered = [];
+        if (filter === 'python') filtered = COURSES.filter(c => c.category === 'python-legend' || c.id.includes('python'));
+        else if (filter === 'web') filtered = COURSES.filter(c => c.category === 'origins' || c.id === 'react' || c.id === 'html' || c.id === 'css');
+        else if (filter === 'misc') filtered = COURSES.filter(c => !c.category && c.id !== 'react');
 
-    // All Courses (Others)
-    const others = COURSES.filter(c => !c.category);
-    html += `
-        < div class="course-section" >
-            <h2 class="section-heading"><span class="icon">📚</span> Electives & More</h2>
-            ${wrapGrid(others.map(createCodedexCard).join(''))}
-        </div >
-        `;
+        if (filtered.length > 0) {
+            html += `<div class="course-section" style="margin-top: 40px;">${wrapGrid(filtered.map(createCodedexCard).join(''))}</div>`;
+        } else {
+            html += `<div style="text-align:center; padding: 40px; color: var(--text-muted);">No courses found for this category.</div>`;
+        }
+    }
 
     grid.innerHTML = html;
-}
+};
 
 // === PRACTICE SECTION ===
 function renderPracticeSection() {
@@ -1888,7 +1802,7 @@ function renderPracticeSection() {
     ];
 
     const challengeCardsHtml = CHALLENGE_PACKS.map(pack => `
-        < div class="practice-card" onclick = "GameState.showToast('${pack.title} coming soon!', 'info')" style = "border-left: 4px solid ${pack.color};" >
+        <div class="practice-card" onclick="GameState.showToast('${pack.title} coming soon!', 'info')" style="border-left: 4px solid ${pack.color};">
             <div class="practice-icon">${pack.icon}</div>
             <div class="practice-info">
                 <h3>${pack.title}</h3>
@@ -1897,16 +1811,16 @@ function renderPracticeSection() {
             <div class="practice-progress">
                 <span>0/${pack.challenges}</span>
             </div>
-        </div >
+        </div>
         `).join('');
 
     mainContent.innerHTML = `
-        < div class="practice-header" style = "text-align: center; margin-bottom: 48px;" >
+        <div class="practice-header" style="text-align: center; margin-bottom: 48px;">
             <h1 style="font-family: 'Press Start 2P'; font-size: 24px; color: white; margin-bottom: 16px;">Practice Arena</h1>
             <p style="color: var(--text-secondary); max-width: 500px; margin: 0 auto;">
                 Sharpen your skills with daily challenges, coding exercises, and timed competitions.
             </p>
-        </div >
+        </div>
 
         <div class="practice-section">
             <h2 class="section-heading"><span class="icon">🔥</span> Challenge Packs</h2>
@@ -1973,7 +1887,7 @@ function renderBuildGallery() {
     ];
 
     const buildCardsHtml = BUILDS.map(build => `
-        < div class="build-card cyber-card" onclick = "GameState.showToast('View ${build.title}', 'info')" >
+        <div class="build-card cyber-card" onclick="GameState.showToast('View ${build.title}', 'info')">
             <div class="build-preview" style="height: 140px; background: var(--bg-deep); display: flex; align-items: center; justify-content: center; font-size: 32px;">📦</div>
             <div class="build-info" style="padding: 16px;">
                 <h3 style="color: var(--text-bright); margin: 0 0 8px 0; font-size: 14px;">${build.title}</h3>
@@ -1985,17 +1899,17 @@ function renderBuildGallery() {
                     <span>❤️ ${build.likes}</span>
                 </div>
             </div>
-        </div >
+        </div>
         `).join('');
 
     mainContent.innerHTML = `
-        < div class="builds-header" style = "text-align: center; margin-bottom: 48px;" >
+        <div class="builds-header" style="text-align: center; margin-bottom: 48px;">
             <h1 style="font-family: 'Press Start 2P'; font-size: 24px; color: white; margin-bottom: 16px;">Build Gallery</h1>
             <p style="color: var(--text-secondary); max-width: 500px; margin: 0 auto 24px auto;">
                 Explore projects built by the MineCode community. Get inspired and share your own!
             </p>
             <button class="btn-cyber-primary">+ Submit Your Build</button>
-        </div >
+        </div>
 
         <div class="codedex-grid">
             ${buildCardsHtml}
@@ -2032,8 +1946,8 @@ function renderCourseRoadmap(id) {
 
     // --- SIDEBAR HTML ---
     sidebar.innerHTML = `
-        < div class="roadmap-sidebar" >
-            < !--User Progress Card-- >
+        <div class="roadmap-sidebar">
+            <!--User Progress Card-->
             <div class="cyber-card" style="padding: 20px;">
                 <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 16px;">
                     <div class="avatar-circle" style="width: 48px; height: 48px;">
@@ -2067,7 +1981,7 @@ function renderCourseRoadmap(id) {
                 </div>
             </div>
 
-            <!--Badges Card-- >
+            <!--Badges Card-->
         <div class="cyber-card" style="padding: 20px;">
             <h4 style="margin: 0 0 12px 0; font-size: 12px; color: var(--text-muted);">EARNED BADGES</h4>
             <div style="display: flex; gap: 8px; flex-wrap: wrap;">
@@ -2076,86 +1990,290 @@ function renderCourseRoadmap(id) {
                 <div class="badge-mini locked" title="Function Pro">🧩</div>
             </div>
         </div>
-        </div >
+        </div>
         `;
 
-    // --- MAIN CONTENT (Chapter Roadmap) ---
-    const chaptersHtml = chapters.map((chapter, chapterIndex) => {
+    // --- MAIN CONTENT (Visual RPG Roadmap) ---
+    // Generate simple zig-zag map layout
+    const chaptersHtml = chapters.map((chapter, index) => {
+        // Alignment: Left, Center, Right, Center...
+        const align = ['flex-start', 'center', 'flex-end', 'center'][index % 4];
+
         // Check chapter completion
         const chapterLessonIds = chapter.lessons.map(l => l.id);
         const chapterCompleted = chapterLessonIds.every(id => completedIds.includes(id));
-        const chapterInProgress = chapterLessonIds.some(id => completedIds.includes(id)) && !chapterCompleted;
-
-        // First unlocked lesson in chapter
-        const firstIncomplete = chapter.lessons.find(l => !completedIds.includes(l.id));
-        const isChapterUnlocked = chapterIndex === 0 || chapters[chapterIndex - 1].lessons.every(l => completedIds.includes(l.id));
+        const isLocked = index > 0 && !chapters[index - 1].lessons.every(l => completedIds.includes(l.id));
 
         const lessonsHtml = chapter.lessons.map(lesson => {
             const isCompleted = completedIds.includes(lesson.id);
-            const isNext = lesson.id === (completedIds.length > 0 ? Math.max(...completedIds) + 1 : 1);
-            const isLocked = !isCompleted && !isNext && !isChapterUnlocked;
+            const isNext = lesson.id === (completedIds.length > 0 ? getNextLessonId(completedIds) : 'python-1-1'); // Simplified next check
+            // Note: getNextLessonId logic needs to be robust, using first incomplete for now
+            const isLessonLocked = isLocked || (!isCompleted && !isNext && index > 0);
 
-            let statusClass = isCompleted ? 'completed' : (isNext ? 'current' : (isLocked ? 'locked' : ''));
-            let icon = isCompleted ? '✓' : (lesson.type === 'project' ? '🛠️' : '📄');
+            // Allow clicking if not locked (or if it's the very first lesson)
+            const canClick = !isLessonLocked || (index === 0 && lesson.id === 'python-1-1');
 
             return `
-        < div class="roadmap-lesson ${statusClass}" onclick = "${!isLocked ? `navigateTo('lesson-${lesson.id}')` : ''}" >
-                    <span class="lesson-icon">${icon}</span>
-                    <span class="lesson-title">${lesson.title}</span>
-                    ${lesson.type === 'project' ? '<span class="project-tag">PROJECT</span>' : ''}
-                </div >
-        `;
-        }).join('');
+            <div class="map-node ${isCompleted ? 'completed' : ''} ${isNext ? 'current' : ''} ${isLessonLocked ? 'locked' : ''}" 
+                 onclick="${canClick ? `navigateTo('lesson-${lesson.id}')` : ''}"
+                 title="${lesson.title}">
+                <div class="node-icon">${isCompleted ? '⚡' : (isNext ? '💠' : (isLessonLocked ? '🔒' : '○'))}</div>
+                <div class="node-label">${lesson.title}</div>
+            </div>`;
+        }).join('<div class="path-line"></div>'); // Simple vertical connector between lessons in a chapter
 
         return `
-        < div class="roadmap-chapter ${chapterCompleted ? 'completed' : ''} ${chapterInProgress ? 'in-progress' : ''}" >
-                <div class="chapter-header">
-                    <div class="chapter-icon">${chapter.icon}</div>
-                    <div class="chapter-info">
-                        <span class="chapter-number">CHAPTER ${chapter.id}</span>
-                        <h3 class="chapter-title">${chapter.title}</h3>
-                    </div>
-                    <div class="chapter-status">
-                        ${chapterCompleted ? '<span class="status-complete">✓</span>' : `<span class="status-count">${chapterLessonIds.filter(id => completedIds.includes(id)).length}/${chapter.lessons.length}</span>`}
-                    </div>
-                </div>
-                <div class="chapter-lessons">
-                    ${lessonsHtml}
-                </div>
-            </div >
+        <div class="map-island" style="align-self: ${align};">
+            <div class="island-visual ${isLocked ? 'locked' : ''}">
+                <div class="island-icon">${chapter.icon}</div>
+                <div class="island-title">${chapter.title}</div>
+            </div>
+            <div class="island-path">
+                ${lessonsHtml}
+            </div>
+        </div>
+        ${index < chapters.length - 1 ? '<div class="ocean-path"></div>' : ''}
         `;
     }).join('');
 
     content.innerHTML = `
-        < div class="roadmap-header" >
-            <button class="btn-back" onclick="navigateTo('courses')">
-                <i data-lucide="arrow-left" style="width: 16px; height: 16px;"></i> Back
+        <div class="roadmap-header" style="text-align: center; padding: 40px 0;">
+            <div class="course-badge-large" style="background: ${course.gradient}; width: 80px; height: 80px; border-radius: 20px; margin: 0 auto 16px; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 20px rgba(0,0,0,0.5);">
+                ${course.image ? `<img src="${course.image}" style="width: 50px;">` : `<span style="font-size: 40px;">${course.icon}</span>`}
+            </div>
+            <h1 style="font-family: 'Press Start 2P'; font-size: 24px; color: white; margin-bottom: 8px;">${course.title}</h1>
+            <p style="color: var(--text-secondary);">${course.desc}</p>
+            <div style="margin-top: 16px;">
+                 <span class="tag">${course.difficulty}</span>
+                 <span class="tag">${progressPercent}% Complete</span>
+            </div>
+             <button class="btn-back" onclick="navigateTo('courses')" style="position: absolute; top: 20px; left: 20px;">
+                ← Back
             </button>
-            <div class="course-badge" style="background: ${course.gradient};">
-                ${course.image ? `<img src="${course.image}" alt="${course.title}">` : `<span style="font-size: 32px;">${course.icon}</span>`}
-            </div>
-            <div class="course-meta">
-                <h1 class="course-title">${course.title}</h1>
-                <p class="course-desc">${course.desc}</p>
-                <div class="course-tags">
-                    <span class="tag">${course.difficulty}</span>
-                    <span class="tag">${totalLessons} lessons</span>
-                </div>
-            </div>
-        </div >
+        </div>
 
-        <div class="roadmap-chapters">
+        <div class="rpg-map-container" style="display: flex; flex-direction: column; gap: 40px; padding: 40px; max-width: 800px; margin: 0 auto; position: relative;">
+            <!-- Background Line -->
+            <div class="map-guide-line"></div>
             ${chaptersHtml}
         </div>
+        
+        <style>
+            .map-island {
+                background: rgba(16, 18, 27, 0.9);
+                border: 1px solid var(--border-subtle);
+                border-radius: 20px;
+                padding: 24px;
+                width: 280px;
+                position: relative;
+                z-index: 2;
+                transition: all 0.3s ease;
+                box-shadow: 0 0 20px rgba(0,0,0,0.2);
+                background-image: radial-gradient(circle at 10% 20%, rgba(0, 255, 255, 0.03) 0%, transparent 20%);
+            }
+            .map-island:hover { 
+                transform: translateY(-5px); 
+                border-color: var(--neon-cyan); 
+                box-shadow: 0 0 30px rgba(0, 255, 255, 0.15);
+            }
+            .map-island::before {
+                content: '';
+                position: absolute;
+                top: -2px; left: -2px; right: -2px; bottom: -2px;
+                border-radius: 22px;
+                background: linear-gradient(45deg, var(--neon-cyan), transparent, var(--neon-purple));
+                z-index: -1;
+                opacity: 0;
+                transition: opacity 0.3s;
+            }
+            .map-island:hover::before { opacity: 0.3; }
+
+            .island-visual { text-align: center; margin-bottom: 16px; }
+            .island-icon { font-size: 32px; margin-bottom: 8px; filter: drop-shadow(0 0 10px rgba(255,255,255,0.3)); }
+            .island-title { font-family: 'Press Start 2P'; font-size: 12px; line-height: 1.4; color: var(--text-bright); text-shadow: 0 0 5px rgba(0,255,255,0.5); }
+            .island-path { display: flex; flex-direction: column; align-items: center; gap: 12px; }
+            
+            .map-node {
+                width: 100%;
+                padding: 12px 16px;
+                background: var(--bg-deep);
+                border-radius: 12px;
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                cursor: pointer;
+                border: 1px solid rgba(255,255,255,0.05);
+                transition: all 0.2s;
+                position: relative;
+            }
+            .map-node:hover { background: var(--bg-elevated); border-color: var(--neon-cyan); }
+            
+            .map-node.current { 
+                border-color: var(--neon-cyan); 
+                box-shadow: 0 0 15px rgba(0, 255, 255, 0.2); 
+                background: rgba(0, 255, 255, 0.05);
+            }
+            .map-node.completed { 
+                border-color: var(--codedex-green); 
+                background: rgba(0, 255, 0, 0.05);
+            }
+            .map-node.completed .node-icon { color: var(--codedex-green); text-shadow: 0 0 10px rgba(0,255,0,0.5); }
+            .map-node.current .node-icon { animation: pulse 1.5s infinite; }
+            
+            .map-node.locked { opacity: 0.5; cursor: not-allowed; filter: grayscale(1); }
+            
+            .node-icon { width: 24px; text-align: center; font-size: 14px; }
+            .node-label { font-size: 12px; font-weight: 600; font-family: var(--font-code); letter-spacing: 0.5px; }
+            
+            .path-line { width: 2px; height: 16px; background: var(--border-subtle); box-shadow: 0 0 5px var(--neon-cyan); }
+            .ocean-path { 
+                height: 60px; 
+                border-left: 2px dashed var(--border-subtle); 
+                margin: 0 auto; 
+                width: 0; 
+                opacity: 0.5;
+            }
+            
+            .map-guide-line {
+                position: absolute;
+                top: 0; bottom: 0; left: 50%;
+                width: 2px;
+                background: linear-gradient(to bottom, transparent, var(--neon-cyan), transparent);
+                opacity: 0.1;
+                pointer-events: none;
+            }
+        </style>
     `;
 
     // Re-init Lucide icons
     if (window.lucide) window.lucide.createIcons();
 }
+// Helper (Quick fix, ideal solution in GameState)
+function getNextLessonId(completed) {
+    // Logic to find next ID. For now return hardcoded if empty
+    return 'python-1-1';
+}
 
 // ============================================
-// LESSON VIEW - Renders individual exercises
+// PROFILE VIEW - Netrunner ID Style
 // ============================================
+function renderProfile() {
+    const content = document.getElementById('profile-content');
+    if (!content) return;
+
+    const user = GameState.data.user;
+
+    // Calculate Rank based on level
+    const rank = user.level < 5 ? 'Novice' : (user.level < 10 ? 'Apprentice' : (user.level < 20 ? 'Cyber Knight' : 'Legend'));
+
+    // Simulate activity data
+    const activityData = Array.from({ length: 12 }, () => Math.floor(Math.random() * 5));
+
+    content.innerHTML = `
+        <div class="cyber-profile-grid" style="display: grid; grid-template-columns: 350px 1fr; gap: 32px; align-items: start;">
+            
+            <!-- LEFT: Netrunner ID Card -->
+            <div class="netrunner-id" style="
+                background: rgba(16, 18, 27, 0.6);
+                backdrop-filter: blur(12px);
+                border: 1px solid rgba(255, 255, 255, 0.1);
+                border-radius: 24px;
+                padding: 32px;
+                position: relative;
+                overflow: hidden;
+                box-shadow: 0 0 40px rgba(0,0,0,0.5);
+            ">
+                <!-- Holo overlay effect -->
+                <div style="position: absolute; top:0; left:0; right:0; height: 200px; background: linear-gradient(180deg, rgba(0,255,255,0.05) 0%, transparent 100%); pointer-events: none;"></div>
+                
+                <div style="text-align: center; position: relative;">
+                    <div class="avatar-large" style="
+                        width: 120px; height: 120px; 
+                        margin: 0 auto 24px;
+                        background: var(--bg-elevated);
+                        border-radius: 50%;
+                        display: flex; align-items: center; justify-content: center;
+                        border: 3px solid var(--neon-cyan);
+                        box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
+                    ">
+                        <i data-lucide="user" style="width: 60px; height: 60px; color: var(--text-bright);"></i>
+                    </div>
+                    <h1 style="font-size: 24px; margin-bottom: 8px; color: white; text-shadow: 0 0 10px rgba(0,255,255,0.5);">${user.name}</h1>
+                    <div class="badge-pill" style="
+                        display: inline-block;
+                        padding: 6px 16px;
+                        background: rgba(0, 255, 255, 0.1);
+                        border: 1px solid var(--neon-cyan);
+                        border-radius: 100px;
+                        color: var(--neon-cyan);
+                        font-family: var(--font-code);
+                        font-size: 12px;
+                        letter-spacing: 1px;
+                    ">${rank} // LEVEL ${user.level}</div>
+                </div>
+
+                <div class="stats-grid" style="
+                    display: grid; grid-template-columns: 1fr 1fr; gap: 16px;
+                    margin-top: 40px;
+                    padding-top: 32px;
+                    border-top: 1px solid rgba(255,255,255,0.1);
+                ">
+                    <div class="stat-box" style="text-align: center;">
+                        <div style="font-size: 24px; color: var(--neon-orange); font-weight: 700;">${user.streak}</div>
+                        <div style="font-size: 11px; color: var(--text-muted); letter-spacing: 1px;">DAY STREAK</div>
+                    </div>
+                    <div class="stat-box" style="text-align: center;">
+                        <div style="font-size: 24px; color: var(--neon-purple); font-weight: 700;">${user.xp}</div>
+                        <div style="font-size: 11px; color: var(--text-muted); letter-spacing: 1px;">TOTAL XP</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- RIGHT: Badges & Activity -->
+            <div class="profile-details" style="display: flex; flex-direction: column; gap: 32px;">
+                
+                <!-- Badge Hex-Grid -->
+                <div class="section-card" style="background: var(--bg-panel); border-radius: 20px; padding: 32px;">
+                    <h3 style="margin-bottom: 24px; font-family: 'Press Start 2P'; font-size: 14px; color: var(--text-secondary);">ACQUIRED BADGES</h3>
+                    <div class="hex-grid" style="display: flex; gap: 16px; flex-wrap: wrap;">
+                        ${[1, 2, 3, 4, 5].map(i => `
+                            <div class="hex-badge" style="
+                                width: 80px; height: 90px;
+                                background: ${i <= 2 ? 'var(--bg-elevated)' : 'rgba(255,255,255,0.05)'};
+                                clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+                                display: flex; align-items: center; justify-content: center;
+                                font-size: 24px;
+                                filter: ${i <= 2 ? 'none' : 'grayscale(1) opacity(0.3)'};
+                                border: 1px solid ${i <= 2 ? 'var(--neon-cyan)' : 'transparent'};
+                            ">
+                                ${['🚀', '🐍', '⭐', '🏆', '⚔️'][i - 1]}
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+
+                <!-- Activity Graph (Decor) -->
+                <div class="section-card" style="background: var(--bg-panel); border-radius: 20px; padding: 32px;">
+                    <h3 style="margin-bottom: 24px; font-family: 'Press Start 2P'; font-size: 14px; color: var(--text-secondary);">NEURAL ACTIVITY</h3>
+                    <div style="display: flex; align-items: flex-end; gap: 8px; height: 100px;">
+                        ${activityData.map(h => `
+                            <div style="
+                                flex: 1;
+                                background: var(--codedex-green);
+                                opacity: ${0.2 + (h * 0.15)};
+                                height: ${h * 20}%;
+                                border-radius: 4px;
+                            "></div>
+                        `).join('')}
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    `;
+
+    if (window.lucide) window.lucide.createIcons();
+}
 function renderLessonView(lessonId) {
     const mainContent = document.getElementById('main-content');
     if (!mainContent) return;
@@ -2574,160 +2692,5 @@ function simulatePythonCode(code) {
     return output.join('\n') || 'No output';
 }
 
-// FEATURE: FUNCTIONAL LESSON EDITOR
-function renderLessonWorkspace() {
-    const instructions = document.getElementById('lesson-instructions');
-    const editor = document.getElementById('code-editor');
-    const terminal = document.getElementById('terminal');
-    const nav = document.getElementById('lesson-nav');
-
-    // Current Lesson State (Mocking Lesson 2)
-    const currentLessonId = 2;
-    const isCompleted = GameState.data.progress.python.completedLessons.includes(currentLessonId);
-
-    instructions.innerHTML = `
-        < div class="fade-in-up" >
-            <span style="background: var(--bg-elevated); color: var(--neon-cyan); padding: 4px 8px; border-radius: 4px; font-size: 10px; font-family: 'Press Start 2P';">LESSON ${currentLessonId}</span>
-            <h1 style="font-family: 'Press Start 2P'; font-size: 18px; margin: 16px 0; line-height: 1.5; color: var(--text-bright);">HELLO WORLD</h1>
-            <p style="font-family: 'VT323'; font-size: 20px; color: var(--text-secondary);">Your first standardized output.</p>
-        </div >
-        <div class="fade-in-up" style="animation-delay: 0.1s; font-family: 'VT323'; font-size: 18px; color: var(--text-primary);">
-            <p>Every cyber-agent starts here. Initializing the output stream.</p>
-            <br>
-                <p>TASK: Print the greeting signal.</p>
-                <div style="background: var(--bg-deep); padding: 12px; border-left: 2px solid var(--neon-green); margin: 16px 0; font-family: 'VT323';">
-                    print("Hello, World!")
-                </div>
-                ${isCompleted ? '<div style="color: var(--neon-green);">✅ LESSON COMPLETE</div>' : ''}
-
-                <!-- Hints System -->
-                <div class="hints-container" style="margin-top: 24px;">
-                    <button class="hint-toggle" onclick="this.nextElementSibling.classList.toggle('hidden'); this.textContent = this.nextElementSibling.classList.contains('hidden') ? '💡 Show Hint' : '💡 Hide Hint';" style="
-                    background: transparent;
-                    border: 1px dashed var(--border-subtle);
-                    color: var(--text-muted);
-                    padding: 8px 16px;
-                    border-radius: 6px;
-                    cursor: pointer;
-                    font-size: 13px;
-                    transition: all 0.2s;
-                ">💡 Show Hint</button>
-                    <div class="hint-content hidden" style="
-                    margin-top: 12px;
-                    padding: 16px;
-                    background: rgba(251, 191, 36, 0.1);
-                    border-left: 3px solid var(--codedex-gold);
-                    border-radius: 0 8px 8px 0;
-                    font-size: 14px;
-                    color: var(--text-secondary);
-                ">
-                        <strong style="color: var(--codedex-gold);">Hint:</strong> Remember to use quotation marks around your text in the print function!
-                    </div>
-                </div>
-        </div>
-    `;
-
-    editor.innerHTML = `
-        < div style = "background: var(--bg-panel); padding: 8px 16px; border-bottom: 1px solid var(--border-subtle); display: flex; justify-content: space-between; align-items: center;" >
-            <span style="font-family: 'VT323'; color: var(--text-secondary);">main.py</span>
-            <button id="run-btn" class="btn-cyber-primary" style="padding: 6px 16px; font-size: 12px;">▶ RUN PROTOCOL</button>
-        </div >
-        <div class="code-editor-container" style="display: flex; height: 300px; background: rgba(13, 17, 23, 0.6); font-family: 'VT323'; font-size: 18px;">
-            <div class="line-numbers" style="padding: 16px 8px; color: var(--text-muted); text-align: right; border-right: 1px solid var(--border-subtle); user-select: none; background: rgba(0,0,0,0.2);">1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10</div>
-                <textarea id="code-input" spellcheck="false" style="flex: 1; background: transparent; color: var(--text-bright); border: none; padding: 16px; outline: none; resize: none; line-height: 1.5;">print("Hello, World!")</textarea>
-            </div>
-                `;
-
-    terminal.innerHTML = `
-                <div style="background: var(--bg-panel); padding: 8px 16px; border-bottom: 1px solid var(--border-subtle); font-family: 'VT323'; color: var(--text-muted); font-size: 14px;">TERMINAL OUTPUT</div>
-                <div id="terminal-out" style="padding: 16px; font-family: 'VT323'; font-size: 16px; color: var(--neon-green); height: 140px; overflow-y: auto; background: rgba(0,0,0,0.3);">
-            > System Ready...<br>
-            > Type 'help' for commands.<br>
-                        </div>
-                        <div style="display: flex; border-top: 1px solid var(--border-subtle); background: rgba(0,0,0,0.2);">
-                            <span style="padding: 8px 0 8px 16px; color: var(--neon-cyan); font-family: 'VT323'; display: flex; align-items: center;">></span>
-                            <input id="term-input" type="text" autocomplete="off" spellcheck="false" style="flex: 1; background: transparent; border: none; color: white; font-family: 'VT323'; font-size: 16px; padding: 8px; outline: none;" placeholder="_">
-                        </div>
-                        `;
-
-    nav.innerHTML = `
-                        <button class="btn-cyber-outline" style="width: auto;" onclick="navigateTo('course-python')">EXIT</button>
-                        <button id="next-lesson-btn" class="btn-cyber-primary" style="display: ${isCompleted ? 'flex' : 'none'}; opacity: ${isCompleted ? 1 : 0}; transition: all 0.3s;" onclick="GameState.showToast('Next lesson locked in demo.', 'accent')">NEXT LESSON →</button>
-                        `;
-
-    // RUN FUNCTIONALITY
-    document.getElementById('run-btn').addEventListener('click', () => {
-        const code = document.getElementById('code-input').value;
-        const term = document.getElementById('terminal-out');
-        const nextBtn = document.getElementById('next-lesson-btn');
-
-        term.innerHTML += `<div>> Running main.py...</div>`;
-        term.scrollTop = term.scrollHeight;
-
-        // Simulate Network Latency for realism
-        setTimeout(() => {
-            if (code.includes('print("') || code.includes("print('")) {
-                const text = code.match(/print\(["'](.+)["']\)/)[1];
-                term.innerHTML += `<div>${text}</div>`;
-
-                // Success Logic
-                term.innerHTML += `<div style="color: var(--neon-cyan); margin-top: 8px; text-shadow: 0 0 5px var(--neon-cyan);">[SUCCESS] PROTOCOL VERIFIED.</div>`;
-
-                // Update GameState
-                const firstTime = GameState.completeLesson('python', 2);
-
-                if (firstTime) {
-                    setTimeout(() => {
-                        GameState.showToast('LESSON COMPLETE! +100 XP', 'success');
-                        // Show Next Button
-                        if (nextBtn) {
-                            nextBtn.style.display = 'flex';
-                            setTimeout(() => nextBtn.style.opacity = '1', 10);
-                        }
-                    }, 500);
-                } else {
-                    GameState.showToast('Code Valid. (Already Completed)', 'info');
-                }
-
-            } else {
-                term.innerHTML += `<div style="color: var(--neon-orange);">[ERROR] SYNTAX INVALID. MISSING PRINT STATEMENT.</div>`;
-                GameState.showToast('Syntax Error: Check your code.', 'error');
-            }
-            term.scrollTop = term.scrollHeight;
-        }, 600);
-    });
-
-    // FAKE TERMINAL INPUT
-    const termInput = document.getElementById('term-input');
-    if (termInput) {
-        termInput.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter') {
-                const val = e.target.value.trim();
-                const termOut = document.getElementById('terminal-out');
-
-                if (val) {
-                    termOut.innerHTML += `<div style="color: var(--text-secondary);">> ${val}</div>`;
-
-                    if (val === 'help') {
-                        termOut.innerHTML += `<div style="color: white;">COMMANDS: help, clear, run, ls, print</div>`;
-                    } else if (val === 'clear') {
-                        termOut.innerHTML = '';
-                    } else if (val === 'run') {
-                        document.getElementById('run-btn').click();
-                    } else if (val === 'ls') {
-                        termOut.innerHTML += `<div>main.py  assets/  config.json</div>`;
-                    } else if (val.startsWith('print ')) {
-                        termOut.innerHTML += `<div>${val.substring(6)}</div>`;
-                    } else {
-                        termOut.innerHTML += `<div style="color: var(--neon-orange);">Command not found: ${val}</div>`;
-                    }
-                }
-
-                e.target.value = '';
-                termOut.scrollTop = termOut.scrollHeight;
-            }
-        });
-    }
-}
 
 

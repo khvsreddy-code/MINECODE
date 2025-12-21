@@ -151,7 +151,8 @@
                         </div>
                     </div>
                     <button class="nav-btn" data-route="builds">Build</button>
-                    <button class="nav-btn" data-route="community">Community</button>
+                    <button class="nav-btn" data-route="community" onclick="navigateTo('community')">Community</button>
+                    <button class="nav-btn" data-route="profile" onclick="navigateTo('profile')">Profile</button>
                 </div>
             </div>
             <div class="nav-right">
@@ -247,6 +248,23 @@
             </aside>
         </div>
 
+        <!-- FULL PAGE VIEWS (Hidden by default) -->
+        <div id="courses-view" class="hidden" style="padding-top: 120px; min-height: 100vh;">
+            <video autoplay muted loop playsinline
+                style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: -5;">
+                <source src="assets/pixel_art/I_want_a_1080p_202512211746.mp4" type="video/mp4">
+            </video>
+            <div class="overlay-gradient"
+                style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: radial-gradient(circle, rgba(0, 0, 0, 0.1) 0%, rgba(0, 0, 0, 0.8) 100%); z-index: -4; pointer-events: none;">
+            </div>
+            <div id="all-courses-grid" class="container"
+                style="max-width: 1200px; margin: 0 auto; position: relative; z-index: 2;"></div>
+        </div>
+
+        <div id="course-view" class="hidden" style="padding-top: 80px;">
+            <div id="course-content" class="container" style="max-width: 1000px; margin: 0 auto;"></div>
+        </div>
+
         <!-- Ko-fi Button Bottom Right -->
 
         <style>
@@ -256,20 +274,7 @@
             }
         </style>
 
-        <!-- Views Container -->
-        <div id="courses-view" class="view hidden">
-            <div class="view-container">
-                <h1 class="view-title cyber-text" style="font-size: 24px;">COURSES CATALOG</h1>
-                <div class="courses-grid" id="all-courses-grid"></div>
-            </div>
-        </div>
 
-        <div id="course-view" class="view hidden">
-            <div class="course-layout" style="max-width: 1000px; margin: 0 auto;">
-                <div id="course-content"></div>
-                <div id="course-sidebar"></div>
-            </div>
-        </div>
 
         <div id="lesson-view" class="view hidden">
             <div class="workspace-layout">
@@ -290,6 +295,12 @@
             </div>
         </div>
 
+        <div id="profile-view" class="view hidden" style="padding-top: 100px;">
+            <div id="profile-content" class="container" style="max-width: 1000px; margin: 0 auto; padding: 20px;">
+                <!-- Profile content rendered by JS -->
+            </div>
+        </div>
+
     </div>
 
     <!-- Supabase JS -->
@@ -305,13 +316,17 @@
     <script src="scripts/modules/auth.js"></script>
     <script src="scripts/modules/components.js"></script>
     <script src="scripts/core/nav.js"></script>
+    <script src="scripts/data/courses-data.js"></script>
+    <script src="scripts/data/curriculum-data.js"></script>
+    <script src="scripts/cyber-app.js"></script>
     <script src="scripts/modules/catalog.js"></script>
     <script src="scripts/modules/challenges.js"></script>
     <script src="scripts/modules/cyber-buttons.js"></script>
-    <script src="scripts/modules/gamification.js"></script>
+    <!-- Gamification module removed (obsolete) -->
 
     <!-- Curriculum Data -->
     <script src="scripts/data/curriculum-data.js"></script>
+    <script src="scripts/data/courses-data.js"></script>
 
     <!-- Main App Logic -->
     <script src="scripts/cyber-app.js"></script>
