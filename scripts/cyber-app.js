@@ -262,7 +262,28 @@ const GameState = {
         this.data.user.xp += amount;
         this.checkLevelUp();
         this.save();
+        this.showXPPopup(amount);
         this.showToast(`+${amount} XP Gained!`, 'success');
+    },
+
+    showXPPopup(amount) {
+        const popup = document.createElement('div');
+        popup.className = 'xp-popup';
+        popup.textContent = `+${amount} XP`;
+        document.body.appendChild(popup);
+        setTimeout(() => popup.remove(), 1500);
+    },
+
+    showBadgeUnlock(badgeName, badgeIcon) {
+        const overlay = document.createElement('div');
+        overlay.className = 'badge-unlock';
+        overlay.innerHTML = `
+            <div style="font-size: 64px; margin-bottom: 16px;">${badgeIcon}</div>
+            <div style="font-family: 'Press Start 2P'; font-size: 12px; color: var(--codedex-gold); margin-bottom: 8px;">BADGE UNLOCKED!</div>
+            <div style="font-size: 18px; color: white;">${badgeName}</div>
+        `;
+        document.body.appendChild(overlay);
+        setTimeout(() => overlay.remove(), 3000);
     },
 
     checkLevelUp() {
