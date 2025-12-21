@@ -1,46 +1,50 @@
 /**
- * HERO EFFECTS CSS - CODEDEX EXACT STYLE
- * Floating text animation matching Codedex's "Start Your Coding Adventure"
+ * HERO EFFECTS CSS - FULL SCREEN CANVAS
+ * Redesigned to fill 100vh/100vw as requested.
  */
 
 /* ==========================================================
-   HERO SECTION - FULL SCREEN VIDEO BACKGROUND
+   HERO SECTION - FULL SCREEN CANVAS
    ========================================================== */
 
 .hero-pixel-scene {
     position: relative;
-    min-height: 100vh;
+    width: 100%;
+    height: 100vh;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     overflow: hidden;
+    background: #000;
+    margin: 0;
+    padding: 0;
 }
 
-/* Full video background */
+/* Full video background - COVER to fill the entire canvas */
 .hero-pixel-scene .video-bg {
     position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
+    top: 50%;
+    left: 50%;
+    min-width: 100%;
+    min-height: 100%;
+    width: auto;
+    height: auto;
+    transform: translate(-50%, -50%);
     object-fit: cover;
     z-index: 0;
 }
 
-/* Optional dark gradient overlay - minimal to show video */
+/* Subtler dark gradient overlay to ensure text readability over bright video spots */
 .hero-pixel-scene .overlay-gradient {
     position: absolute;
     inset: 0;
-    background: linear-gradient(to bottom,
-            rgba(0, 0, 0, 0.1) 0%,
-            rgba(0, 0, 0, 0.3) 50%,
-            rgba(0, 0, 0, 0.5) 100%);
+    background: radial-gradient(circle, rgba(0, 0, 0, 0.1) 0%, rgba(0, 0, 0, 0.4) 100%);
     z-index: 1;
 }
 
 /* ==========================================================
-   CODEDEX-STYLE ANIMATED TEXT
+   HERO CONTENT - PERFECT CENTERING
    ========================================================== */
 
 .hero-content-wrapper {
@@ -49,18 +53,43 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
     text-align: center;
-    padding: 20px;
+    width: 100%;
+    height: 100%;
+    padding: 40px;
+    box-sizing: border-box;
 }
 
-/* "START YOUR" - Small white text on top */
+/* HERO TEXT CONTAINER - Fully transparent as requested */
+.hero-text-box {
+    background: transparent;
+    border: none;
+    padding: 20px;
+    position: relative;
+    max-width: 1200px;
+    /* Increased for wider impact */
+    width: 100%;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    /* Robust vertical centering */
+    z-index: 5;
+    animation: fadeInUp 1s ease-out both;
+}
+
+/* "START YOUR" - SMALL white text on top */
 .hero-start-text {
     font-family: 'Monocraft', monospace;
-    font-size: clamp(10px, 2vw, 14px);
+    font-size: 12px;
     color: #ffffff;
-    letter-spacing: 4px;
+    letter-spacing: 8px;
     margin-bottom: 8px;
-    text-shadow: 2px 2px 0 #000;
+    opacity: 0.95;
+    text-transform: uppercase;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
     animation: float-text 3s ease-in-out infinite;
 }
 
@@ -76,35 +105,34 @@
 .hero-adventure-line {
     display: flex;
     justify-content: center;
+    width: 100%;
 }
 
-/* Individual animated letters - CODEDEX YELLOW/ORANGE GRADIENT */
+/* Individual animated letters - BIGGER & BOLDER */
 .hero-adventure-line span {
     display: inline-block;
     font-family: 'Monocraft', monospace;
-    font-size: clamp(36px, 8vw, 72px);
-    font-weight: 400;
-    line-height: 1.1;
+    font-size: clamp(40px, 12vw, 120px);
+    /* Massive impactful size */
+    font-weight: 900;
+    line-height: 0.85;
+    letter-spacing: -2px;
 
     /* Yellow to Orange gradient like Codedex */
     background: linear-gradient(180deg,
             #FFD966 0%,
-            /* Light yellow top */
             #F5A623 50%,
-            /* Orange middle */
-            #D4790A 100%
-            /* Darker orange bottom */
-        );
+            #D4790A 100%);
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
 
     /* Thick black outline using text-stroke + shadow */
-    -webkit-text-stroke: 3px #000;
+    -webkit-text-stroke: 4px #000;
     paint-order: stroke fill;
 
     /* Drop shadow for depth */
-    filter: drop-shadow(4px 4px 0 #000) drop-shadow(0 6px 0 rgba(0, 0, 0, 0.3));
+    filter: drop-shadow(6px 6px 0 #000) drop-shadow(0 8px 0 rgba(0, 0, 0, 0.4));
 
     /* Floating animation */
     animation: float-letter 2s ease-in-out infinite;
@@ -156,7 +184,7 @@
     }
 
     50% {
-        transform: translateY(-8px);
+        transform: translateY(-12px);
     }
 }
 
@@ -168,29 +196,35 @@
     }
 
     50% {
-        transform: translateY(-4px);
+        transform: translateY(-6px);
     }
 }
 
 /* ==========================================================
-   SUBTITLE
+   SUBTITLE & BUTTONS
    ========================================================== */
 
 .hero-subtitle {
     font-family: var(--font-body);
-    font-size: 16px;
-    color: rgba(255, 255, 255, 0.9);
+    font-size: 20px;
+    color: #fff;
     text-align: center;
-    max-width: 450px;
-    margin-top: 24px;
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
-    animation: fadeInUp 1s ease-out 0.8s both;
+    max-width: 600px;
+    margin-top: 32px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.9);
+    line-height: 1.5;
+}
+
+.hero-buttons {
+    margin-top: 48px;
+    display: flex;
+    gap: 24px;
 }
 
 @keyframes fadeInUp {
     from {
         opacity: 0;
-        transform: translateY(20px);
+        transform: translateY(30px);
     }
 
     to {
@@ -200,7 +234,7 @@
 }
 
 /* ==========================================================
-   NES-STYLE CTA BUTTON - CODEDEX YELLOW
+   NES-STYLE CTA BUTTONS
    ========================================================== */
 
 .btn-nes-primary {
@@ -209,46 +243,43 @@
     justify-content: center;
     gap: 8px;
     font-family: 'Press Start 2P', monospace;
-    font-size: 11px;
-    padding: 16px 28px;
-    margin-top: 32px;
+    font-size: 13px;
+    padding: 18px 36px;
 
-    /* Yellow gradient like Codedex */
+    /* Yellow gradient */
     background: linear-gradient(180deg, #FFE066 0%, #F5A623 100%);
     color: #000;
 
-    /* NES thick border */
     border: 4px solid #000;
-    border-radius: 0;
     cursor: pointer;
-
-    /* 3D depth */
-    box-shadow:
-        4px 4px 0 #000,
-        inset -3px -3px 0 rgba(0, 0, 0, 0.15);
-
+    box-shadow: 6px 6px 0 #000;
     transition: transform 0.1s, box-shadow 0.1s;
     text-transform: uppercase;
 }
 
 .btn-nes-primary:hover {
+    transform: translate(-3px, -3px);
+    box-shadow: 9px 9px 0 #000;
+}
+
+.btn-nes-secondary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 11px;
+    padding: 16px 28px;
+    background: rgba(0, 0, 0, 0.5);
+    color: white;
+    border: 4px solid #fff;
+    cursor: pointer;
+    box-shadow: 6px 6px 0 rgba(255, 255, 255, 0.2);
+    transition: all 0.2s;
+}
+
+.btn-nes-secondary:hover {
+    background: #fff;
+    color: #000;
     transform: translate(-2px, -2px);
-    box-shadow:
-        6px 6px 0 #000,
-        inset -3px -3px 0 rgba(0, 0, 0, 0.15);
-}
-
-.btn-nes-primary:active {
-    transform: translate(2px, 2px);
-    box-shadow:
-        2px 2px 0 #000,
-        inset 3px 3px 0 rgba(0, 0, 0, 0.15);
-}
-
-/* Cyan variant */
-.btn-nes-cyan {
-    background: linear-gradient(180deg, #67E8F9 0%, #06B6D4 100%);
-    box-shadow:
-        4px 4px 0 #0891B2,
-        inset -3px -3px 0 rgba(0, 0, 0, 0.1);
+    box-shadow: 6px 6px 0 rgba(255, 255, 255, 0.5);
 }

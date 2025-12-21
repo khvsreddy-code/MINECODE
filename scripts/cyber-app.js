@@ -221,6 +221,18 @@ const TUTORIALS = [
     }
 ];
 
+// UTILITIES
+/**
+ * Splits text into animated spans with staggered delays.
+ */
+const animateText = (text, baseDelay = 0) => {
+    return text.split('').map((char, i) => {
+        if (char === ' ') return '&nbsp;';
+        const delay = (baseDelay + i * 0.08).toFixed(2);
+        return `<span style="animation-delay: ${delay}s">${char}</span>`;
+    }).join('');
+};
+
 // STATE MANAGEMENT (The "Brain")
 const GameState = {
     data: {
@@ -514,15 +526,6 @@ function renderLandingPage() {
     if (sidebar) sidebar.style.display = 'none';
     if (rightSidebar) rightSidebar.style.display = 'none';
 
-    // Helper to split text into animated spans
-    const animateText = (text, baseDelay = 0) => {
-        return text.split('').map((char, i) => {
-            if (char === ' ') return '&nbsp;';
-            const delay = (baseDelay + i * 0.08).toFixed(2);
-            return `<span style="animation-delay: ${delay}s">${char}</span>`;
-        }).join('');
-    };
-
     mainContent.innerHTML = `
         <div class="hero-pixel-scene">
             <!-- Background Video -->
@@ -530,15 +533,15 @@ function renderLandingPage() {
                 <source src="./assets/_looped_video_1080p_202512201349.mp4" type="video/mp4">
             </video>
             
-            <!-- Strong overlay for text readability -->
-            <div class="overlay-gradient" style="background: linear-gradient(180deg, rgba(0,0,0,0.5) 0%, rgba(0,0,0,0.7) 50%, rgba(0,0,0,0.9) 100%);"></div>
+            <!-- Radial overlay for better center focus -->
+            <div class="overlay-gradient"></div>
             
-            <!-- Hero Content - Clean glassmorphism panel -->
+            <!-- Hero Content - Full Screen Centered Area -->
             <div class="hero-content-wrapper">
-                <div class="hero-glass-panel">
+                <div class="hero-text-box">
                     <div class="hero-start-text">START YOUR</div>
                     
-                    <!-- Main Animated Title -->
+                    <!-- Main Animated Title - MASSIVE -->
                     <div class="hero-adventure-container">
                         <div class="hero-adventure-line">
                             ${animateText('Coding', 0)}
@@ -554,8 +557,7 @@ function renderLandingPage() {
                     </p>
                     
                     <div class="hero-buttons">
-                        <button class="btn-nes-primary btn-glow" onclick="navigateTo('signup')">
-                            <span class="btn-icon">▶</span>
+                        <button class="btn-nes-primary" onclick="navigateTo('signup')">
                             START FOR FREE
                         </button>
                         <button class="btn-nes-secondary" onclick="navigateTo('courses')">
@@ -918,11 +920,18 @@ function renderSignupPage() {
 // HOME DASHBOARD (Logged In) - CYBER FUTURISTIC CODEDEX STYLE
 // HOME DASHBOARD (Logged In) - CYBER FUTURISTIC CODEDEX STYLE
 function renderHomeDashboard() {
-    document.querySelector('.right-sidebar').style.display = 'none';
+    // Force 1-column layout for dashboard to allow breakout hero
     const mainLayout = document.getElementById('main-layout');
     if (mainLayout) {
-        mainLayout.style.gridTemplateColumns = '1fr'; // Fix empty right space
+        mainLayout.style.display = 'block';
+        mainLayout.style.maxWidth = 'none';
+        mainLayout.style.margin = '0';
+        mainLayout.style.padding = '72px 0 0 0';
+        // We removed the 100vw hack - the container will handle alignment now
     }
+
+    const rightSidebar = document.querySelector('.right-sidebar');
+    if (rightSidebar) rightSidebar.style.display = 'none';
 
     // ASSETS
     const bannerArt = "./assets/pixel_art/cyber_cozy_lofi_lounge_panoramic.png";
@@ -930,108 +939,126 @@ function renderHomeDashboard() {
     const jsArt = "./assets/pixel_art/js.png";
 
     const dashboardHTML = `
-        <div class="cyber-dashboard">
-            <!-- MAIN CONTENT AREA -->
-            <div class="dash-main">
-                <!-- BREADCRUMBS -->
-                <div id="dashboard-breadcrumbs" class="breadcrumbs" style="margin-bottom: 20px;"></div>
+        < !--TOP ZONE: FULL WIDTH -->
+        <div class="dashboard-top-zone" style="width: 100%; overflow: hidden;">
+            <!-- BREADCRUMBS -->
+            <div id="dashboard-breadcrumbs" class="breadcrumbs" style="margin-bottom: 20px; padding: 0 32px;"></div>
 
-                <!-- MASCOT TIP BAR -->
-                <div class="cyber-tip-bar">
-                    <div class="tip-mascot"><i data-lucide="bot" style="width:28px;height:28px;color:#22d3ee;"></i></div>
-                    <div class="tip-content">
-                        <span class="tip-badge">NEW</span>
-                        <span>Intermediate Python is out now! Start your journey deeper into the code.</span>
-                    </div>
-                    <button class="tip-dismiss" data-tooltip="Dismiss Tip">✕</button>
+            <!-- MASCOT TIP BAR -->
+            <div class="cyber-tip-bar" style="margin: 0 32px 24px 32px;">
+                <div class="tip-mascot"><i data-lucide="bot" style="width:28px;height:28px;color:#22d3ee;"></i></div>
+                <div class="tip-content">
+                    <span class="tip-badge">NEW</span>
+                    <span>Intermediate Python is out now! Start your journey deeper into the code.</span>
                 </div>
+                <button class="tip-dismiss" data-tooltip="Dismiss Tip">✕</button>
+            </div>
 
-                <!-- HERO WELCOME BANNER -->
-                <div class="cyber-hero-banner">
-                    <!-- ANIMATED BACKGROUND LOOP -->
-                    <video class="cyber-video-bg" autoplay muted loop playsinline>
+            <!-- FULL SCREEN HERO SUCCESSOR -->
+            <div class="hero-pixel-scene" style="height: 80vh; min-height: 600px; margin-bottom: 40px; width: 100%;">
+                    <!-- Background Video -->
+                    <video id="dashboard-video-bg" class="video-bg" autoplay muted loop playsinline>
                         <source src="./assets/_looped_video_1080p_202512201349.mp4" type="video/mp4">
                     </video>
-                    <!-- RAIN OVERLAY -->
-                    <div class="rain-overlay"></div>
                     
-                    <div class="hero-overlay"></div>
-                    <div class="hero-content">
-                        <!-- CHANGED: Use hero-title and removed glitch effect for clarity -->
-                        <h1 class="hero-title">Start Your Coding Adventure</h1>
-                        <p class="cyber-subtitle" style="font-size: 18px; max-width: 600px; margin: 0 auto 32px auto; color: var(--text-secondary);">Your coding journey awaits. Choose your path and start building.</p>
-                        <div class="hero-actions">
-                            <button class="btn-cyber-primary" onclick="navigateTo('courses')">
-                                <i data-lucide="rocket" style="width:18px;height:18px;"></i> Start Learning
-                            </button>
-                            <button class="btn-cyber-outline" onclick="navigateTo('practice')">
-                                <i data-lucide="swords" style="width:18px;height:18px;"></i> Practice Now
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- EXPLORE SECTION -->
-                <div class="section-header">
-                    <h2 class="section-title"><span class="title-accent">//</span> EXPLORE</h2>
-                </div>
-                <!-- CHANGED: Use section-grid-4 for responsive full-width layout -->
-                <div class="section-grid-4">
-                    <div class="cyber-cozy-card" onclick="navigateTo('practice')" style="--card-accent: #00f5ff; width: 100%;">
-                        <div class="card-icon"><i data-lucide="zap" style="width:32px;height:32px;"></i></div>
-                        <div class="card-label">PRACTICE</div>
-                        <h3>Challenge Packs</h3>
-                        <p>Sharpen your skills with coding challenges</p>
-                    </div>
-                    <div class="cyber-cozy-card" onclick="navigateTo('builds')" style="--card-accent: #a855f7; width: 100%;">
-                        <div class="card-icon"><i data-lucide="wrench" style="width:32px;height:32px;"></i></div>
-                        <div class="card-label">BUILD</div>
-                        <h3>Project Tutorials</h3>
-                        <p>Create real-world applications step by step</p>
-                    </div>
-                    <div class="cyber-cozy-card" onclick="navigateTo('community')" style="--card-accent: #4ade80; width: 100%;">
-                        <div class="card-icon"><i data-lucide="moon" style="width:32px;height:32px;"></i></div>
-                        <div class="card-label">COMMIT</div>
-                        <h3>#30NitesOfCode</h3>
-                        <p>Join the coding streak challenge</p>
-                    </div>
-                    <div class="cyber-cozy-card" onclick="navigateTo('community')" style="--card-accent: #ffc800; width: 100%;">
-                        <div class="card-icon"><i data-lucide="globe" style="width:32px;height:32px;"></i></div>
-                        <div class="card-label">COMMUNITY</div>
-                        <h3>Builds Gallery</h3>
-                        <p>Share your creations with others</p>
-                    </div>
-                </div>
-
-                <!-- CONTINUE LEARNING -->
-                <div class="section-header">
-                    <h2 class="section-title"><span class="title-accent">//</span> CONTINUE LEARNING</h2>
-                    <a href="#" class="section-link" onclick="navigateTo('courses')">View All →</a>
-                </div>
-                <div class="cyber-course-row">
-                    <div class="cyber-course-card" onclick="navigateTo('course-python')">
-                        <div class="course-image" style="background-image: url('${pythonArt}');"></div>
-                        <div class="course-info">
-                            <span class="course-language">PYTHON</span>
-                            <h4>The Legend of Python</h4>
-                            <div class="course-progress">
-                                <div class="progress-bar">
-                                    <div class="progress-fill" style="width: 44%;"></div>
+                    <div class="overlay-gradient"></div>
+                    
+                    <div class="hero-content-wrapper">
+                        <div class="hero-text-box" style="padding: 20px;">
+                            <div class="hero-start-text">START YOUR</div>
+                            
+                            <div class="hero-adventure-container">
+                                <div class="hero-adventure-line">
+                                    ${animateText('Coding', 0)}
                                 </div>
-                                <span class="progress-text">44% Complete</span>
+                                <div class="hero-adventure-line">
+                                    ${animateText('Adventure', 0.8)}
+                                </div>
+                            </div>
+                            
+                            <p class="hero-subtitle" style="margin-top: 24px; font-size: 16px;">
+                                Your coding journey awaits. Choose your path and start building.
+                            </p>
+                            
+                            <div class="hero-buttons" style="margin-top: 32px;">
+                                <button class="btn-nes-primary" onclick="navigateTo('courses')">
+                                    START LEARNING
+                                </button>
+                                <button class="btn-nes-secondary" onclick="navigateTo('practice')">
+                                    PRACTICE NOW
+                                </button>
                             </div>
                         </div>
+                </div> <!-- Close hero-content-wrapper -->
+            </div> <!-- Close hero-pixel-scene -->
+        </div> <!-- Close dashboard-top-zone -->
+
+        <!-- BOTTOM ZONE: GRID WITH SIDEBAR -->
+        <div class="cyber-dashboard" style="max-width: 1400px; margin: 0 auto; padding: 0 32px;">
+            <div class="dash-main">
+                <div class="dash-content-container" style="padding: 40px 0;">
+                    <!-- EXPLORE SECTION -->
+                    <div class="section-header">
+                        <h2 class="section-title"><span class="title-accent">//</span> EXPLORE</h2>
                     </div>
-                    <div class="cyber-course-card" onclick="navigateTo('course-js')">
-                        <div class="course-image" style="background-image: url('${jsArt}');"></div>
-                        <div class="course-info">
-                            <span class="course-language">JAVASCRIPT</span>
-                            <h4>JavaScript Origins</h4>
-                            <div class="course-progress">
-                                <div class="progress-bar">
-                                    <div class="progress-fill" style="width: 12%;"></div>
+                    <!-- CHANGED: Use section-grid-4 for responsive full-width layout -->
+                    <div class="section-grid-4">
+                        <div class="cyber-cozy-card" onclick="navigateTo('practice')" style="--card-accent: #00f5ff; width: 100%;">
+                            <div class="card-icon"><i data-lucide="zap" style="width:32px;height:32px;"></i></div>
+                            <div class="card-label">PRACTICE</div>
+                            <h3>Challenge Packs</h3>
+                            <p>Sharpen your skills with coding challenges</p>
+                        </div>
+                        <div class="cyber-cozy-card" onclick="navigateTo('builds')" style="--card-accent: #a855f7; width: 100%;">
+                            <div class="card-icon"><i data-lucide="wrench" style="width:32px;height:32px;"></i></div>
+                            <div class="card-label">BUILD</div>
+                            <h3>Project Tutorials</h3>
+                            <p>Create real-world applications step by step</p>
+                        </div>
+                        <div class="cyber-cozy-card" onclick="navigateTo('community')" style="--card-accent: #4ade80; width: 100%;">
+                            <div class="card-icon"><i data-lucide="moon" style="width:32px;height:32px;"></i></div>
+                            <div class="card-label">COMMIT</div>
+                            <h3>#30NitesOfCode</h3>
+                            <p>Join the coding streak challenge</p>
+                        </div>
+                        <div class="cyber-cozy-card" onclick="navigateTo('community')" style="--card-accent: #ffc800; width: 100%;">
+                            <div class="card-icon"><i data-lucide="globe" style="width:32px;height:32px;"></i></div>
+                            <div class="card-label">COMMUNITY</div>
+                            <h3>Builds Gallery</h3>
+                            <p>Share your creations with others</p>
+                        </div>
+                    </div>
+
+                    <!-- CONTINUE LEARNING -->
+                    <div class="section-header">
+                        <h2 class="section-title"><span class="title-accent">//</span> CONTINUE LEARNING</h2>
+                        <a href="#" class="section-link" onclick="navigateTo('courses')">View All →</a>
+                    </div>
+                    <div class="cyber-course-row">
+                        <div class="cyber-course-card" onclick="navigateTo('course-python')">
+                            <div class="course-image" style="background-image: url('${pythonArt}');"></div>
+                            <div class="course-info">
+                                <span class="course-language">PYTHON</span>
+                                <h4>The Legend of Python</h4>
+                                <div class="course-progress">
+                                    <div class="progress-bar">
+                                        <div class="progress-fill" style="width: 44%;"></div>
+                                    </div>
+                                    <span class="progress-text">44% Complete</span>
                                 </div>
-                                <span class="progress-text">12% Complete</span>
+                            </div>
+                        </div>
+                        <div class="cyber-course-card" onclick="navigateTo('course-js')">
+                            <div class="course-image" style="background-image: url('${jsArt}');"></div>
+                            <div class="course-info">
+                                <span class="course-language">JAVASCRIPT</span>
+                                <h4>JavaScript Origins</h4>
+                                <div class="course-progress">
+                                    <div class="progress-bar">
+                                        <div class="progress-fill" style="width: 12%;"></div>
+                                    </div>
+                                    <span class="progress-text">12% Complete</span>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -1224,7 +1251,7 @@ function renderPracticePage() {
     const bannerArt = "./assets/pixel_art/ChatGPT Image Dec 20, 2025, 09_33_16 AM.png";
 
     const html = `
-        <div class="page-container" style="max-width: 1200px; margin: 0 auto; padding: 24px;">
+        < div class="page-container" style = "max-width: 1200px; margin: 0 auto; padding: 24px;" >
             <div class="page-banner" style="background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('${bannerArt}'); background-size: cover; background-position: center; border-radius: 24px; padding: 60px 40px; margin-bottom: 32px;">
                 <h1 style="font-family: 'Press Start 2P'; font-size: 28px; margin-bottom: 16px;">Challenge Packs</h1>
                 <p style="color: var(--text-secondary); max-width: 500px;">Practice with bite-sized challenges to sharpen your skills.</p>
@@ -1253,8 +1280,8 @@ function renderPracticePage() {
                     </div>
                 `}).join('')}
             </div>
-        </div>
-    `;
+        </div >
+        `;
 
     document.getElementById('main-content').innerHTML = html;
 }
@@ -1276,7 +1303,7 @@ function renderProfilePage() {
     ];
 
     const html = `
-        <div class="profile-container">
+        < div class="profile-container" >
             <div class="profile-header-large cyber-card">
                 <div class="profile-avatar-large">
                     <img src="./assets/avatars/avatar-1.png" style="width: 80%; opacity: 0.8;" onerror="this.src=''; this.style.display='none'">
@@ -1337,8 +1364,8 @@ function renderProfilePage() {
                     </ul>
                  </div>
             </div>
-        </div>
-    `;
+        </div >
+        `;
 
     document.getElementById('main-content').innerHTML = html;
     if (window.lucide) window.lucide.createIcons();
@@ -1349,7 +1376,7 @@ function renderBuildsPage() {
     const mascotArt = "./assets/pixel_art/ChatGPT Image Dec 20, 2025, 09_42_03 AM.png";
 
     const html = `
-        <div class="page-container" style="max-width: 1000px; margin: 0 auto; padding: 24px; text-align: center;">
+        < div class="page-container" style = "max-width: 1000px; margin: 0 auto; padding: 24px; text-align: center;" >
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 32px;">
                 <h1 style="font-family: 'Press Start 2P'; font-size: 24px;">Builds</h1>
                 <button class="btn-home-cta" style="font-size: 12px; padding: 12px 24px;">+ New Build</button>
@@ -1361,8 +1388,8 @@ function renderBuildsPage() {
                 <p style="color: var(--text-muted); max-width: 400px; margin: 0 auto 24px;">Share your code snippets, projects, and ideas with the community.</p>
                 <button class="btn-cyber-primary" style="padding: 14px 32px;">Create Your First Build</button>
             </div>
-        </div>
-    `;
+        </div >
+        `;
 
     document.getElementById('main-content').innerHTML = html;
 }
@@ -1373,8 +1400,8 @@ function renderBuildsPage() {
 async function renderCommunityPage() {
     // 1. Setup Skeleton Layout
     const html = `
-        <div class="community-layout" style="display: grid; grid-template-columns: 250px 1fr 300px; gap: 24px; padding: 24px; max-width: 1400px; margin: 0 auto;">
-            <!-- Left Sidebar: Channels -->
+        < div class="community-layout" style = "display: grid; grid-template-columns: 250px 1fr 300px; gap: 24px; padding: 24px; max-width: 1400px; margin: 0 auto;" >
+            < !--Left Sidebar: Channels-- >
             <div class="community-channels" style="background: var(--bg-card); border-radius: 16px; padding: 20px; border: 1px solid var(--border-subtle);">
                 <h4 style="font-family: 'Press Start 2P'; font-size: 10px; color: var(--text-muted); margin-bottom: 16px;">CHANNELS</h4>
                 <div id="channel-list" style="display: flex; flex-direction: column; gap: 8px;">
@@ -1385,7 +1412,7 @@ async function renderCommunityPage() {
                 </div>
             </div>
 
-            <!-- Center: Feed -->
+            <!--Center: Feed-- >
             <div class="community-feed">
                 <!-- Post Creator -->
                 <div class="cyber-card" style="padding: 16px; margin-bottom: 24px; border: 1px solid var(--border-subtle);">
@@ -1409,32 +1436,32 @@ async function renderCommunityPage() {
                 </div>
             </div>
 
-            <!-- Right Sidebar: News & Events -->
-            <div class="community-sidebar">
-                <div class="sidebar-widget" style="background: var(--bg-card); border-radius: 16px; padding: 20px; margin-bottom: 16px; border: 1px solid var(--border-subtle);">
-                    <h4 style="font-family: 'Press Start 2P'; font-size: 10px; color: var(--text-muted); margin-bottom: 16px;">MINECODE NEWS</h4>
-                    <div style="color: var(--text-secondary); font-size: 14px;">
-                        <p style="margin-bottom: 12px;">🎉 Intermediate Python course is now live!</p>
-                        <p>🚀 New Challenge Packs coming next week.</p>
-                    </div>
+            <!--Right Sidebar: News & Events-- >
+        <div class="community-sidebar">
+            <div class="sidebar-widget" style="background: var(--bg-card); border-radius: 16px; padding: 20px; margin-bottom: 16px; border: 1px solid var(--border-subtle);">
+                <h4 style="font-family: 'Press Start 2P'; font-size: 10px; color: var(--text-muted); margin-bottom: 16px;">MINECODE NEWS</h4>
+                <div style="color: var(--text-secondary); font-size: 14px;">
+                    <p style="margin-bottom: 12px;">🎉 Intermediate Python course is now live!</p>
+                    <p>🚀 New Challenge Packs coming next week.</p>
                 </div>
+            </div>
 
-                <div class="sidebar-widget" style="background: var(--bg-card); border-radius: 16px; padding: 20px; border: 1px solid var(--border-subtle);">
-                    <h4 style="font-family: 'Press Start 2P'; font-size: 10px; color: var(--text-muted); margin-bottom: 16px;">UPCOMING EVENTS</h4>
-                    <div class="event-item" style="display: flex; gap: 12px; align-items: center; margin-bottom: 12px;">
-                        <div style="background: var(--bg-deep); padding: 8px 12px; border-radius: 8px; text-align: center;">
-                            <span style="display: block; font-size: 10px; color: var(--text-muted);">DEC</span>
-                            <span style="font-size: 18px; font-weight: 700;">30</span>
-                        </div>
-                        <div>
-                            <div style="font-weight: 600;">End of Year Jam</div>
-                            <div style="font-size: 12px; color: var(--text-muted);">All Day Event</div>
-                        </div>
+            <div class="sidebar-widget" style="background: var(--bg-card); border-radius: 16px; padding: 20px; border: 1px solid var(--border-subtle);">
+                <h4 style="font-family: 'Press Start 2P'; font-size: 10px; color: var(--text-muted); margin-bottom: 16px;">UPCOMING EVENTS</h4>
+                <div class="event-item" style="display: flex; gap: 12px; align-items: center; margin-bottom: 12px;">
+                    <div style="background: var(--bg-deep); padding: 8px 12px; border-radius: 8px; text-align: center;">
+                        <span style="display: block; font-size: 10px; color: var(--text-muted);">DEC</span>
+                        <span style="font-size: 18px; font-weight: 700;">30</span>
+                    </div>
+                    <div>
+                        <div style="font-weight: 600;">End of Year Jam</div>
+                        <div style="font-size: 12px; color: var(--text-muted);">All Day Event</div>
                     </div>
                 </div>
             </div>
         </div>
-    `;
+        </div >
+        `;
 
     document.getElementById('main-content').innerHTML = html;
 
@@ -1473,13 +1500,13 @@ function renderChannels(channels) {
     if (!channels.length) return;
 
     container.innerHTML = channels.map(c => `
-        <a href="#" class="channel-item ${c.slug === 'general' ? 'active' : ''}" data-id="${c.id}" 
-           onclick="loadChannelFeed(${c.id}); selectChannel(this);"
-           style="display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 8px; text-decoration: none; transition: background 0.2s;">
+        < a href = "#" class="channel-item ${c.slug === 'general' ? 'active' : ''}" data - id="${c.id}"
+    onclick = "loadChannelFeed(${c.id}); selectChannel(this);"
+    style = "display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 8px; text-decoration: none; transition: background 0.2s;" >
             <span>${c.icon || '#'}</span> 
             <span style="text-transform: capitalize;">${c.name}</span>
-        </a>
-    `).join('');
+        </a >
+        `).join('');
 
     // Simple inline style strategy for active/inactive
     updateChannelStyles();
@@ -1529,7 +1556,7 @@ function renderPost(post, prepend = false) {
     const date = new Date(post.created_at).toLocaleDateString();
 
     const html = `
-        <div class="post-card cyber-card" style="background: var(--bg-card); border-radius: 16px; padding: 20px; border: 1px solid var(--border-subtle); animation: fadeIn 0.5s;">
+        < div class="post-card cyber-card" style = "background: var(--bg-card); border-radius: 16px; padding: 20px; border: 1px solid var(--border-subtle); animation: fadeIn 0.5s;" >
             <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
                 <div style="width: 40px; height: 40px; background: var(--bg-deep); border-radius: 50%; overflow: hidden;">
                      <img src="${post.author?.avatar_url || 'assets/default.png'}" style="width:100%; height:100%;">
@@ -1547,8 +1574,8 @@ function renderPost(post, prepend = false) {
                 <button class="btn-icon" style="background:none; border:none; color:inherit; cursor:pointer;">❤️ ${post.likes_count || 0}</button>
                 <button class="btn-icon" style="background:none; border:none; color:inherit; cursor:pointer;">💬 Reply</button>
             </div>
-        </div>
-    `;
+        </div >
+        `;
 
     const div = document.createElement('div');
     div.innerHTML = html;
@@ -1581,14 +1608,14 @@ function renderCommunityHub() {
     ];
 
     const channelsHtml = CHANNELS.map(ch => `
-        <div class="channel-item" onclick="GameState.showToast('${ch.name} channel coming soon!', 'info')">
+        < div class="channel-item" onclick = "GameState.showToast('${ch.name} channel coming soon!', 'info')" >
             <span class="channel-name">${ch.name}</span>
             <span class="channel-meta">${ch.members} members</span>
-        </div>
-    `).join('');
+        </div >
+        `).join('');
 
     const postsHtml = RECENT_POSTS.map(post => `
-        <div class="community-post cyber-card">
+        < div class="community-post cyber-card" >
             <div class="post-header">
                 <div class="post-avatar">${post.avatar}</div>
                 <div class="post-author">
@@ -1603,16 +1630,16 @@ function renderCommunityHub() {
                 <button class="post-btn">💬 Reply</button>
                 <button class="post-btn">🔗 Share</button>
             </div>
-        </div>
-    `).join('');
+        </div >
+        `).join('');
 
     mainContent.innerHTML = `
-        <div class="community-header" style="text-align: center; margin-bottom: 48px;">
+        < div class="community-header" style = "text-align: center; margin-bottom: 48px;" >
             <h1 style="font-family: 'Press Start 2P'; font-size: 24px; color: white; margin-bottom: 16px;">Community Hub</h1>
             <p style="color: var(--text-secondary); max-width: 500px; margin: 0 auto;">
                 Connect with fellow coders, share your projects, and get help from the community.
             </p>
-        </div>
+        </div >
 
         <div class="community-layout" style="display: grid; grid-template-columns: 280px 1fr; gap: 32px;">
             <!-- Channels Sidebar -->
@@ -1685,42 +1712,42 @@ function renderDashboard() {
         heroVisual.style.backgroundPosition = 'center';
         // Remove old CSS art elements if any
         heroVisual.innerHTML = `
-            <div class="hero-progress-bar">
+        < div class="hero-progress-bar" >
                 <div class="progress-track">
                     <div class="progress-fill" id="hero-progress" style="width: 44%"></div>
                 </div>
                 <span class="progress-text">44%</span>
-            </div>
+            </div >
         `;
     }
 
     const progressContainer = document.getElementById('progress-cards');
     if (progressContainer) {
         progressContainer.innerHTML = COURSES.slice(0, 2).map(c => `
-            <div class="small-course-card cyber-card stagger-item" style="
-                background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('${c.image}');
-                background-size: cover;
-                background-position: center;
-                min-width: 220px; 
-                padding: 16px; 
-                border-radius: 12px; 
-                cursor: pointer;
-                border: 1px solid var(--border-subtle);
-                animation-delay: ${0.1 + (i * 0.1)}s;
-            " data-route="course-${c.id}">
-                <span style="font-size: 10px; background: rgba(0,0,0,0.6); padding: 2px 6px; border-radius: 4px; backdrop-filter:blur(4px);">COURSE</span>
+        < div class="small-course-card cyber-card stagger-item" style = "
+    background: linear - gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('${c.image}');
+    background - size: cover;
+    background - position: center;
+    min - width: 220px;
+    padding: 16px;
+    border - radius: 12px;
+    cursor: pointer;
+    border: 1px solid var(--border - subtle);
+    animation - delay: ${0.1 + (i * 0.1)} s;
+    " data-route="course - ${c.id} ">
+        < span style = "font-size: 10px; background: rgba(0,0,0,0.6); padding: 2px 6px; border-radius: 4px; backdrop-filter:blur(4px);" > COURSE</span >
                 <h4 style="font-family: 'Press Start 2P'; font-size: 12px; margin: 8px 0; color: white;">${c.title}</h4>
                 <div style="font-size: 12px; font-family: 'VT323'; color: rgba(255,255,255,0.9);">
                     ${c.completed}/${c.lessons} COMPLETED
                 </div>
-            </div>
+            </div >
         `).join('');
     }
 
     const tutorialsGrid = document.getElementById('tutorials-grid');
     if (tutorialsGrid) {
         tutorialsGrid.innerHTML = TUTORIALS.map(t => `
-            <div class="tutorial-card" style="background: var(--bg-card); border-radius: 12px; overflow: hidden; border: 1px solid var(--border-subtle);">
+        < div class="tutorial-card" style = "background: var(--bg-card); border-radius: 12px; overflow: hidden; border: 1px solid var(--border-subtle);" >
                 <div style="height: 100px; background: ${t.img}; background-size: cover; background-position: center;"></div>
                 <div style="padding: 12px;">
                     <h4 style="font-size: 12px; font-family: 'Press Start 2P'; margin-bottom: 8px;">${t.title}</h4>
@@ -1728,7 +1755,7 @@ function renderDashboard() {
                         ${t.tags.map(tag => `<span style="font-size: 10px; background: rgba(0,245,255,0.1); color: var(--neon-cyan); padding: 2px 6px; border-radius: 4px;">${tag}</span>`).join('')}
                     </div>
                 </div>
-            </div>
+            </div >
         `).join('');
     }
 }
@@ -1743,7 +1770,7 @@ function renderCoursesCatalog() {
 
     // 1. HEADER BANNER (Codedex Style)
     const headerHTML = `
-        <div class="catalog-header" style="text-align: center; margin-bottom: 60px; padding-top: 20px;">
+        < div class="catalog-header" style = "text-align: center; margin-bottom: 60px; padding-top: 20px;" >
             <h1 style="font-family: 'Press Start 2P'; font-size: 28px; margin-bottom: 16px; color: white;">Course Catalog</h1>
             <p style="font-family: 'Outfit'; color: var(--text-secondary); font-size: 16px; max-width: 600px; margin: 0 auto;">
                 Browse our full curriculum of interactive coding courses. From Python to Web Development, start your journey today.
@@ -1755,8 +1782,8 @@ function renderCoursesCatalog() {
                 <button class="filter-btn">Web Dev</button>
                 <button class="filter-btn">CS</button>
             </div>
-        </div>
-    `;
+        </div >
+        `;
 
     // 2. Card Creator Helper
     const createCodedexCard = (c) => {
@@ -1766,33 +1793,33 @@ function renderCoursesCatalog() {
         // Icon/Image Logic
         let visualContent = '';
         if (c.image) {
-            visualContent = `<div class="card-visual" style="background-image: url('${c.image}');"></div>`;
+            visualContent = `< div class="card-visual" style = "background-image: url('${c.image}');" ></div > `;
         } else {
             // Fallback gradient/icon
             const iconHtml = c.icon.startsWith('pixel-icon-')
-                ? `<img src="https://unpkg.com/pixelarticons@1.8.1/svg/${c.icon.replace('pixel-icon-', '')}.svg" style="filter: brightness(0) invert(1); width: 40px;">`
-                : `<span style="font-size: 40px;">${c.icon}</span>`;
-            visualContent = `<div class="card-visual" style="background: ${c.gradient}; display: flex; align-items: center; justify-content: center;">${iconHtml}</div>`;
+                ? `< img src = "https://unpkg.com/pixelarticons@1.8.1/svg/${c.icon.replace('pixel-icon-', '')}.svg" style = "filter: brightness(0) invert(1); width: 40px;" > `
+                : `< span style = "font-size: 40px;" > ${c.icon}</span > `;
+            visualContent = `< div class="card-visual" style = "background: ${c.gradient}; display: flex; align-items: center; justify-content: center;" > ${iconHtml}</div > `;
         }
 
         return `
-        <div class="codedex-card" onclick="navigateTo('course-${c.id}')">
+        < div class="codedex-card" onclick = "navigateTo('course-${c.id}')" >
             ${visualContent}
-            <div class="card-body">
-                <div class="card-top">
-                    <span class="lang-badge">${c.id.toUpperCase()}</span>
-                    <span class="level-badge-simple">${c.difficulty}</span>
-                </div>
-                <h3>${c.title}</h3>
-                <p>${c.desc}</p>
-                <div class="card-footer">
-                    <div class="progress-wrap">
-                        <div class="progress-bar-thin"><div class="fill" style="width: ${progressPercent}%"></div></div>
-                        <span>${progressPercent}%</span>
-                    </div>
-                </div>
+    <div class="card-body">
+        <div class="card-top">
+            <span class="lang-badge">${c.id.toUpperCase()}</span>
+            <span class="level-badge-simple">${c.difficulty}</span>
+        </div>
+        <h3>${c.title}</h3>
+        <p>${c.desc}</p>
+        <div class="card-footer">
+            <div class="progress-wrap">
+                <div class="progress-bar-thin"><div class="fill" style="width: ${progressPercent}%"></div></div>
+                <span>${progressPercent}%</span>
             </div>
         </div>
+    </div>
+        </div >
         `;
     };
 
@@ -1800,32 +1827,32 @@ function renderCoursesCatalog() {
     let html = headerHTML;
 
     // Helper for grid wrapper
-    const wrapGrid = (cards) => `<div class="codedex-grid">${cards}</div>`;
+    const wrapGrid = (cards) => `< div class="codedex-grid" > ${cards}</div > `;
 
     // The Legend of Python
     html += `
-        <div class="course-section">
+        < div class="course-section" >
             <h2 class="section-heading"><span class="icon">🐍</span> The Legend of Python</h2>
             ${wrapGrid(COURSES.filter(c => c.category === 'python-legend').map(createCodedexCard).join(''))}
-        </div>
-    `;
+        </div >
+        `;
 
     // The Origins Trilogy
     html += `
-        <div class="course-section">
+        < div class="course-section" >
             <h2 class="section-heading"><span class="icon">🌐</span> The Origins Trilogy</h2>
             ${wrapGrid(COURSES.filter(c => c.category === 'origins').map(createCodedexCard).join(''))}
-        </div>
-    `;
+        </div >
+        `;
 
     // All Courses (Others)
     const others = COURSES.filter(c => !c.category);
     html += `
-        <div class="course-section">
+        < div class="course-section" >
             <h2 class="section-heading"><span class="icon">📚</span> Electives & More</h2>
             ${wrapGrid(others.map(createCodedexCard).join(''))}
-        </div>
-    `;
+        </div >
+        `;
 
     grid.innerHTML = html;
 }
@@ -1843,7 +1870,7 @@ function renderPracticeSection() {
     ];
 
     const challengeCardsHtml = CHALLENGE_PACKS.map(pack => `
-        <div class="practice-card" onclick="GameState.showToast('${pack.title} coming soon!', 'info')" style="border-left: 4px solid ${pack.color};">
+        < div class="practice-card" onclick = "GameState.showToast('${pack.title} coming soon!', 'info')" style = "border-left: 4px solid ${pack.color};" >
             <div class="practice-icon">${pack.icon}</div>
             <div class="practice-info">
                 <h3>${pack.title}</h3>
@@ -1852,16 +1879,16 @@ function renderPracticeSection() {
             <div class="practice-progress">
                 <span>0/${pack.challenges}</span>
             </div>
-        </div>
-    `).join('');
+        </div >
+        `).join('');
 
     mainContent.innerHTML = `
-        <div class="practice-header" style="text-align: center; margin-bottom: 48px;">
+        < div class="practice-header" style = "text-align: center; margin-bottom: 48px;" >
             <h1 style="font-family: 'Press Start 2P'; font-size: 24px; color: white; margin-bottom: 16px;">Practice Arena</h1>
             <p style="color: var(--text-secondary); max-width: 500px; margin: 0 auto;">
                 Sharpen your skills with daily challenges, coding exercises, and timed competitions.
             </p>
-        </div>
+        </div >
 
         <div class="practice-section">
             <h2 class="section-heading"><span class="icon">🔥</span> Challenge Packs</h2>
@@ -1928,7 +1955,7 @@ function renderBuildGallery() {
     ];
 
     const buildCardsHtml = BUILDS.map(build => `
-        <div class="build-card cyber-card" onclick="GameState.showToast('View ${build.title}', 'info')">
+        < div class="build-card cyber-card" onclick = "GameState.showToast('View ${build.title}', 'info')" >
             <div class="build-preview" style="height: 140px; background: var(--bg-deep); display: flex; align-items: center; justify-content: center; font-size: 32px;">📦</div>
             <div class="build-info" style="padding: 16px;">
                 <h3 style="color: var(--text-bright); margin: 0 0 8px 0; font-size: 14px;">${build.title}</h3>
@@ -1940,17 +1967,17 @@ function renderBuildGallery() {
                     <span>❤️ ${build.likes}</span>
                 </div>
             </div>
-        </div>
-    `).join('');
+        </div >
+        `).join('');
 
     mainContent.innerHTML = `
-        <div class="builds-header" style="text-align: center; margin-bottom: 48px;">
+        < div class="builds-header" style = "text-align: center; margin-bottom: 48px;" >
             <h1 style="font-family: 'Press Start 2P'; font-size: 24px; color: white; margin-bottom: 16px;">Build Gallery</h1>
             <p style="color: var(--text-secondary); max-width: 500px; margin: 0 auto 24px auto;">
                 Explore projects built by the MineCode community. Get inspired and share your own!
             </p>
             <button class="btn-cyber-primary">+ Submit Your Build</button>
-        </div>
+        </div >
 
         <div class="codedex-grid">
             ${buildCardsHtml}
@@ -2020,8 +2047,8 @@ function renderCourseRoadmap(id) {
 
     // --- SIDEBAR HTML ---
     sidebar.innerHTML = `
-        <div class="roadmap-sidebar">
-            <!-- User Progress Card -->
+        < div class="roadmap-sidebar" >
+            < !--User Progress Card-- >
             <div class="cyber-card" style="padding: 20px;">
                 <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 16px;">
                     <div class="avatar-circle" style="width: 48px; height: 48px;">
@@ -2055,17 +2082,17 @@ function renderCourseRoadmap(id) {
                 </div>
             </div>
 
-            <!-- Badges Card -->
-            <div class="cyber-card" style="padding: 20px;">
-                <h4 style="margin: 0 0 12px 0; font-size: 12px; color: var(--text-muted);">EARNED BADGES</h4>
-                <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-                    <div class="badge-mini" title="First Code">🎯</div>
-                    <div class="badge-mini locked" title="Loop Master">🔄</div>
-                    <div class="badge-mini locked" title="Function Pro">🧩</div>
-                </div>
+            <!--Badges Card-- >
+        <div class="cyber-card" style="padding: 20px;">
+            <h4 style="margin: 0 0 12px 0; font-size: 12px; color: var(--text-muted);">EARNED BADGES</h4>
+            <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                <div class="badge-mini" title="First Code">🎯</div>
+                <div class="badge-mini locked" title="Loop Master">🔄</div>
+                <div class="badge-mini locked" title="Function Pro">🧩</div>
             </div>
         </div>
-    `;
+        </div >
+        `;
 
     // --- MAIN CONTENT (Chapter Roadmap) ---
     const chaptersHtml = chapters.map((chapter, chapterIndex) => {
@@ -2087,16 +2114,16 @@ function renderCourseRoadmap(id) {
             let icon = isCompleted ? '✓' : (lesson.type === 'project' ? '🛠️' : '📄');
 
             return `
-                <div class="roadmap-lesson ${statusClass}" onclick="${!isLocked ? "navigateTo('lesson')" : ''}">
+        < div class="roadmap-lesson ${statusClass}" onclick = "${!isLocked ? "navigateTo('lesson')" : ''}" >
                     <span class="lesson-icon">${icon}</span>
                     <span class="lesson-title">${lesson.title}</span>
                     ${lesson.type === 'project' ? '<span class="project-tag">PROJECT</span>' : ''}
-                </div>
-            `;
+                </div >
+        `;
         }).join('');
 
         return `
-            <div class="roadmap-chapter ${chapterCompleted ? 'completed' : ''} ${chapterInProgress ? 'in-progress' : ''}">
+        < div class="roadmap-chapter ${chapterCompleted ? 'completed' : ''} ${chapterInProgress ? 'in-progress' : ''}" >
                 <div class="chapter-header">
                     <div class="chapter-icon">${chapter.icon}</div>
                     <div class="chapter-info">
@@ -2110,12 +2137,12 @@ function renderCourseRoadmap(id) {
                 <div class="chapter-lessons">
                     ${lessonsHtml}
                 </div>
-            </div>
+            </div >
         `;
     }).join('');
 
     content.innerHTML = `
-        <div class="roadmap-header">
+        < div class="roadmap-header" >
             <button class="btn-back" onclick="navigateTo('courses')">
                 <i data-lucide="arrow-left" style="width: 16px; height: 16px;"></i> Back
             </button>
@@ -2130,8 +2157,8 @@ function renderCourseRoadmap(id) {
                     <span class="tag">${totalLessons} lessons</span>
                 </div>
             </div>
-        </div>
-        
+        </div >
+
         <div class="roadmap-chapters">
             ${chaptersHtml}
         </div>
@@ -2154,23 +2181,23 @@ function renderLessonWorkspace() {
     const isCompleted = GameState.data.progress.python.completedLessons.includes(currentLessonId);
 
     instructions.innerHTML = `
-        <div class="fade-in-up">
+        < div class="fade-in-up" >
             <span style="background: var(--bg-elevated); color: var(--neon-cyan); padding: 4px 8px; border-radius: 4px; font-size: 10px; font-family: 'Press Start 2P';">LESSON ${currentLessonId}</span>
             <h1 style="font-family: 'Press Start 2P'; font-size: 18px; margin: 16px 0; line-height: 1.5; color: var(--text-bright);">HELLO WORLD</h1>
             <p style="font-family: 'VT323'; font-size: 20px; color: var(--text-secondary);">Your first standardized output.</p>
-        </div>
+        </div >
         <div class="fade-in-up" style="animation-delay: 0.1s; font-family: 'VT323'; font-size: 18px; color: var(--text-primary);">
             <p>Every cyber-agent starts here. Initializing the output stream.</p>
             <br>
-            <p>TASK: Print the greeting signal.</p>
-            <div style="background: var(--bg-deep); padding: 12px; border-left: 2px solid var(--neon-green); margin: 16px 0; font-family: 'VT323';">
-                print("Hello, World!")
-            </div>
-            ${isCompleted ? '<div style="color: var(--neon-green);">✅ LESSON COMPLETE</div>' : ''}
-            
-            <!-- Hints System -->
-            <div class="hints-container" style="margin-top: 24px;">
-                <button class="hint-toggle" onclick="this.nextElementSibling.classList.toggle('hidden'); this.textContent = this.nextElementSibling.classList.contains('hidden') ? '💡 Show Hint' : '💡 Hide Hint';" style="
+                <p>TASK: Print the greeting signal.</p>
+                <div style="background: var(--bg-deep); padding: 12px; border-left: 2px solid var(--neon-green); margin: 16px 0; font-family: 'VT323';">
+                    print("Hello, World!")
+                </div>
+                ${isCompleted ? '<div style="color: var(--neon-green);">✅ LESSON COMPLETE</div>' : ''}
+
+                <!-- Hints System -->
+                <div class="hints-container" style="margin-top: 24px;">
+                    <button class="hint-toggle" onclick="this.nextElementSibling.classList.toggle('hidden'); this.textContent = this.nextElementSibling.classList.contains('hidden') ? '💡 Show Hint' : '💡 Hide Hint';" style="
                     background: transparent;
                     border: 1px dashed var(--border-subtle);
                     color: var(--text-muted);
@@ -2180,7 +2207,7 @@ function renderLessonWorkspace() {
                     font-size: 13px;
                     transition: all 0.2s;
                 ">💡 Show Hint</button>
-                <div class="hint-content hidden" style="
+                    <div class="hint-content hidden" style="
                     margin-top: 12px;
                     padding: 16px;
                     background: rgba(251, 191, 36, 0.1);
@@ -2189,39 +2216,39 @@ function renderLessonWorkspace() {
                     font-size: 14px;
                     color: var(--text-secondary);
                 ">
-                    <strong style="color: var(--codedex-gold);">Hint:</strong> Remember to use quotation marks around your text in the print function!
+                        <strong style="color: var(--codedex-gold);">Hint:</strong> Remember to use quotation marks around your text in the print function!
+                    </div>
                 </div>
-            </div>
         </div>
     `;
 
     editor.innerHTML = `
-        <div style="background: var(--bg-panel); padding: 8px 16px; border-bottom: 1px solid var(--border-subtle); display: flex; justify-content: space-between; align-items: center;">
+        < div style = "background: var(--bg-panel); padding: 8px 16px; border-bottom: 1px solid var(--border-subtle); display: flex; justify-content: space-between; align-items: center;" >
             <span style="font-family: 'VT323'; color: var(--text-secondary);">main.py</span>
             <button id="run-btn" class="btn-cyber-primary" style="padding: 6px 16px; font-size: 12px;">▶ RUN PROTOCOL</button>
-        </div>
+        </div >
         <div class="code-editor-container" style="display: flex; height: 300px; background: rgba(13, 17, 23, 0.6); font-family: 'VT323'; font-size: 18px;">
             <div class="line-numbers" style="padding: 16px 8px; color: var(--text-muted); text-align: right; border-right: 1px solid var(--border-subtle); user-select: none; background: rgba(0,0,0,0.2);">1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10</div>
-            <textarea id="code-input" spellcheck="false" style="flex: 1; background: transparent; color: var(--text-bright); border: none; padding: 16px; outline: none; resize: none; line-height: 1.5;">print("Hello, World!")</textarea>
-        </div>
-    `;
+                <textarea id="code-input" spellcheck="false" style="flex: 1; background: transparent; color: var(--text-bright); border: none; padding: 16px; outline: none; resize: none; line-height: 1.5;">print("Hello, World!")</textarea>
+            </div>
+                `;
 
     terminal.innerHTML = `
-        <div style="background: var(--bg-panel); padding: 8px 16px; border-bottom: 1px solid var(--border-subtle); font-family: 'VT323'; color: var(--text-muted); font-size: 14px;">TERMINAL OUTPUT</div>
-        <div id="terminal-out" style="padding: 16px; font-family: 'VT323'; font-size: 16px; color: var(--neon-green); height: 140px; overflow-y: auto; background: rgba(0,0,0,0.3);">
+                <div style="background: var(--bg-panel); padding: 8px 16px; border-bottom: 1px solid var(--border-subtle); font-family: 'VT323'; color: var(--text-muted); font-size: 14px;">TERMINAL OUTPUT</div>
+                <div id="terminal-out" style="padding: 16px; font-family: 'VT323'; font-size: 16px; color: var(--neon-green); height: 140px; overflow-y: auto; background: rgba(0,0,0,0.3);">
             > System Ready...<br>
             > Type 'help' for commands.<br>
-        </div>
-        <div style="display: flex; border-top: 1px solid var(--border-subtle); background: rgba(0,0,0,0.2);">
-            <span style="padding: 8px 0 8px 16px; color: var(--neon-cyan); font-family: 'VT323'; display: flex; align-items: center;">></span>
-            <input id="term-input" type="text" autocomplete="off" spellcheck="false" style="flex: 1; background: transparent; border: none; color: white; font-family: 'VT323'; font-size: 16px; padding: 8px; outline: none;" placeholder="_">
-        </div>
-    `;
+                        </div>
+                        <div style="display: flex; border-top: 1px solid var(--border-subtle); background: rgba(0,0,0,0.2);">
+                            <span style="padding: 8px 0 8px 16px; color: var(--neon-cyan); font-family: 'VT323'; display: flex; align-items: center;">></span>
+                            <input id="term-input" type="text" autocomplete="off" spellcheck="false" style="flex: 1; background: transparent; border: none; color: white; font-family: 'VT323'; font-size: 16px; padding: 8px; outline: none;" placeholder="_">
+                        </div>
+                        `;
 
     nav.innerHTML = `
-        <button class="btn-cyber-outline" style="width: auto;" onclick="navigateTo('course-python')">EXIT</button>
-        <button id="next-lesson-btn" class="btn-cyber-primary" style="display: ${isCompleted ? 'flex' : 'none'}; opacity: ${isCompleted ? 1 : 0}; transition: all 0.3s;" onclick="GameState.showToast('Next lesson locked in demo.', 'accent')">NEXT LESSON →</button>
-    `;
+                        <button class="btn-cyber-outline" style="width: auto;" onclick="navigateTo('course-python')">EXIT</button>
+                        <button id="next-lesson-btn" class="btn-cyber-primary" style="display: ${isCompleted ? 'flex' : 'none'}; opacity: ${isCompleted ? 1 : 0}; transition: all 0.3s;" onclick="GameState.showToast('Next lesson locked in demo.', 'accent')">NEXT LESSON →</button>
+                        `;
 
     // RUN FUNCTIONALITY
     document.getElementById('run-btn').addEventListener('click', () => {
