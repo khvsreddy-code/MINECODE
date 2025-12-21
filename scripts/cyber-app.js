@@ -438,6 +438,11 @@ window.navigateTo = function (route) {
         breadcrumbs.push({ label: 'Courses', route: 'courses' });
         breadcrumbs.push({ label: courseId.toUpperCase(), route: route });
     } else if (route === 'courses') {
+        // Ensure main-content has the grid container before rendering
+        const mainContent = document.getElementById('main-content');
+        if (mainContent && !document.getElementById('all-courses-grid')) {
+            mainContent.innerHTML = '<div id="all-courses-grid"></div>';
+        }
         renderCoursesCatalog();
         breadcrumbs.push({ label: 'Catalog', route: 'courses' });
     } else if (route === 'practice') {
