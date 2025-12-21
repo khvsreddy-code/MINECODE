@@ -2,7 +2,7 @@
 
 > **"Beyond Syntax. Deep Logic. Professional Mastery."**
 
-MineCode is a next-generation, gamified coding platform designed to bridge the gap between "Hello World" and professional software engineering. Unlike traditional platforms that focus on rote syntax memorization, MineCode emphasizes **Architectural Logic, System Design, and Real-World Problem Solving** from Day 1.
+MineCode is a next-generation, **completely free**, gamified coding platform designed to bridge the gap between "Hello World" and professional software engineering. Unlike traditional platforms that focus on rote syntax memorization, MineCode emphasizes **Architectural Logic, System Design, and Real-World Problem Solving** from Day 1.
 
 ## 🚀 Mission: The Logic Standard
 We are building the ultimate diverse coding ecosystem. Our philosophy:
@@ -10,42 +10,86 @@ We are building the ultimate diverse coding ecosystem. Our philosophy:
 2.  **Visual & Audio Immersion**: A "Cozy/Cyber" aesthetic that makes coding feel like hacking the mainframe.
 3.  **Real-Time Feedback**: Our "Live Link" editor analyzes your keystrokes instantly.
 
-## 🛠 Development Status (Phase 5)
-The platform is currently in **Active Beta**.
-- **✅ Practice Arena**: A fully functional, free-form Python sandbox.
-- **✅ Smart Validation**: AI-driven error analysis that provides context-aware hints.
-- **✅ Gamified Tracks**:
-    - **Python**: "The Neural Uplink"
-    - **Java**: "The Fortress" (OOP & Strict Typing)
-    - **C++**: "The Core" (Memory Management)
-- **✅ Soundscape**: Integrated Web Audio API for immersive feedback.
+## ✨ Key Features
 
-## 🗺 Application Roadmap
+### 📚 Comprehensive Curriculum
+- **5 Python Chapters** with 19 interactive exercises and projects
+- Story-driven lessons with engaging narratives
+- Progressive difficulty from "Hello World" to functions
 
-### Phase 1-3: The Foundation (Completed)
-- [x] Bootloader & SPA Router
-- [x] Code Editor & Terminal Emulation
-- [x] Basic Curriculum Data
+### 🎮 Gamified Learning
+- **XP System** - Earn experience points for completing lessons
+- **Streak Tracking** - Build daily coding habits
+- **Badge Unlocks** - Celebrate your achievements
+- **Progress Visualization** - Track your journey through each course
 
-### Phase 4: Polish & Feel (Completed)
-- [x] "Cozy" Video Backgrounds & Static UI
-- [x] Audio System Implementation
-- [x] Reactive "Live Link" Header
+### 💻 Interactive Code Editor
+- Syntax-highlighted code workspace
+- Simulated Python execution
+- Real-time error feedback
+- Line numbers and terminal output
 
-### Phase 5: The Functional Layer (Current)
-- [x] Full Gamification of Java & C++
-- [x] End-to-End Progression Logic
-- [ ] Advanced Visual Triggers
+### 🎨 Premium UI/UX
+- Cyber-futuristic design inspired by Codedex
+- Smooth animations and transitions
+- Responsive layout for all devices
+- Video backgrounds and ambient effects
 
-### Phase 6: The Build Forge (Future)
-- [ ] **Project Generator**: Deploy real web apps from the browser.
-- [ ] **Syndicate Links**: Multiplayer/Chat functionality.
-- [ ] **AI Pair Programmer**: Deep LLM integration for complex debugging.
+## 🛠 Development Status
 
-## 💸 Access & Pricing
-**MineCode is currently FREE for all users.**
-We believe in democratizing access to high-level logic training. While premium features may arrive in the future, the core "Caverns of Logic" will remain accessible to early adopters.
+| Phase | Status | Description |
+|-------|--------|-------------|
+| 1-3 | ✅ Complete | Foundation, Bootloader, SPA Router |
+| 4 | ✅ Complete | Visual Polish, Video Backgrounds, Audio |
+| 5 | ✅ Complete | Gamification, Curriculum System |
+| 6 | 🚧 In Progress | Project Generator, AI Integration |
+
+## 🗺 Course Catalog
+
+### The Legend of Python 🐍
+- **Python Basics** - Variables, data types, control flow
+- **Intermediate Python** - Data structures, OOP
+- **NumPy** - Scientific computing
+
+### The Origins Trilogy 🌐
+- **HTML** - Structure of the web
+- **CSS** - Styling and layout
+- **JavaScript** - Interactive web apps
+
+### Coming Soon
+- React, SQL, Lua, C++, Java, and more!
+
+## 💸 Pricing
+
+### 🆓 MineCode is 100% FREE
+We believe coding education should be accessible to everyone. All courses, exercises, and features are completely free with no premium tiers or paywalls.
+
+## 🏁 Getting Started
+
+1. Clone the repository
+2. Open `index.html` in your browser
+3. Click "Start Coding" and begin your journey!
+
+```bash
+git clone https://github.com/your-username/minecode.git
+cd minecode
+# Open index.html in your browser
+```
+
+## 🤝 Contributing
+
+We welcome contributions! Whether it's:
+- Adding new lessons and exercises
+- Improving the UI/UX
+- Fixing bugs
+- Enhancing the Python simulator
+
+## 📄 License
+
+MIT License - Free to use, modify, and distribute.
 
 ---
-*Built by [StartUp Team] | Deploying the Future of Code Education*
-*Version 0.9.5 (Candidate)*
+
+*Built with ❤️ by the MineCode Team | Deploying the Future of Code Education*
+
+*Version 1.0.0*

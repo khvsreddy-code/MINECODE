@@ -349,3 +349,4 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 window.App.Controller = AppController;
+

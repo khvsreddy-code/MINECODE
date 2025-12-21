@@ -66,16 +66,16 @@
     --border-subtle: rgba(255, 255, 255, 0.1);
     --border-card: rgba(255, 255, 255, 0.08);
 
-    /* Typography - CUSTOM MINECRAFT OVERHAUL */
+    /* Typography - CUSTOM MINECRAFT OVERHAUL + PREMIUM OUTFIT */
     --font-pixel: 'Press Start 2P', cursive;
     /* Headings */
     --font-display: 'Press Start 2P', cursive;
     /* Main Display */
-    --font-body: 'Monocraft', monospace;
-    /* BODY: Minecraft Font ONLY */
-    --font-ui: 'Monocraft', monospace;
-    /* UI Elements */
+    --font-body: 'Outfit', sans-serif;
+    /* BODY: Modern Premium Contrast */
     --font-code: 'Monocraft', monospace;
+    --font-ui: 'Outfit', sans-serif;
+    /* UI Elements */
 
     /* Spacing */
     --space-xs: 4px;
@@ -91,6 +91,10 @@
     --radius-lg: 12px;
     --radius-xl: 16px;
     --radius-2xl: 24px;
+
+    /* Glassmorphism Refinement */
+    --glass-grad: linear-gradient(135deg, rgba(255, 255, 255, 0.05), transparent 60%);
+    --glass-stroke: rgba(255, 255, 255, 0.1);
 }
 
 /* === CRISP NEON FRAME (CODEDEX PREMIUM) === */
@@ -130,6 +134,7 @@ body {
     min-height: 100vh;
     overflow-x: hidden;
     line-height: 1.6;
+    /* Optimized for Outfit */
 }
 
 /* =========================================
@@ -366,31 +371,36 @@ a:hover {
     border-radius: var(--radius-lg);
     position: relative;
     overflow: hidden;
-    overflow: hidden;
-    transition: all 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+    transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
 }
 
 .cyber-card::before {
     content: '';
     position: absolute;
-    inset: -1px;
-    border-radius: inherit;
-    padding: 1px;
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), transparent 40%);
-    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-    -webkit-mask-composite: xor;
-    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-    mask-composite: exclude;
-    z-index: 2;
+    inset: 0;
+    background: var(--glass-grad);
     pointer-events: none;
+    z-index: 0;
+}
+
+.cyber-card::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    border: 1px solid var(--glass-stroke);
+    pointer-events: none;
+    z-index: 1;
 }
 
 .cyber-card:hover {
-    border-color: var(--neon-cyan);
+    border-color: var(--codedex-cyan);
     box-shadow:
-        0 0 20px rgba(0, 188, 255, 0.3),
-        0 12px 32px -8px rgba(0, 0, 0, 0.5);
-    transform: translateY(-6px) scale(1.02);
+        0 0 20px rgba(34, 211, 238, 0.2),
+        0 8px 32px rgba(0, 0, 0, 0.4);
+    transform: translateY(-4px);
 }
 
 .cyber-border {
@@ -635,6 +645,10 @@ a:hover {
     border-radius: 50%;
     transition: all 0.2s;
     position: relative;
+    color: var(--text-secondary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .nav-icon:hover {
@@ -666,6 +680,7 @@ a:hover {
     cursor: pointer;
     transition: all 0.2s;
     border: 2px solid transparent;
+    color: var(--text-secondary);
 }
 
 .nav-avatar:hover {
@@ -2696,18 +2711,61 @@ html {
 
 .tip-mascot {
     font-size: 28px;
-    animation: tipBounce 2s infinite;
+    animation: mascotFloat 3s ease-in-out infinite;
+    filter: drop-shadow(0 0 8px rgba(34, 211, 238, 0.4));
 }
 
-@keyframes tipBounce {
+@keyframes mascotFloat {
 
     0%,
     100% {
-        transform: translateY(0);
+        transform: translateY(0) rotate(-2deg);
+        filter: drop-shadow(0 0 8px rgba(34, 211, 238, 0.4));
+    }
+
+    45% {
+        transform: translateY(-8px) rotate(2deg) scaleX(1.05);
+        clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+    }
+
+    47% {
+        transform: translateY(-8.5px) rotate(-1deg) scaleX(0.9) skewX(2deg);
+        clip-path: polygon(0 15%, 100% 0, 100% 85%, 0 100%);
+        filter: drop-shadow(-4px 0 0 rgba(255, 0, 255, 0.4));
     }
 
     50% {
-        transform: translateY(-4px);
+        transform: translateY(-9px) rotate(3deg) scaleX(0.95);
+        filter: drop-shadow(0 0 12px rgba(34, 211, 238, 0.6));
+        clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+    }
+
+    53% {
+        transform: translateY(-8.5px) rotate(1deg) scaleX(1.1) skewX(-2deg);
+        clip-path: polygon(0 0, 100% 15%, 100% 100%, 0 85%);
+        filter: drop-shadow(4px 0 0 rgba(0, 255, 255, 0.4));
+    }
+
+    55% {
+        transform: translateY(-8px) rotate(2deg) scaleX(1.05);
+        clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+    }
+}
+
+/* === VIEW TRANSITIONS === */
+.view-fade-in {
+    animation: viewFadeIn 0.5s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+}
+
+@keyframes viewFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
     }
 }
 
@@ -3013,12 +3071,25 @@ html {
     border-radius: 16px;
     overflow: hidden;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    position: relative;
+}
+
+.cyber-course-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--glass-grad);
+    pointer-events: none;
+    z-index: 0;
 }
 
 .cyber-course-card:hover {
-    border-color: var(--neon-cyan);
-    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+    border-color: var(--codedex-cyan);
+    transform: translateY(-4px) scale(1.01);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
 }
 
 .course-image {
@@ -3074,22 +3145,63 @@ html {
     color: var(--text-muted);
 }
 
-/* WIDGETS */
+/* WIDGETS - TRIPLE LAYER GLASS */
 .cyber-widget {
     background: var(--bg-card);
     border: 1px solid var(--border-subtle);
     border-radius: 16px;
-    padding: 20px;
+    padding: 24px;
+    /* Increased for modern look */
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    position: relative;
+    overflow: hidden;
+    box-shadow:
+        0 8px 32px rgba(0, 0, 0, 0.4),
+        0 4px 12px rgba(0, 0, 0, 0.2);
+    transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+.cyber-widget::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--glass-grad);
+    pointer-events: none;
+    z-index: 0;
+}
+
+.cyber-widget::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    border: 1px solid var(--glass-stroke);
+    pointer-events: none;
+    z-index: 1;
+}
+
+.cyber-widget:hover {
+    border-color: rgba(34, 211, 238, 0.3);
+    transform: translateY(-4px) scale(1.01);
+    box-shadow:
+        0 12px 48px rgba(0, 0, 0, 0.5),
+        0 0 20px rgba(34, 211, 238, 0.1);
 }
 
 .widget-title {
+    position: relative;
+    z-index: 2;
     display: flex;
     align-items: center;
-    gap: 8px;
-    font-size: 14px;
-    font-weight: 600;
-    margin-bottom: 16px;
-    color: var(--text-bright);
+    gap: 10px;
+    font-family: var(--font-display);
+    font-size: 11px;
+    /* Pixel font sizing */
+    letter-spacing: 1px;
+    margin-bottom: 20px;
+    color: var(--codedex-cyan);
+    text-transform: uppercase;
 }
 
 .title-icon {
@@ -3097,6 +3209,11 @@ html {
 }
 
 /* PROFILE WIDGET */
+.cyber-profile {
+    position: relative;
+    z-index: 2;
+}
+
 .cyber-profile .profile-header {
     display: flex;
     gap: 14px;
@@ -3107,26 +3224,46 @@ html {
     position: relative;
     width: 50px;
     height: 50px;
-    background: linear-gradient(135deg, var(--bg-elevated), var(--bg-deep));
+    background: linear-gradient(135deg, var(--bg-panel), var(--bg-deep));
     border-radius: 12px;
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 24px;
+    border: 1px solid var(--border-subtle);
 }
 
 .avatar-ring {
     position: absolute;
     inset: -3px;
-    border: 2px solid var(--neon-cyan);
+    border: 2px solid var(--codedex-cyan);
     border-radius: 14px;
     opacity: 0.6;
+    animation: glowPulse 2s infinite ease-in-out;
+}
+
+@keyframes glowPulse {
+    0% {
+        box-shadow: 0 0 5px rgba(34, 211, 238, 0.2);
+        opacity: 0.4;
+    }
+
+    50% {
+        box-shadow: 0 0 15px rgba(34, 211, 238, 0.5);
+        opacity: 0.8;
+    }
+
+    100% {
+        box-shadow: 0 0 5px rgba(34, 211, 238, 0.2);
+        opacity: 0.4;
+    }
 }
 
 .profile-info h4 {
-    font-size: 16px;
-    font-weight: 700;
-    margin-bottom: 4px;
+    font-family: var(--font-display);
+    font-size: 13px;
+    font-weight: 400;
+    margin-bottom: 6px;
     color: var(--text-bright);
 }
 
@@ -3137,32 +3274,52 @@ html {
 }
 
 .level-badge {
-    font-size: 10px;
-    font-weight: 700;
+    font-family: var(--font-display);
+    font-size: 8px;
+    font-weight: 400;
     background: linear-gradient(135deg, #a855f7, #7c3aed);
     color: white;
-    padding: 3px 8px;
+    padding: 4px 8px;
     border-radius: 4px;
 }
 
 .xp-text {
-    font-size: 12px;
+    font-family: var(--font-code);
+    font-size: 10px;
     color: var(--text-muted);
 }
 
 .profile-xp-bar {
-    height: 8px;
-    background: var(--bg-deep);
-    border-radius: 4px;
+    height: 10px;
+    background: rgba(15, 23, 42, 0.5);
+    border-radius: 6px;
     overflow: hidden;
     margin-bottom: 16px;
+    border: 1px solid var(--border-subtle);
 }
 
 .xp-fill {
     height: 100%;
-    background: linear-gradient(90deg, #a855f7, #ec4899);
-    border-radius: 4px;
-    transition: width 0.5s ease;
+    background: linear-gradient(90deg,
+            #a855f7 0%,
+            #ec4899 25%,
+            #a855f7 50%,
+            #ec4899 75%,
+            #a855f7 100%);
+    background-size: 200% 100%;
+    border-radius: 6px;
+    transition: width 0.8s cubic-bezier(0.23, 1, 0.32, 1);
+    animation: flowingXp 3s linear infinite;
+}
+
+@keyframes flowingXp {
+    0% {
+        background-position: 200% 0;
+    }
+
+    100% {
+        background-position: 0 0;
+    }
 }
 
 .profile-stats {
@@ -3332,7 +3489,8 @@ html {
     position: relative;
     display: inline-block;
     padding: 14px 28px;
-    font-family: var(--font-pixel), 'Press Start 2P', cursive;
+    font-family: var(--font-ui);
+    font-weight: 700;
     font-size: 12px;
     text-transform: uppercase;
     text-decoration: none;
@@ -3346,7 +3504,7 @@ html {
         0 6px 0 rgba(0, 80, 120, 0.9),
         0 8px 12px rgba(0, 0, 0, 0.4),
         inset 0 1px 0 rgba(255, 255, 255, 0.1);
-    transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: all 0.2s cubic-bezier(0.165, 0.84, 0.44, 1);
     image-rendering: pixelated;
 }
 
@@ -3437,42 +3595,54 @@ html {
     }
 }
 
-/* === CYBER COZY CARDS === */
+/* === CYBER COZY CARDS - PREMIUM GLASS === */
 .cyber-cozy-card {
-    background: rgba(15, 23, 42, 0.6);
-    border: 1px solid rgba(255, 255, 255, 0.05);
+    background: var(--bg-card);
+    border: 1px solid var(--border-subtle);
     border-radius: 16px;
     padding: 24px;
     position: relative;
     overflow: hidden;
-    transition: all 0.3s ease;
-    backdrop-filter: blur(10px);
+    transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+.cyber-cozy-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--glass-grad);
+    pointer-events: none;
+    z-index: 0;
 }
 
 .cyber-cozy-card::after {
     content: '';
     position: absolute;
     inset: 0;
-    background: linear-gradient(to bottom,
-            transparent 50%,
-            rgba(0, 0, 0, 0.1) 50%);
-    background-size: 100% 4px;
+    border-radius: inherit;
+    border: 1px solid var(--glass-stroke);
     pointer-events: none;
-    opacity: 0;
-    transition: opacity 0.3s;
+    z-index: 1;
 }
 
 .cyber-cozy-card:hover {
-    transform: translateY(-8px) scale(1.03);
-    border-color: var(--card-accent, var(--codedex-cyan));
+    transform: translateY(-8px) scale(1.02);
+    border-color: var(--codedex-cyan);
     box-shadow:
-        0 0 25px rgba(var(--card-accent-rgb, 0, 188, 255), 0.4),
         0 16px 48px rgba(0, 0, 0, 0.5),
-        inset 0 0 20px rgba(255, 255, 255, 0.03);
+        0 0 30px rgba(34, 211, 238, 0.2);
 }
 
+/* Scanline effect for cards on hover */
 .cyber-cozy-card:hover::after {
-    opacity: 1;
+    background-image: linear-gradient(to bottom,
+            transparent 50%,
+            rgba(0, 0, 0, 0.1) 50%);
+    background-size: 100% 4px;
+    opacity: 0.15;
 }
 
 /* === CYBER TEXT ANIMATION === */

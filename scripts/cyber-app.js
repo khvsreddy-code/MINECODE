@@ -433,7 +433,12 @@ window.navigateTo = function (route) {
     // Handle Internal Dashboard Routing (SPA-like)
     // Hide all views
     document.querySelectorAll('.view').forEach(el => el.classList.add('hidden'));
-    document.getElementById('main-content').innerHTML = ''; // Clear main content if needed
+
+    const mainContent = document.getElementById('main-content');
+    if (mainContent) {
+        mainContent.innerHTML = '';
+        mainContent.classList.remove('view-fade-in');
+    }
 
     // Update URL without reload (for bookmarking)
     const url = new URL(window.location);
@@ -449,9 +454,17 @@ window.navigateTo = function (route) {
         renderCourseView(courseId);
         breadcrumbs.push({ label: 'Courses', route: 'courses' });
         breadcrumbs.push({ label: courseId.toUpperCase(), route: route });
+    } else if (route.startsWith('lesson-')) {
+        // Lesson View (NEW!)
+        const lessonId = route.replace('lesson-', '');
+        renderLessonView(lessonId);
+        // Extract course from lessonId (e.g., 'python-1-1' -> 'python')
+        const courseId = lessonId.split('-')[0];
+        breadcrumbs.push({ label: 'Courses', route: 'courses' });
+        breadcrumbs.push({ label: courseId.toUpperCase(), route: `course-${courseId}` });
+        breadcrumbs.push({ label: 'Lesson', route: route });
     } else if (route === 'courses') {
         // Ensure main-content has the grid container before rendering
-        const mainContent = document.getElementById('main-content');
         if (mainContent && !document.getElementById('all-courses-grid')) {
             mainContent.innerHTML = '<div id="all-courses-grid"></div>';
         }
@@ -468,6 +481,8 @@ window.navigateTo = function (route) {
         breadcrumbs.push({ label: 'Community', route: 'community' });
     } else if (route === 'profile') {
         // Profile View
+        const sidebar = document.querySelector('.right-sidebar');
+        const mainLayout = document.getElementById('main-layout');
         if (sidebar) sidebar.style.display = 'block';
         if (mainLayout) mainLayout.style.display = 'grid'; // Enable sidebar
         renderProfilePage();
@@ -475,6 +490,15 @@ window.navigateTo = function (route) {
     } else {
         // Default: Home Dashboard
         renderHomeDashboard();
+    }
+
+    // Trigger Fade-In
+    if (mainContent) {
+        // Force reflow
+        void mainContent.offsetWidth;
+        requestAnimationFrame(() => {
+            mainContent.classList.add('view-fade-in');
+        });
     }
 
     // Render Breadcrumbs
@@ -939,8 +963,8 @@ function renderHomeDashboard() {
     const jsArt = "./assets/pixel_art/js.png";
 
     const dashboardHTML = `
-        < !--TOP ZONE: FULL WIDTH -->
-        <div class="dashboard-top-zone" style="width: 100%; overflow: hidden;">
+        <!-- TOP ZONE: FULL WIDTH -->
+        <div class="dashboard-top-zone fade-in-up" style="width: 100%; overflow: hidden;">
             <!-- BREADCRUMBS -->
             <div id="dashboard-breadcrumbs" class="breadcrumbs" style="margin-bottom: 20px; padding: 0 32px;"></div>
 
@@ -951,7 +975,7 @@ function renderHomeDashboard() {
                     <span class="tip-badge">NEW</span>
                     <span>Intermediate Python is out now! Start your journey deeper into the code.</span>
                 </div>
-                <button class="tip-dismiss" data-tooltip="Dismiss Tip">✕</button>
+                <button class="tip-dismiss" data-tooltip="Dismiss Tip" style="padding: 8px; margin-right: -8px;">✕</button>
             </div>
 
             <!-- FULL SCREEN HERO SUCCESSOR -->
@@ -994,7 +1018,7 @@ function renderHomeDashboard() {
         </div> <!-- Close dashboard-top-zone -->
 
         <!-- BOTTOM ZONE: GRID WITH SIDEBAR -->
-        <div class="cyber-dashboard" style="max-width: 1400px; margin: 0 auto; padding: 0 32px;">
+        <div class="cyber-dashboard fade-in-up" style="max-width: 1400px; margin: 0 auto; padding: 0 clamp(16px, 4vw, 32px); animation-delay: 0.1s;">
             <div class="dash-main">
                 <div class="dash-content-container" style="padding: 40px 0;">
                     <!-- EXPLORE SECTION -->
@@ -1130,12 +1154,6 @@ function renderHomeDashboard() {
                         </div>
                     </div>
                 </div>
-
-                <div class="cyber-widget cyber-club">
-                    <div class="club-glow"></div>
-                    <h3><i data-lucide="crown" style="width:20px;height:20px;color:#ffc800;"></i> JOIN THE CLUB</h3>
-                    <p>Get unlimited access to all courses, projects, and exclusive content.</p>
-                    <button class="cyber-btn cyber-btn-gold full-width">Learn More</button>
                 </div>
             </div>
         </div>
@@ -1990,54 +2008,21 @@ function renderCourseRoadmap(id) {
     const content = document.getElementById('course-content');
     const sidebar = document.getElementById('course-sidebar');
 
-    // --- CODEDEX-STYLE CHAPTER DATA ---
-    // This would ideally come from a database, but we'll define it inline for now
-    const COURSE_CHAPTERS = {
-        'python': [
+    // --- USE CENTRALIZED CURRICULUM DATA ---
+    // Get chapters from CURRICULUM if available, otherwise fallback to hardcoded
+    let chapters = [];
+    if (window.CURRICULUM && window.CURRICULUM[id]) {
+        chapters = window.CURRICULUM[id].chapters;
+    } else {
+        // Fallback for courses not yet in CURRICULUM
+        chapters = [
             {
-                id: 1, title: 'Setting Up', icon: '⚙️', lessons: [
-                    { id: 1, title: 'Hello World', type: 'exercise' },
-                    { id: 2, title: 'Comments', type: 'exercise' },
-                    { id: 3, title: 'Block Letters', type: 'project' }
-                ]
-            },
-            {
-                id: 2, title: 'Variables', icon: '📦', lessons: [
-                    { id: 4, title: 'Creating Variables', type: 'exercise' },
-                    { id: 5, title: 'Data Types', type: 'exercise' },
-                    { id: 6, title: 'Type Conversion', type: 'exercise' },
-                    { id: 7, title: 'Mad Libs', type: 'project' }
-                ]
-            },
-            {
-                id: 3, title: 'Control Flow', icon: '🔀', lessons: [
-                    { id: 8, title: 'If Statements', type: 'exercise' },
-                    { id: 9, title: 'Else / Elif', type: 'exercise' },
-                    { id: 10, title: 'Logical Operators', type: 'exercise' },
-                    { id: 11, title: 'Magic 8 Ball', type: 'project' }
-                ]
-            },
-            {
-                id: 4, title: 'Loops', icon: '🔄', lessons: [
-                    { id: 12, title: 'While Loops', type: 'exercise' },
-                    { id: 13, title: 'For Loops', type: 'exercise' },
-                    { id: 14, title: 'Range', type: 'exercise' },
-                    { id: 15, title: 'FizzBuzz', type: 'project' }
-                ]
-            },
-            {
-                id: 5, title: 'Functions', icon: '🧩', lessons: [
-                    { id: 16, title: 'Defining Functions', type: 'exercise' },
-                    { id: 17, title: 'Parameters', type: 'exercise' },
-                    { id: 18, title: 'Return Values', type: 'exercise' },
-                    { id: 19, title: 'Currency Converter', type: 'project' }
+                id: 1, title: 'Coming Soon', icon: '🚧', lessons: [
+                    { id: `${id}-1-1`, title: 'Content in Progress', type: 'exercise' }
                 ]
             }
-        ]
-    };
-
-    // Get chapters for this course (fallback to python)
-    const chapters = COURSE_CHAPTERS[course.id] || COURSE_CHAPTERS['python'];
+        ];
+    }
 
     // Get user progress
     const state = GameState.data.progress[course.id] || { completedLessons: [] };
@@ -2114,7 +2099,7 @@ function renderCourseRoadmap(id) {
             let icon = isCompleted ? '✓' : (lesson.type === 'project' ? '🛠️' : '📄');
 
             return `
-        < div class="roadmap-lesson ${statusClass}" onclick = "${!isLocked ? "navigateTo('lesson')" : ''}" >
+        < div class="roadmap-lesson ${statusClass}" onclick = "${!isLocked ? `navigateTo('lesson-${lesson.id}')` : ''}" >
                     <span class="lesson-icon">${icon}</span>
                     <span class="lesson-title">${lesson.title}</span>
                     ${lesson.type === 'project' ? '<span class="project-tag">PROJECT</span>' : ''}
@@ -2168,7 +2153,427 @@ function renderCourseRoadmap(id) {
     if (window.lucide) window.lucide.createIcons();
 }
 
-// FEATURE: FUNCTIONAL LESSON EDITOR
+// ============================================
+// LESSON VIEW - Renders individual exercises
+// ============================================
+function renderLessonView(lessonId) {
+    const mainContent = document.getElementById('main-content');
+    if (!mainContent) return;
+
+    // Find lesson in CURRICULUM
+    let lesson = null;
+    let courseId = null;
+    let chapterNum = null;
+    let lessonIndex = null;
+    let allLessonsFlat = [];
+
+    // Search through all courses and chapters
+    if (window.CURRICULUM) {
+        for (const [cId, courseData] of Object.entries(window.CURRICULUM)) {
+            for (const chapter of courseData.chapters) {
+                for (let i = 0; i < chapter.lessons.length; i++) {
+                    const l = chapter.lessons[i];
+                    allLessonsFlat.push({ ...l, courseId: cId, chapterId: chapter.id });
+                    if (l.id === lessonId) {
+                        lesson = l;
+                        courseId = cId;
+                        chapterNum = chapter.id;
+                        lessonIndex = i;
+                    }
+                }
+            }
+        }
+    }
+
+    if (!lesson) {
+        mainContent.innerHTML = `
+            <div style="padding: 60px; text-align: center;">
+                <h2 style="color: var(--text-bright);">Lesson Not Found</h2>
+                <p style="color: var(--text-secondary);">The lesson "${lessonId}" could not be found.</p>
+                <button class="btn-cyber-primary" onclick="navigateTo('courses')">Back to Courses</button>
+            </div>
+        `;
+        return;
+    }
+
+    const { story, instructions, hints, starterCode, solution, expectedOutput } = lesson.content;
+
+    // Check if completed
+    const state = GameState.data.progress[courseId] || { completedLessons: [] };
+    const isCompleted = state.completedLessons.includes(lessonId);
+
+    // Find next lesson
+    const currentFlatIndex = allLessonsFlat.findIndex(l => l.id === lessonId);
+    const nextLesson = allLessonsFlat[currentFlatIndex + 1];
+
+    // Parse markdown helper
+    const parseMarkdown = (text) => {
+        return text
+            .replace(/```python\n([\s\S]*?)```/g, '<pre class="code-block"><code>$1</code></pre>')
+            .replace(/```([\s\S]*?)```/g, '<pre class="code-block"><code>$1</code></pre>')
+            .replace(/`([^`]+)`/g, '<code class="inline-code">$1</code>')
+            .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
+            .replace(/^# (.+)$/gm, '<h1>$1</h1>')
+            .replace(/^## (.+)$/gm, '<h2>$1</h2>')
+            .replace(/^### (.+)$/gm, '<h3>$1</h3>')
+            .replace(/\n\n/g, '</p><p>')
+            .replace(/\n/g, '<br>');
+    };
+
+    mainContent.innerHTML = `
+        <div class="lesson-container fade-in-up" style="display: grid; grid-template-columns: 1fr 1fr; gap: 0; height: calc(100vh - 120px); max-width: 100%; margin: 0;">
+            <!-- LEFT: Instructions Panel -->
+            <div class="lesson-instructions-panel" style="
+                background: var(--bg-panel);
+                border-right: 1px solid var(--border-subtle);
+                overflow-y: auto;
+                padding: 32px;
+            ">
+                <!-- Back Button & Meta -->
+                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px;">
+                    <button class="btn-back" onclick="navigateTo('course-${courseId}')" style="
+                        background: transparent;
+                        border: 1px solid var(--border-subtle);
+                        color: var(--text-secondary);
+                        padding: 8px 16px;
+                        border-radius: 6px;
+                        cursor: pointer;
+                        display: flex;
+                        align-items: center;
+                        gap: 8px;
+                    ">
+                        ← Back to Course
+                    </button>
+                    <div style="display: flex; gap: 8px; align-items: center;">
+                        <span class="lesson-badge" style="
+                            background: ${lesson.type === 'project' ? 'var(--codedex-purple)' : 'var(--codedex-cyan)'};
+                            color: black;
+                            padding: 4px 12px;
+                            border-radius: 4px;
+                            font-size: 10px;
+                            font-weight: 700;
+                            text-transform: uppercase;
+                        ">${lesson.type}</span>
+                        <span class="xp-badge" style="
+                            background: var(--codedex-gold);
+                            color: black;
+                            padding: 4px 12px;
+                            border-radius: 4px;
+                            font-size: 10px;
+                            font-weight: 700;
+                        ">+${lesson.xp} XP</span>
+                    </div>
+                </div>
+
+                <!-- Title -->
+                <h1 style="
+                    font-family: 'Press Start 2P', monospace;
+                    font-size: 18px;
+                    color: var(--text-bright);
+                    margin-bottom: 24px;
+                    line-height: 1.4;
+                ">${lesson.title}</h1>
+
+                <!-- Story Content -->
+                <div class="lesson-story" style="
+                    font-family: var(--font-body);
+                    font-size: 15px;
+                    line-height: 1.7;
+                    color: var(--text-secondary);
+                    margin-bottom: 32px;
+                ">
+                    ${parseMarkdown(story)}
+                </div>
+
+                <!-- Instructions -->
+                <div class="lesson-instructions" style="margin-bottom: 24px;">
+                    <h3 style="
+                        font-family: 'Press Start 2P', monospace;
+                        font-size: 10px;
+                        color: var(--codedex-cyan);
+                        margin-bottom: 16px;
+                    ">📋 INSTRUCTIONS</h3>
+                    <ol style="padding-left: 24px; margin: 0;">
+                        ${instructions.map(i => `
+                            <li style="
+                                color: var(--text-secondary);
+                                margin-bottom: 12px;
+                                line-height: 1.6;
+                            " data-step="${i.step}">${parseMarkdown(i.text)}</li>
+                        `).join('')}
+                    </ol>
+                </div>
+
+                <!-- Hints -->
+                <details class="hints-panel" style="
+                    background: rgba(251, 191, 36, 0.1);
+                    border-left: 3px solid var(--codedex-gold);
+                    border-radius: 0 8px 8px 0;
+                    padding: 16px;
+                    margin-bottom: 24px;
+                ">
+                    <summary style="
+                        cursor: pointer;
+                        color: var(--codedex-gold);
+                        font-weight: 600;
+                    ">💡 Need a hint?</summary>
+                    <ul style="padding-left: 20px; margin-top: 12px;">
+                        ${hints.map(h => `<li style="color: var(--text-secondary); margin-bottom: 8px;">${h}</li>`).join('')}
+                    </ul>
+                </details>
+
+                ${isCompleted ? `
+                    <div style="
+                        background: rgba(34, 197, 94, 0.1);
+                        border: 1px solid var(--codedex-green);
+                        border-radius: 8px;
+                        padding: 16px;
+                        text-align: center;
+                        color: var(--codedex-green);
+                    ">
+                        ✓ LESSON COMPLETED
+                    </div>
+                ` : ''}
+            </div>
+
+            <!-- RIGHT: Code Editor & Terminal -->
+            <div class="lesson-editor-panel" style="
+                display: flex;
+                flex-direction: column;
+                background: var(--bg-deep);
+            ">
+                <!-- Editor Header -->
+                <div style="
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    padding: 12px 16px;
+                    background: var(--bg-panel);
+                    border-bottom: 1px solid var(--border-subtle);
+                ">
+                    <span style="
+                        font-family: var(--font-code);
+                        color: var(--text-muted);
+                        font-size: 14px;
+                    ">main.py</span>
+                    <button id="run-code-btn" class="btn-cyber-primary" style="
+                        padding: 8px 20px;
+                        font-size: 12px;
+                    ">▶ RUN</button>
+                </div>
+
+                <!-- Code Editor -->
+                <div style="flex: 1; display: flex; overflow: hidden;">
+                    <div id="line-numbers" style="
+                        padding: 16px 8px;
+                        background: rgba(0,0,0,0.2);
+                        color: var(--text-muted);
+                        font-family: var(--font-code);
+                        font-size: 14px;
+                        text-align: right;
+                        user-select: none;
+                        border-right: 1px solid var(--border-subtle);
+                        line-height: 1.6;
+                    ">1</div>
+                    <textarea id="code-input" spellcheck="false" style="
+                        flex: 1;
+                        background: transparent;
+                        color: var(--text-bright);
+                        border: none;
+                        padding: 16px;
+                        font-family: var(--font-code);
+                        font-size: 14px;
+                        line-height: 1.6;
+                        resize: none;
+                        outline: none;
+                    ">${starterCode}</textarea>
+                </div>
+
+                <!-- Terminal -->
+                <div style="
+                    height: 200px;
+                    border-top: 1px solid var(--border-subtle);
+                    display: flex;
+                    flex-direction: column;
+                ">
+                    <div style="
+                        padding: 8px 16px;
+                        background: var(--bg-panel);
+                        border-bottom: 1px solid var(--border-subtle);
+                        font-family: var(--font-code);
+                        font-size: 12px;
+                        color: var(--text-muted);
+                    ">OUTPUT</div>
+                    <div id="terminal-output" style="
+                        flex: 1;
+                        padding: 16px;
+                        font-family: var(--font-code);
+                        font-size: 14px;
+                        color: var(--neon-green);
+                        overflow-y: auto;
+                        background: rgba(0,0,0,0.3);
+                    ">
+                        <div style="color: var(--text-muted);">Ready to run your code...</div>
+                    </div>
+                </div>
+
+                <!-- Navigation -->
+                <div style="
+                    display: flex;
+                    justify-content: space-between;
+                    padding: 16px;
+                    background: var(--bg-panel);
+                    border-top: 1px solid var(--border-subtle);
+                ">
+                    <button onclick="navigateTo('course-${courseId}')" style="
+                        background: transparent;
+                        border: 1px solid var(--border-subtle);
+                        color: var(--text-secondary);
+                        padding: 10px 20px;
+                        border-radius: 6px;
+                        cursor: pointer;
+                    ">EXIT</button>
+                    <button id="next-lesson-btn" style="
+                        background: var(--codedex-cyan);
+                        color: black;
+                        border: none;
+                        padding: 10px 24px;
+                        border-radius: 6px;
+                        cursor: pointer;
+                        font-weight: 700;
+                        display: ${isCompleted && nextLesson ? 'block' : 'none'};
+                    " onclick="${nextLesson ? `navigateTo('lesson-${nextLesson.id}')` : ''}">
+                        NEXT →
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <style>
+            .lesson-story h1, .lesson-story h2 { margin: 16px 0 8px 0; color: var(--text-bright); }
+            .lesson-story h1 { font-size: 20px; }
+            .lesson-story h2 { font-size: 16px; }
+            .code-block { background: var(--bg-deep); padding: 16px; border-radius: 8px; overflow-x: auto; margin: 12px 0; }
+            .code-block code { color: var(--neon-green); font-family: var(--font-code); }
+            .inline-code { background: var(--bg-elevated); padding: 2px 6px; border-radius: 4px; color: var(--codedex-cyan); }
+        </style>
+    `;
+
+    // Initialize line numbers
+    const codeInput = document.getElementById('code-input');
+    const lineNumbers = document.getElementById('line-numbers');
+    const updateLineNumbers = () => {
+        const lines = codeInput.value.split('\n').length;
+        lineNumbers.innerHTML = Array.from({ length: lines }, (_, i) => i + 1).join('<br>');
+    };
+    if (codeInput) {
+        codeInput.addEventListener('input', updateLineNumbers);
+        updateLineNumbers();
+    }
+
+    // Run Code Handler
+    const runBtn = document.getElementById('run-code-btn');
+    const terminalOutput = document.getElementById('terminal-output');
+    const nextBtn = document.getElementById('next-lesson-btn');
+
+    if (runBtn) {
+        runBtn.addEventListener('click', () => {
+            const code = codeInput.value;
+            terminalOutput.innerHTML = '<div style="color: var(--text-muted);">▶ Running...</div>';
+
+            setTimeout(() => {
+                // Simple Python simulation
+                const output = simulatePythonCode(code);
+                terminalOutput.innerHTML += `<div>${output}</div>`;
+
+                // Check solution
+                const isCorrect = output.trim() === expectedOutput.trim();
+
+                if (isCorrect) {
+                    terminalOutput.innerHTML += '<div style="color: var(--neon-green); margin-top: 8px;">✓ CORRECT!</div>';
+
+                    // Award XP
+                    const firstTime = GameState.completeLesson(courseId, lessonId);
+                    if (firstTime) {
+                        GameState.showToast(`+${lesson.xp} XP! Lesson Complete!`, 'success');
+                    }
+
+                    // Show next button
+                    if (nextBtn && nextLesson) {
+                        nextBtn.style.display = 'block';
+                    }
+                } else {
+                    terminalOutput.innerHTML += `<div style="color: var(--neon-orange); margin-top: 8px;">✗ Expected: ${expectedOutput}</div>`;
+                }
+            }, 500);
+        });
+    }
+}
+
+// Simple Python Simulator
+function simulatePythonCode(code) {
+    const lines = code.split('\n');
+    let output = [];
+    let variables = {};
+
+    for (const line of lines) {
+        const trimmed = line.trim();
+        if (trimmed.startsWith('#') || trimmed === '') continue;
+
+        // Variable assignment
+        const assignMatch = trimmed.match(/^(\w+)\s*=\s*(.+)$/);
+        if (assignMatch && !trimmed.includes('print')) {
+            const [, varName, value] = assignMatch;
+            let parsedValue = value.trim();
+            // String
+            if (parsedValue.match(/^["'](.*)["']$/)) {
+                parsedValue = parsedValue.slice(1, -1);
+            }
+            // Number
+            else if (!isNaN(parsedValue)) {
+                parsedValue = parseFloat(parsedValue);
+            }
+            // Boolean
+            else if (parsedValue === 'True') parsedValue = true;
+            else if (parsedValue === 'False') parsedValue = false;
+            // Variable reference
+            else if (variables[parsedValue] !== undefined) {
+                parsedValue = variables[parsedValue];
+            }
+            variables[varName] = parsedValue;
+            continue;
+        }
+
+        // Print statements
+        const printMatch = trimmed.match(/^print\s*\((.+)\)$/);
+        if (printMatch) {
+            let content = printMatch[1].trim();
+
+            // Handle multiple items (comma separated)
+            const items = content.split(',').map(item => {
+                item = item.trim();
+                // String literal
+                if (item.match(/^["'](.*)["']$/)) {
+                    return item.slice(1, -1);
+                }
+                // Variable
+                if (variables[item] !== undefined) {
+                    return String(variables[item]);
+                }
+                // Expression (simplified)
+                try {
+                    return String(eval(item.replace(/True/g, 'true').replace(/False/g, 'false')));
+                } catch {
+                    return item;
+                }
+            });
+            output.push(items.join(' '));
+        }
+    }
+
+    return output.join('\n') || 'No output';
+}
+
 // FEATURE: FUNCTIONAL LESSON EDITOR
 function renderLessonWorkspace() {
     const instructions = document.getElementById('lesson-instructions');
