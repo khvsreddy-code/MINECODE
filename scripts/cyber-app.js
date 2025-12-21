@@ -1499,191 +1499,278 @@ function renderCoursesCatalog() {
 
     // Clear existing grid and set up for sections
     grid.innerHTML = '';
-    // Override grid styling to allow block-level sections
     grid.style.display = 'block';
-    grid.style.gridTemplateColumns = 'none';
-    grid.style.marginTop = '0';
 
-    // 1. HERO BANNER
-    // Check if hero exists to avoid unnecessary re-renders or dupes
-    if (!document.querySelector('.catalog-banner')) {
-        // We will create the banner structure within the grid container
-    }
+    // 1. HEADER BANNER (Codedex Style)
+    const headerHTML = `
+        <div class="catalog-header" style="text-align: center; margin-bottom: 60px; padding-top: 20px;">
+            <h1 style="font-family: 'Press Start 2P'; font-size: 28px; margin-bottom: 16px; color: white;">Course Catalog</h1>
+            <p style="font-family: 'Outfit'; color: var(--text-secondary); font-size: 16px; max-width: 600px; margin: 0 auto;">
+                Browse our full curriculum of interactive coding courses. From Python to Web Development, start your journey today.
+            </p>
+            
+            <div class="catalog-filters" style="display: flex; justify-content: center; gap: 12px; margin-top: 32px;">
+                <button class="filter-btn active">All</button>
+                <button class="filter-btn">Python</button>
+                <button class="filter-btn">Web Dev</button>
+                <button class="filter-btn">CS</button>
+            </div>
+        </div>
+    `;
 
-    // Helper to create card HTML
-    const createCard = (c, i) => {
-        // Sync with GameState
+    // 2. Card Creator Helper
+    const createCodedexCard = (c) => {
         const state = GameState.data.progress[c.id];
         const progressPercent = state ? Math.floor((state.completedLessons.length / c.lessons) * 100) : 0;
 
-        const bgStyle = c.image
-            ? `background-image: url('${c.image}'); background-size: cover; background-position: center;`
-            : `background: ${c.gradient}; display: flex; justify-content: center; align-items: center;`;
-
-        let contentOverlay = '';
-        if (!c.image) {
-            if (c.icon && c.icon.startsWith('pixel-icon-')) {
-                const iconName = c.icon.replace('pixel-icon-', '');
-                contentOverlay = `<img src="https://unpkg.com/pixelarticons@1.8.1/svg/${iconName}.svg" style="width: 64px; height: 64px; filter: brightness(0) invert(1);" alt="${c.title}">`;
-            } else {
-                contentOverlay = `<div style="font-size: 64px; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.3));">${c.icon}</div>`;
-            }
+        // Icon/Image Logic
+        let visualContent = '';
+        if (c.image) {
+            visualContent = `<div class="card-visual" style="background-image: url('${c.image}');"></div>`;
+        } else {
+            // Fallback gradient/icon
+            const iconHtml = c.icon.startsWith('pixel-icon-')
+                ? `<img src="https://unpkg.com/pixelarticons@1.8.1/svg/${c.icon.replace('pixel-icon-', '')}.svg" style="filter: brightness(0) invert(1); width: 40px;">`
+                : `<span style="font-size: 40px;">${c.icon}</span>`;
+            visualContent = `<div class="card-visual" style="background: ${c.gradient}; display: flex; align-items: center; justify-content: center;">${iconHtml}</div>`;
         }
 
         return `
-        <div class="course-card cyber-card stagger-item" data-route="course-${c.id}" onclick="navigateTo('course-${c.id}')" style="animation-delay: ${i * 0.1}s">
-             <div class="course-card-image" style="${bgStyle}">
-                ${contentOverlay}
-             </div>
-             <div class="course-card-content">
-                <div style="display:flex; justify-content:space-between; align-items:center;">
-                    <h3 style="font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 16px; color: var(--text-bright); margin: 0; letter-spacing: 0.5px;">${c.title}</h3>
+        <div class="codedex-card" onclick="navigateTo('course-${c.id}')">
+            ${visualContent}
+            <div class="card-body">
+                <div class="card-top">
+                    <span class="lang-badge">${c.id.toUpperCase()}</span>
+                    <span class="level-badge-simple">${c.difficulty}</span>
                 </div>
-                <p style="font-family: 'Outfit', sans-serif; font-size: 13px; color: var(--text-secondary); line-height: 1.4; margin-top: 4px; height: 36px; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;">${c.desc}</p>
-                
-                <div style="margin-top: 12px; display: flex; align-items: center; justify-content: space-between;">
-                     <span class="course-pill">${c.difficulty}</span>
-                     ${progressPercent > 0 ? `<span style="font-size: 10px; color: var(--neon-green); font-weight: bold;">${progressPercent}%</span>` : ''}
+                <h3>${c.title}</h3>
+                <p>${c.desc}</p>
+                <div class="card-footer">
+                    <div class="progress-wrap">
+                        <div class="progress-bar-thin"><div class="fill" style="width: ${progressPercent}%"></div></div>
+                        <span>${progressPercent}%</span>
+                    </div>
                 </div>
-                ${progressPercent > 0 ? `<div class="course-progress-container"><div class="course-progress-bar" style="width: ${progressPercent}%; background: var(--neon-green);"></div></div>` : ''}
             </div>
         </div>
         `;
     };
 
-    // 2. Sections HTML Content
-    let html = '';
+    // 3. Render Sections
+    let html = headerHTML;
 
-    // SECTION: The Legend of Python
+    // Helper for grid wrapper
+    const wrapGrid = (cards) => `<div class="codedex-grid">${cards}</div>`;
+
+    // The Legend of Python
     html += `
-        <div class="catalog-section">
-            <h2 class="section-title-large">🐍 The Legend of Python</h2>
-            <p class="section-subtitle">Get started with Python, a beginner-friendly programming language great for learning.</p>
-            <div class="section-grid-3">
-                ${COURSES.filter(c => c.category === 'python-legend').map(createCard).join('')}
-            </div>
+        <div class="course-section">
+            <h2 class="section-heading"><span class="icon">🐍</span> The Legend of Python</h2>
+            ${wrapGrid(COURSES.filter(c => c.category === 'python-legend').map(createCodedexCard).join(''))}
         </div>
     `;
 
-    // SECTION: The Origins Trilogy
+    // The Origins Trilogy
     html += `
-        <div class="catalog-section">
-            <h2 class="section-title-large">🌐 The Origins Trilogy</h2>
-            <p class="section-subtitle">Want to create your own website? Learn the three core technologies that make up the web.</p>
-            <div class="section-grid-3">
-                ${COURSES.filter(c => c.category === 'origins').map(createCard).join('')}
-            </div>
+        <div class="course-section">
+            <h2 class="section-heading"><span class="icon">🌐</span> The Origins Trilogy</h2>
+            ${wrapGrid(COURSES.filter(c => c.category === 'origins').map(createCodedexCard).join(''))}
         </div>
     `;
 
-    // SECTION: All Courses
+    // All Courses (Others)
     const others = COURSES.filter(c => !c.category);
     html += `
-        <div class="catalog-section">
-            <h2 class="section-title-large">📚 All Courses</h2>
-            <div class="section-grid-4">
-                ${others.map(createCard).join('')}
-            </div>
+        <div class="course-section">
+            <h2 class="section-heading"><span class="icon">📚</span> Electives & More</h2>
+            ${wrapGrid(others.map(createCodedexCard).join(''))}
         </div>
     `;
 
-    // Combine Banner + Content
-    // Combine Banner + Content
-    grid.innerHTML = `
-        <div class="catalog-banner" style="position: relative; margin-bottom: 40px; border-radius: 16px; overflow: hidden; border: 1px solid var(--border-subtle); height: 260px;">
-            <img src="./assets/pixel_art/ChatGPT Image Dec 20, 2025, 09_38_38 AM.png" style="width: 100%; height: 100%; object-fit: cover; object-position: center;" alt="World Map">
-            <div style="position: absolute; inset: 0; background: linear-gradient(to bottom, transparent 30%, rgba(13, 17, 23, 0.9));"></div>
-            <div style="position: absolute; bottom: 24px; left: 32px; z-index: 2;">
-                 <h1 style="font-family: 'Press Start 2P'; font-size: 28px; color: white; text-shadow: 0 4px 8px black; margin-bottom: 8px;">MineCode</h1>
-                 <p style="font-family: 'Outfit'; color: #ccc; max-width: 600px;">Hack the system. Learn to code through immersive 16-bit adventures.</p>
-            </div>
-        </div>
-        ${html}
-    `;
-
-    // Initialize 3D Tilt
-    if (window.TiltEffect) {
-        window.TiltEffect.init('.course-card', { max: 8, speed: 400, scale: 1.02 });
-    }
+    grid.innerHTML = html;
 }
 
 function renderCourseRoadmap(id) {
     const course = COURSES.find(c => c.id === id) || COURSES[0];
     const content = document.getElementById('course-content');
+    const sidebar = document.getElementById('course-sidebar');
 
-    // RPG Map Coordinates (Percent X, Percent Y) - Winding Path to Castle
-    const mapNodes = [
-        { id: 1, x: 15, y: 80, label: "The Awakening" },
-        { id: 2, x: 30, y: 65, label: "Data Stranding" },
-        { id: 3, x: 50, y: 55, label: "The Loop" },
-        { id: 4, x: 70, y: 40, label: "Function Peaks" },
-        { id: 5, x: 85, y: 20, label: "Object Castle" }
-    ];
+    // --- CODEDEX-STYLE CHAPTER DATA ---
+    // This would ideally come from a database, but we'll define it inline for now
+    const COURSE_CHAPTERS = {
+        'python': [
+            {
+                id: 1, title: 'Setting Up', icon: '⚙️', lessons: [
+                    { id: 1, title: 'Hello World', type: 'exercise' },
+                    { id: 2, title: 'Comments', type: 'exercise' },
+                    { id: 3, title: 'Block Letters', type: 'project' }
+                ]
+            },
+            {
+                id: 2, title: 'Variables', icon: '📦', lessons: [
+                    { id: 4, title: 'Creating Variables', type: 'exercise' },
+                    { id: 5, title: 'Data Types', type: 'exercise' },
+                    { id: 6, title: 'Type Conversion', type: 'exercise' },
+                    { id: 7, title: 'Mad Libs', type: 'project' }
+                ]
+            },
+            {
+                id: 3, title: 'Control Flow', icon: '🔀', lessons: [
+                    { id: 8, title: 'If Statements', type: 'exercise' },
+                    { id: 9, title: 'Else / Elif', type: 'exercise' },
+                    { id: 10, title: 'Logical Operators', type: 'exercise' },
+                    { id: 11, title: 'Magic 8 Ball', type: 'project' }
+                ]
+            },
+            {
+                id: 4, title: 'Loops', icon: '🔄', lessons: [
+                    { id: 12, title: 'While Loops', type: 'exercise' },
+                    { id: 13, title: 'For Loops', type: 'exercise' },
+                    { id: 14, title: 'Range', type: 'exercise' },
+                    { id: 15, title: 'FizzBuzz', type: 'project' }
+                ]
+            },
+            {
+                id: 5, title: 'Functions', icon: '🧩', lessons: [
+                    { id: 16, title: 'Defining Functions', type: 'exercise' },
+                    { id: 17, title: 'Parameters', type: 'exercise' },
+                    { id: 18, title: 'Return Values', type: 'exercise' },
+                    { id: 19, title: 'Currency Converter', type: 'project' }
+                ]
+            }
+        ]
+    };
 
-    // Get Progress
+    // Get chapters for this course (fallback to python)
+    const chapters = COURSE_CHAPTERS[course.id] || COURSE_CHAPTERS['python'];
+
+    // Get user progress
     const state = GameState.data.progress[course.id] || { completedLessons: [] };
     const completedIds = state.completedLessons;
-    const nextLevel = completedIds.length + 1; // Simplistic progress
+    const totalLessons = chapters.reduce((sum, ch) => sum + ch.lessons.length, 0);
+    const progressPercent = Math.floor((completedIds.length / totalLessons) * 100);
 
-    // Generate Map HTML
-    const nodesHtml = mapNodes.map(node => {
-        const isCompleted = completedIds.includes(node.id);
-        const isUnlocked = node.id === 1 || completedIds.includes(node.id - 1);
-        const isCurrent = node.id === nextLevel;
+    // --- SIDEBAR HTML ---
+    sidebar.innerHTML = `
+        <div class="roadmap-sidebar">
+            <!-- User Progress Card -->
+            <div class="cyber-card" style="padding: 20px;">
+                <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 16px;">
+                    <div class="avatar-circle" style="width: 48px; height: 48px;">
+                        <i data-lucide="user" style="width: 24px; height: 24px;"></i>
+                    </div>
+                    <div>
+                        <h4 style="color: var(--text-bright); margin: 0;">${GameState.data.user.name}</h4>
+                        <span class="level-badge">LVL ${GameState.data.user.level}</span>
+                    </div>
+                </div>
+                
+                <div style="margin-bottom: 16px;">
+                    <div style="display: flex; justify-content: space-between; font-size: 12px; color: var(--text-secondary); margin-bottom: 4px;">
+                        <span>Course Progress</span>
+                        <span>${progressPercent}%</span>
+                    </div>
+                    <div class="progress-bar-thin" style="height: 8px;">
+                        <div class="fill" style="width: ${progressPercent}%; background: var(--neon-cyan);"></div>
+                    </div>
+                </div>
 
-        let statusClass = 'locked';
-        if (isCompleted) statusClass = 'completed';
-        else if (isCurrent) statusClass = 'active-current unlocked';
-        else if (isUnlocked) statusClass = 'unlocked';
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; text-align: center;">
+                    <div style="background: var(--bg-deep); padding: 12px; border-radius: 8px;">
+                        <div style="font-size: 20px; font-weight: 700; color: var(--text-bright);">${completedIds.length}</div>
+                        <div style="font-size: 10px; color: var(--text-muted);">COMPLETED</div>
+                    </div>
+                    <div style="background: var(--bg-deep); padding: 12px; border-radius: 8px;">
+                        <div style="font-size: 20px; font-weight: 700; color: var(--text-bright);">${totalLessons - completedIds.length}</div>
+                        <div style="font-size: 10px; color: var(--text-muted);">REMAINING</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Badges Card -->
+            <div class="cyber-card" style="padding: 20px;">
+                <h4 style="margin: 0 0 12px 0; font-size: 12px; color: var(--text-muted);">EARNED BADGES</h4>
+                <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                    <div class="badge-mini" title="First Code">🎯</div>
+                    <div class="badge-mini locked" title="Loop Master">🔄</div>
+                    <div class="badge-mini locked" title="Function Pro">🧩</div>
+                </div>
+            </div>
+        </div>
+    `;
+
+    // --- MAIN CONTENT (Chapter Roadmap) ---
+    const chaptersHtml = chapters.map((chapter, chapterIndex) => {
+        // Check chapter completion
+        const chapterLessonIds = chapter.lessons.map(l => l.id);
+        const chapterCompleted = chapterLessonIds.every(id => completedIds.includes(id));
+        const chapterInProgress = chapterLessonIds.some(id => completedIds.includes(id)) && !chapterCompleted;
+
+        // First unlocked lesson in chapter
+        const firstIncomplete = chapter.lessons.find(l => !completedIds.includes(l.id));
+        const isChapterUnlocked = chapterIndex === 0 || chapters[chapterIndex - 1].lessons.every(l => completedIds.includes(l.id));
+
+        const lessonsHtml = chapter.lessons.map(lesson => {
+            const isCompleted = completedIds.includes(lesson.id);
+            const isNext = lesson.id === (completedIds.length > 0 ? Math.max(...completedIds) + 1 : 1);
+            const isLocked = !isCompleted && !isNext && !isChapterUnlocked;
+
+            let statusClass = isCompleted ? 'completed' : (isNext ? 'current' : (isLocked ? 'locked' : ''));
+            let icon = isCompleted ? '✓' : (lesson.type === 'project' ? '🛠️' : '📄');
+
+            return `
+                <div class="roadmap-lesson ${statusClass}" onclick="${!isLocked ? "navigateTo('lesson')" : ''}">
+                    <span class="lesson-icon">${icon}</span>
+                    <span class="lesson-title">${lesson.title}</span>
+                    ${lesson.type === 'project' ? '<span class="project-tag">PROJECT</span>' : ''}
+                </div>
+            `;
+        }).join('');
 
         return `
-            <div class="map-node ${statusClass}" 
-                 style="left: ${node.x}%; top: ${node.y}%;"
-                 onclick="${isUnlocked ? `navigateTo('lesson')` : ''}"
-                 data-tilt data-tilt-scale="1.2">
-                
-                <div class="node-icon">
-                    ${isCompleted ? '✓' : node.id}
+            <div class="roadmap-chapter ${chapterCompleted ? 'completed' : ''} ${chapterInProgress ? 'in-progress' : ''}">
+                <div class="chapter-header">
+                    <div class="chapter-icon">${chapter.icon}</div>
+                    <div class="chapter-info">
+                        <span class="chapter-number">CHAPTER ${chapter.id}</span>
+                        <h3 class="chapter-title">${chapter.title}</h3>
+                    </div>
+                    <div class="chapter-status">
+                        ${chapterCompleted ? '<span class="status-complete">✓</span>' : `<span class="status-count">${chapterLessonIds.filter(id => completedIds.includes(id)).length}/${chapter.lessons.length}</span>`}
+                    </div>
                 </div>
-                <div class="node-label">${node.label}</div>
+                <div class="chapter-lessons">
+                    ${lessonsHtml}
+                </div>
             </div>
         `;
     }).join('');
 
-    // Player Token Position (at current level)
-    const activeNode = mapNodes.find(n => n.id === nextLevel) || mapNodes[mapNodes.length - 1];
-    const tokenHtml = `
-        <div class="player-token" style="left: ${activeNode.x}%; top: ${activeNode.y}%;"></div>
-    `;
-
     content.innerHTML = `
-        <div class="cyber-header" style="margin-bottom: 24px; text-align: center;">
-            <h1 style="font-family: var(--font-display); font-size: 32px; text-shadow: 0 4px 0 black; margin-bottom: 8px;">${course.title} World</h1>
-            <p style="font-family: var(--font-mono); color: var(--neon-cyan);">Make your way to the Object Castle.</p>
-        </div>
-
-        <div class="rpg-map-viewport">
-            <div class="rpg-map-overlay">
-                <!-- Map Image Layer -->
-                <img src="assets/gamification/map-forest.png" class="rpg-map-image" alt="RPG World Map">
-                
-                <!-- Interactive Nodes -->
-                ${nodesHtml}
-
-                <!-- Player Avatar -->
-                ${tokenHtml}
+        <div class="roadmap-header">
+            <button class="btn-back" onclick="navigateTo('courses')">
+                <i data-lucide="arrow-left" style="width: 16px; height: 16px;"></i> Back
+            </button>
+            <div class="course-badge" style="background: ${course.gradient};">
+                ${course.image ? `<img src="${course.image}" alt="${course.title}">` : `<span style="font-size: 32px;">${course.icon}</span>`}
+            </div>
+            <div class="course-meta">
+                <h1 class="course-title">${course.title}</h1>
+                <p class="course-desc">${course.desc}</p>
+                <div class="course-tags">
+                    <span class="tag">${course.difficulty}</span>
+                    <span class="tag">${totalLessons} lessons</span>
+                </div>
             </div>
         </div>
         
-        <div style="margin-top: 24px; text-align: center;">
-             <button class="btn-cyber-outline" onclick="navigateTo('courses')">← BACK TO ORBIT</button>
+        <div class="roadmap-chapters">
+            ${chaptersHtml}
         </div>
     `;
 
-    // Initialize Tilt on new nodes
-    if (window.TiltEffect && window.TiltEffect.init) {
-        window.TiltEffect.init('.map-node', { max: 15, speed: 400, scale: 1.2 });
-    }
+    // Re-init Lucide icons
+    if (window.lucide) window.lucide.createIcons();
 }
 
 // FEATURE: FUNCTIONAL LESSON EDITOR

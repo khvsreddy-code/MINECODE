@@ -3715,15 +3715,20 @@ html {
 .hero-title {
     font-family: 'Press Start 2P', monospace;
     font-size: 40px;
-    /* Reduced from 64px to fit better */
-    line-height: 1.6;
-    /* Increased line height to prevent overlap */
+    /* Kept readable size */
+    line-height: 1.4;
+    /* Tighter line height to keep it cohesive */
     color: var(--text-bright);
     margin-bottom: 24px;
     text-shadow: 0 4px 0 #000;
-    max-width: 900px;
+    width: 100%;
+    /* Ensure full width */
+    max-width: 1000px;
     margin-left: auto;
     margin-right: auto;
+    position: relative;
+    z-index: 2;
+    /* Ensure on top of overlays */
 }
 
 /* Ensure animated spans don't break layout */
@@ -3868,4 +3873,388 @@ html {
     100% {
         transform: translateX(100%) rotate(45deg);
     }
+}
+
+/* === PHASE 11: CODEDEX CATALOG STYLES ================= */
+
+.codedex-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 32px;
+    margin-bottom: 48px;
+}
+
+.codedex-card {
+    background: #0d1117;
+    border: 1px solid #30363d;
+    border-radius: 12px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.codedex-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.4);
+    border-color: var(--neon-cyan);
+}
+
+.card-visual {
+    height: 160px;
+    background-size: cover;
+    background-position: center;
+    border-bottom: 1px solid #30363d;
+}
+
+.card-body {
+    padding: 20px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.card-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.lang-badge {
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--neon-cyan);
+    letter-spacing: 1px;
+}
+
+.level-badge-simple {
+    font-size: 10px;
+    background: #21262d;
+    color: var(--text-secondary);
+    padding: 2px 8px;
+    border-radius: 4px;
+}
+
+.codedex-card h3 {
+    font-family: 'Outfit', sans-serif;
+    font-size: 18px;
+    color: white;
+    margin-bottom: 8px;
+}
+
+.codedex-card p {
+    font-size: 13px;
+    color: var(--text-secondary);
+    line-height: 1.5;
+    flex: 1;
+    margin-bottom: 16px;
+}
+
+.card-footer {
+    margin-top: auto;
+}
+
+.progress-wrap {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 11px;
+    color: var(--text-muted);
+}
+
+.progress-bar-thin {
+    flex: 1;
+    height: 4px;
+    background: #21262d;
+    border-radius: 2px;
+    overflow: hidden;
+}
+
+.progress-bar-thin .fill {
+    height: 100%;
+    background: var(--neon-cyan);
+    border-radius: 2px;
+    transition: width 0.3s;
+}
+
+.filter-btn {
+    background: transparent;
+    border: 1px solid #30363d;
+    color: var(--text-secondary);
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.filter-btn:hover,
+.filter-btn.active {
+    background: var(--neon-cyan);
+    color: black;
+    border-color: var(--neon-cyan);
+    font-weight: 600;
+}
+
+.section-heading {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 14px;
+    color: var(--text-bright);
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+/* === PHASE 12: COURSE ROADMAP STYLES ================= */
+
+/* Roadmap Header */
+.roadmap-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 24px;
+    margin-bottom: 40px;
+    padding: 24px;
+    background: var(--bg-card);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--border-subtle);
+}
+
+.btn-back {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: transparent;
+    border: 1px solid var(--border-subtle);
+    color: var(--text-secondary);
+    padding: 8px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 13px;
+    transition: all 0.2s;
+}
+
+.btn-back:hover {
+    border-color: var(--neon-cyan);
+    color: var(--neon-cyan);
+}
+
+.course-badge {
+    width: 80px;
+    height: 80px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    flex-shrink: 0;
+}
+
+.course-badge img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.course-meta {
+    flex: 1;
+}
+
+.course-title {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 20px;
+    color: var(--text-bright);
+    margin: 0 0 8px 0;
+}
+
+.course-desc {
+    color: var(--text-secondary);
+    margin: 0 0 12px 0;
+    font-size: 14px;
+}
+
+.course-tags {
+    display: flex;
+    gap: 8px;
+}
+
+.course-tags .tag {
+    font-size: 10px;
+    padding: 4px 10px;
+    background: var(--bg-deep);
+    color: var(--text-muted);
+    border-radius: 4px;
+    text-transform: uppercase;
+}
+
+/* Roadmap Chapters */
+.roadmap-chapters {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.roadmap-chapter {
+    background: var(--bg-card);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    transition: all 0.2s;
+}
+
+.roadmap-chapter:hover {
+    border-color: rgba(34, 211, 238, 0.3);
+}
+
+.roadmap-chapter.completed {
+    border-left: 3px solid var(--neon-green);
+}
+
+.roadmap-chapter.in-progress {
+    border-left: 3px solid var(--neon-cyan);
+}
+
+.chapter-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 20px;
+    cursor: pointer;
+}
+
+.chapter-icon {
+    font-size: 28px;
+    width: 48px;
+    height: 48px;
+    background: var(--bg-deep);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.chapter-info {
+    flex: 1;
+}
+
+.chapter-number {
+    font-size: 10px;
+    color: var(--text-muted);
+    letter-spacing: 1px;
+    margin-bottom: 4px;
+    display: block;
+}
+
+.chapter-title {
+    font-family: 'Outfit', sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text-bright);
+    margin: 0;
+}
+
+.chapter-status {
+    font-size: 12px;
+    color: var(--text-muted);
+}
+
+.status-complete {
+    color: var(--neon-green);
+    font-size: 18px;
+}
+
+.status-count {
+    background: var(--bg-deep);
+    padding: 4px 10px;
+    border-radius: 4px;
+}
+
+/* Lessons */
+.chapter-lessons {
+    padding: 0 20px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.roadmap-lesson {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    background: var(--bg-deep);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+    border: 1px solid transparent;
+}
+
+.roadmap-lesson:hover {
+    background: var(--bg-elevated);
+    border-color: rgba(34, 211, 238, 0.2);
+}
+
+.roadmap-lesson.completed {
+    opacity: 0.7;
+}
+
+.roadmap-lesson.completed .lesson-icon {
+    color: var(--neon-green);
+}
+
+.roadmap-lesson.current {
+    border-color: var(--neon-cyan);
+    background: rgba(34, 211, 238, 0.1);
+}
+
+.roadmap-lesson.locked {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+.lesson-icon {
+    font-size: 16px;
+    width: 24px;
+    text-align: center;
+}
+
+.lesson-title {
+    flex: 1;
+    font-size: 14px;
+    color: var(--text-primary);
+}
+
+.project-tag {
+    font-size: 9px;
+    padding: 3px 8px;
+    background: linear-gradient(135deg, #a855f7, #7c3aed);
+    color: white;
+    border-radius: 4px;
+    font-weight: 600;
+}
+
+/* Roadmap Sidebar */
+.roadmap-sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.badge-mini {
+    width: 36px;
+    height: 36px;
+    background: var(--bg-deep);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+}
+
+.badge-mini.locked {
+    opacity: 0.3;
+    filter: grayscale(100%);
 }
