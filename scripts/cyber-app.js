@@ -534,21 +534,9 @@ function renderLandingPage() {
                     <button class="btn-nes-outline" onclick="navigateTo('courses')" style="background: transparent; border: 2px solid white; color: white;">
                         EXPLORE COURSES
                     </button>
-                </div>
             </div>
         </div>
         
-        <!-- Social Proof Section -->
-        <div class="social-proof-section" style="background: var(--bg-void); padding: 40px 24px; text-align: center;">
-            <p style="color: var(--text-muted); font-size: 13px; margin-bottom: 24px; letter-spacing: 2px;">TRUSTED BY LEARNERS WORLDWIDE</p>
-            <div class="proof-logos" style="display: flex; justify-content: center; align-items: center; gap: 48px; flex-wrap: wrap; opacity: 0.6;">
-                <span style="font-family: 'Press Start 2P'; font-size: 12px; color: var(--text-secondary);">🎓 10K+ Students</span>
-                <span style="font-family: 'Press Start 2P'; font-size: 12px; color: var(--text-secondary);">⭐ 4.9 Rating</span>
-                <span style="font-family: 'Press Start 2P'; font-size: 12px; color: var(--text-secondary);">🌍 50+ Countries</span>
-                <span style="font-family: 'Press Start 2P'; font-size: 12px; color: var(--text-secondary);">📚 15+ Courses</span>
-            </div>
-        </div>
-
         <!-- Features Section -->
         <div class="features-section" style="background: var(--bg-deep); padding: 80px 24px;">
             <div style="max-width: 1100px; margin: 0 auto;">
@@ -596,51 +584,6 @@ function renderLandingPage() {
                 <button class="btn-nes-primary btn-nes-cyan" onclick="navigateTo('signup')">
                     Explore All Courses
                 </button>
-            </div>
-        </div>
-
-        <!-- Testimonials Section -->
-        <div class="testimonials-section" style="background: var(--bg-deep); padding: 80px 24px;">
-            <div style="max-width: 1100px; margin: 0 auto;">
-                <div style="text-align: center; margin-bottom: 48px;">
-                    <h2 style="font-family: 'Press Start 2P'; font-size: 18px; color: var(--text-bright); margin-bottom: 16px;">What Learners Say</h2>
-                </div>
-                
-                <div class="testimonials-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 24px;">
-                    <div class="testimonial-card cyber-card" style="padding: 24px;">
-                        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 16px;">
-                            <div style="width: 48px; height: 48px; background: linear-gradient(135deg, #22d3ee, #06b6d4); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 20px;">🧑‍💻</div>
-                            <div>
-                                <h4 style="color: var(--text-bright); margin: 0;">Alex Chen</h4>
-                                <span style="color: var(--text-muted); font-size: 12px;">Python Developer</span>
-                            </div>
-                        </div>
-                        <p style="color: var(--text-secondary); font-size: 14px; line-height: 1.6;">"MineCode made learning Python actually fun! The gamification kept me motivated and I landed my first dev job in 6 months."</p>
-                        <div style="margin-top: 12px; color: var(--codedex-gold);">⭐⭐⭐⭐⭐</div>
-                    </div>
-                    <div class="testimonial-card cyber-card" style="padding: 24px;">
-                        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 16px;">
-                            <div style="width: 48px; height: 48px; background: linear-gradient(135deg, #a855f7, #7c3aed); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 20px;">👩‍🎨</div>
-                            <div>
-                                <h4 style="color: var(--text-bright); margin: 0;">Sarah Kim</h4>
-                                <span style="color: var(--text-muted); font-size: 12px;">Web Designer</span>
-                            </div>
-                        </div>
-                        <p style="color: var(--text-secondary); font-size: 14px; line-height: 1.6;">"As a designer, I was intimidated by code. MineCode's pixel art aesthetic and friendly approach changed everything!"</p>
-                        <div style="margin-top: 12px; color: var(--codedex-gold);">⭐⭐⭐⭐⭐</div>
-                    </div>
-                    <div class="testimonial-card cyber-card" style="padding: 24px;">
-                        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 16px;">
-                            <div style="width: 48px; height: 48px; background: linear-gradient(135deg, #4ade80, #22c55e); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 20px;">🎓</div>
-                            <div>
-                                <h4 style="color: var(--text-bright); margin: 0;">Marcus Johnson</h4>
-                                <span style="color: var(--text-muted); font-size: 12px;">CS Student</span>
-                            </div>
-                        </div>
-                        <p style="color: var(--text-secondary); font-size: 14px; line-height: 1.6;">"The community here is amazing. I've learned more from MineCode challenges than my college courses!"</p>
-                        <div style="margin-top: 12px; color: var(--codedex-gold);">⭐⭐⭐⭐⭐</div>
-                    </div>
-                </div>
             </div>
         </div>
 
