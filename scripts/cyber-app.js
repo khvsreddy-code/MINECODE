@@ -526,15 +526,59 @@ function renderLandingPage() {
                     The most fun and beginner-friendly way to learn to code.
                 </p>
                 
-                <button class="btn-nes-primary" onclick="navigateTo('signup')">
-                    <img src="https://unpkg.com/pixelarticons@1.8.1/svg/play.svg" alt="" class="pixel-icon pixel-icon-sm" style="filter: brightness(0); margin-right: 8px;">
-                    GET STARTED
-                </button>
+                <div class="hero-buttons" style="display: flex; gap: 16px; justify-content: center; flex-wrap: wrap;">
+                    <button class="btn-nes-primary" onclick="navigateTo('signup')">
+                        <img src="https://unpkg.com/pixelarticons@1.8.1/svg/play.svg" alt="" class="pixel-icon pixel-icon-sm" style="filter: brightness(0); margin-right: 8px;">
+                        GET STARTED FREE
+                    </button>
+                    <button class="btn-nes-outline" onclick="navigateTo('courses')" style="background: transparent; border: 2px solid white; color: white;">
+                        EXPLORE COURSES
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Social Proof Section -->
+        <div class="social-proof-section" style="background: var(--bg-void); padding: 40px 24px; text-align: center;">
+            <p style="color: var(--text-muted); font-size: 13px; margin-bottom: 24px; letter-spacing: 2px;">TRUSTED BY LEARNERS WORLDWIDE</p>
+            <div class="proof-logos" style="display: flex; justify-content: center; align-items: center; gap: 48px; flex-wrap: wrap; opacity: 0.6;">
+                <span style="font-family: 'Press Start 2P'; font-size: 12px; color: var(--text-secondary);">🎓 10K+ Students</span>
+                <span style="font-family: 'Press Start 2P'; font-size: 12px; color: var(--text-secondary);">⭐ 4.9 Rating</span>
+                <span style="font-family: 'Press Start 2P'; font-size: 12px; color: var(--text-secondary);">🌍 50+ Countries</span>
+                <span style="font-family: 'Press Start 2P'; font-size: 12px; color: var(--text-secondary);">📚 15+ Courses</span>
+            </div>
+        </div>
+
+        <!-- Features Section -->
+        <div class="features-section" style="background: var(--bg-deep); padding: 80px 24px;">
+            <div style="max-width: 1100px; margin: 0 auto;">
+                <div style="text-align: center; margin-bottom: 60px;">
+                    <h2 style="font-family: 'Press Start 2P'; font-size: 18px; color: var(--text-bright); margin-bottom: 16px;">Why MineCode?</h2>
+                    <p style="color: var(--text-secondary); max-width: 500px; margin: 0 auto;">A gamified learning experience that makes coding fun and addictive.</p>
+                </div>
+                
+                <div class="features-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 32px;">
+                    <div class="feature-card cyber-card" style="padding: 32px; text-align: center;">
+                        <div style="font-size: 48px; margin-bottom: 16px;">🎮</div>
+                        <h3 style="font-family: 'Press Start 2P'; font-size: 12px; color: var(--text-bright); margin-bottom: 12px;">Gamified Learning</h3>
+                        <p style="color: var(--text-secondary); font-size: 14px;">Earn XP, unlock badges, and level up as you complete lessons.</p>
+                    </div>
+                    <div class="feature-card cyber-card" style="padding: 32px; text-align: center;">
+                        <div style="font-size: 48px; margin-bottom: 16px;">💻</div>
+                        <h3 style="font-family: 'Press Start 2P'; font-size: 12px; color: var(--text-bright); margin-bottom: 12px;">Code in Browser</h3>
+                        <p style="color: var(--text-secondary); font-size: 14px;">No setup required. Write and run code directly in your browser.</p>
+                    </div>
+                    <div class="feature-card cyber-card" style="padding: 32px; text-align: center;">
+                        <div style="font-size: 48px; margin-bottom: 16px;">🏆</div>
+                        <h3 style="font-family: 'Press Start 2P'; font-size: 12px; color: var(--text-bright); margin-bottom: 12px;">Real Projects</h3>
+                        <p style="color: var(--text-secondary); font-size: 14px;">Build portfolio-worthy projects like games, apps, and websites.</p>
+                    </div>
+                </div>
             </div>
         </div>
         
         <!-- Courses Preview Section -->
-        <div class="landing-courses-preview" style="background: var(--bg-deep); padding: 80px 24px;">
+        <div class="landing-courses-preview" style="background: var(--bg-panel); padding: 80px 24px;">
             <div class="landing-section-header" style="text-align: center; margin-bottom: 48px;">
                 <h2 style="font-family: 'Press Start 2P', monospace; font-size: 18px; color: var(--text-bright); margin-bottom: 16px;">
                     Journey through the world of programming
@@ -554,6 +598,119 @@ function renderLandingPage() {
                 </button>
             </div>
         </div>
+
+        <!-- Testimonials Section -->
+        <div class="testimonials-section" style="background: var(--bg-deep); padding: 80px 24px;">
+            <div style="max-width: 1100px; margin: 0 auto;">
+                <div style="text-align: center; margin-bottom: 48px;">
+                    <h2 style="font-family: 'Press Start 2P'; font-size: 18px; color: var(--text-bright); margin-bottom: 16px;">What Learners Say</h2>
+                </div>
+                
+                <div class="testimonials-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 24px;">
+                    <div class="testimonial-card cyber-card" style="padding: 24px;">
+                        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 16px;">
+                            <div style="width: 48px; height: 48px; background: linear-gradient(135deg, #22d3ee, #06b6d4); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 20px;">🧑‍💻</div>
+                            <div>
+                                <h4 style="color: var(--text-bright); margin: 0;">Alex Chen</h4>
+                                <span style="color: var(--text-muted); font-size: 12px;">Python Developer</span>
+                            </div>
+                        </div>
+                        <p style="color: var(--text-secondary); font-size: 14px; line-height: 1.6;">"MineCode made learning Python actually fun! The gamification kept me motivated and I landed my first dev job in 6 months."</p>
+                        <div style="margin-top: 12px; color: var(--codedex-gold);">⭐⭐⭐⭐⭐</div>
+                    </div>
+                    <div class="testimonial-card cyber-card" style="padding: 24px;">
+                        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 16px;">
+                            <div style="width: 48px; height: 48px; background: linear-gradient(135deg, #a855f7, #7c3aed); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 20px;">👩‍🎨</div>
+                            <div>
+                                <h4 style="color: var(--text-bright); margin: 0;">Sarah Kim</h4>
+                                <span style="color: var(--text-muted); font-size: 12px;">Web Designer</span>
+                            </div>
+                        </div>
+                        <p style="color: var(--text-secondary); font-size: 14px; line-height: 1.6;">"As a designer, I was intimidated by code. MineCode's pixel art aesthetic and friendly approach changed everything!"</p>
+                        <div style="margin-top: 12px; color: var(--codedex-gold);">⭐⭐⭐⭐⭐</div>
+                    </div>
+                    <div class="testimonial-card cyber-card" style="padding: 24px;">
+                        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 16px;">
+                            <div style="width: 48px; height: 48px; background: linear-gradient(135deg, #4ade80, #22c55e); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 20px;">🎓</div>
+                            <div>
+                                <h4 style="color: var(--text-bright); margin: 0;">Marcus Johnson</h4>
+                                <span style="color: var(--text-muted); font-size: 12px;">CS Student</span>
+                            </div>
+                        </div>
+                        <p style="color: var(--text-secondary); font-size: 14px; line-height: 1.6;">"The community here is amazing. I've learned more from MineCode challenges than my college courses!"</p>
+                        <div style="margin-top: 12px; color: var(--codedex-gold);">⭐⭐⭐⭐⭐</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CTA Section -->
+        <div class="cta-section" style="background: linear-gradient(135deg, #0a0e17 0%, #1a1a2e 100%); padding: 100px 24px; text-align: center;">
+            <h2 style="font-family: 'Press Start 2P'; font-size: 22px; color: var(--text-bright); margin-bottom: 16px;">Ready to Start?</h2>
+            <p style="color: var(--text-secondary); max-width: 500px; margin: 0 auto 32px auto; font-size: 16px;">
+                Join thousands of learners and begin your coding journey today. It's free!
+            </p>
+            <button class="btn-nes-primary" onclick="navigateTo('signup')" style="font-size: 14px; padding: 16px 32px;">
+                🚀 START LEARNING NOW
+            </button>
+        </div>
+
+        <!-- Footer -->
+        <footer class="landing-footer" style="background: #0a0b10; padding: 60px 24px 30px; border-top: 1px solid var(--border-subtle);">
+            <div style="max-width: 1100px; margin: 0 auto;">
+                <div class="footer-grid" style="display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 48px; margin-bottom: 48px;">
+                    <!-- Brand -->
+                    <div>
+                        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 16px;">
+                            <span style="font-size: 28px;">⛏️</span>
+                            <span style="font-family: 'Press Start 2P'; font-size: 14px; color: var(--text-bright);">MINECODE</span>
+                        </div>
+                        <p style="color: var(--text-muted); font-size: 13px; line-height: 1.6; max-width: 280px;">
+                            The gamified way to learn coding. Earn XP, collect badges, and build real projects.
+                        </p>
+                    </div>
+                    
+                    <!-- Learn -->
+                    <div>
+                        <h4 style="color: var(--text-bright); font-size: 12px; margin-bottom: 16px;">LEARN</h4>
+                        <ul style="list-style: none; padding: 0; margin: 0;">
+                            <li style="margin-bottom: 8px;"><a href="#" onclick="navigateTo('courses')" style="color: var(--text-muted); font-size: 13px; text-decoration: none;">All Courses</a></li>
+                            <li style="margin-bottom: 8px;"><a href="#" onclick="navigateTo('practice')" style="color: var(--text-muted); font-size: 13px; text-decoration: none;">Practice</a></li>
+                            <li style="margin-bottom: 8px;"><a href="#" onclick="navigateTo('builds')" style="color: var(--text-muted); font-size: 13px; text-decoration: none;">Projects</a></li>
+                        </ul>
+                    </div>
+                    
+                    <!-- Community -->
+                    <div>
+                        <h4 style="color: var(--text-bright); font-size: 12px; margin-bottom: 16px;">COMMUNITY</h4>
+                        <ul style="list-style: none; padding: 0; margin: 0;">
+                            <li style="margin-bottom: 8px;"><a href="#" onclick="navigateTo('community')" style="color: var(--text-muted); font-size: 13px; text-decoration: none;">Forum</a></li>
+                            <li style="margin-bottom: 8px;"><a href="#" style="color: var(--text-muted); font-size: 13px; text-decoration: none;">Discord</a></li>
+                            <li style="margin-bottom: 8px;"><a href="#" style="color: var(--text-muted); font-size: 13px; text-decoration: none;">Twitter/X</a></li>
+                        </ul>
+                    </div>
+                    
+                    <!-- Company -->
+                    <div>
+                        <h4 style="color: var(--text-bright); font-size: 12px; margin-bottom: 16px;">COMPANY</h4>
+                        <ul style="list-style: none; padding: 0; margin: 0;">
+                            <li style="margin-bottom: 8px;"><a href="#" style="color: var(--text-muted); font-size: 13px; text-decoration: none;">About</a></li>
+                            <li style="margin-bottom: 8px;"><a href="#" style="color: var(--text-muted); font-size: 13px; text-decoration: none;">Blog</a></li>
+                            <li style="margin-bottom: 8px;"><a href="#" style="color: var(--text-muted); font-size: 13px; text-decoration: none;">Contact</a></li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <!-- Bottom Bar -->
+                <div style="border-top: 1px solid var(--border-subtle); padding-top: 24px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
+                    <p style="color: var(--text-muted); font-size: 12px; margin: 0;">© 2025 MineCode. Made with ❤️ for coders.</p>
+                    <div style="display: flex; gap: 24px;">
+                        <a href="#" style="color: var(--text-muted); font-size: 12px; text-decoration: none;">Privacy</a>
+                        <a href="#" style="color: var(--text-muted); font-size: 12px; text-decoration: none;">Terms</a>
+                    </div>
+                </div>
+            </div>
+        </footer>
     `;
 
     // Play video

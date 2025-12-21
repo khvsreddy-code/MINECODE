@@ -4460,3 +4460,57 @@ html {
 .post-btn:hover {
     color: var(--neon-cyan);
 }
+
+/* === PHASE 17: LANDING PAGE ENHANCEMENTS ================= */
+
+/* Footer Responsive */
+@media (max-width: 768px) {
+    .footer-grid {
+        grid-template-columns: 1fr !important;
+        gap: 32px !important;
+        text-align: center;
+    }
+
+    .features-grid,
+    .testimonials-grid {
+        grid-template-columns: 1fr !important;
+    }
+
+    .proof-logos {
+        gap: 24px !important;
+        flex-direction: column;
+    }
+
+    .hero-buttons {
+        flex-direction: column;
+        align-items: center;
+    }
+}
+
+/* Button Outline Style */
+.btn-nes-outline {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 11px;
+    padding: 14px 24px;
+    background: transparent;
+    border: 2px solid white;
+    color: white;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-transform: uppercase;
+}
+
+.btn-nes-outline:hover {
+    background: rgba(255, 255, 255, 0.1);
+    transform: translateY(-2px);
+}
+
+/* Testimonial hover */
+.testimonial-card:hover {
+    transform: translateY(-4px);
+}
+
+/* Feature card hover */
+.feature-card:hover {
+    border-color: var(--neon-cyan);
+}
