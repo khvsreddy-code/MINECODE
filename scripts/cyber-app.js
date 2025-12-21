@@ -530,78 +530,37 @@ function renderLandingPage() {
                 <source src="./assets/_looped_video_1080p_202512201349.mp4" type="video/mp4">
             </video>
             
-            <!-- Dark gradient overlay for readability -->
-            <div class="overlay-gradient"></div>
+            <!-- Strong overlay for text readability -->
+            <div class="overlay-gradient" style="background: linear-gradient(180deg, rgba(0,0,0,0.5) 0%, rgba(0,0,0,0.7) 50%, rgba(0,0,0,0.9) 100%);"></div>
             
-            <!-- Floating Pixel Stars -->
-            <div class="pixel-stars">
-                <div class="star" style="top: 15%; left: 10%; animation-delay: 0s;"></div>
-                <div class="star" style="top: 25%; left: 85%; animation-delay: 0.5s;"></div>
-                <div class="star" style="top: 60%; left: 5%; animation-delay: 1s;"></div>
-                <div class="star" style="top: 70%; left: 90%; animation-delay: 1.5s;"></div>
-                <div class="star" style="top: 40%; left: 95%; animation-delay: 2s;"></div>
-            </div>
-            
-            <!-- Floating Course Icons (Codedex Style) -->
-            <div class="floating-icons">
-                <div class="floating-icon" style="top: 20%; left: 8%;">🐍</div>
-                <div class="floating-icon" style="top: 30%; right: 10%;">⚡</div>
-                <div class="floating-icon" style="top: 65%; left: 12%;">🌐</div>
-                <div class="floating-icon" style="top: 55%; right: 8%;">🎮</div>
-                <div class="floating-icon" style="top: 80%; left: 20%;">📊</div>
-                <div class="floating-icon" style="top: 75%; right: 15%;">🔧</div>
-            </div>
-            
-            <!-- Hero Content -->
+            <!-- Hero Content - Clean glassmorphism panel -->
             <div class="hero-content-wrapper">
-                <!-- Pixel Art Badge -->
-                <div class="hero-badge">
-                    <span class="badge-text">🎮 GAMIFIED LEARNING</span>
-                </div>
-                
-                <!-- Small White Text on Top -->
-                <div class="hero-start-text">START YOUR</div>
-                
-                <!-- Main Animated Title -->
-                <div class="hero-adventure-container">
-                    <div class="hero-adventure-line">
-                        ${animateText('Coding', 0)}
+                <div class="hero-glass-panel">
+                    <div class="hero-start-text">START YOUR</div>
+                    
+                    <!-- Main Animated Title -->
+                    <div class="hero-adventure-container">
+                        <div class="hero-adventure-line">
+                            ${animateText('Coding', 0)}
+                        </div>
+                        <div class="hero-adventure-line">
+                            ${animateText('Adventure', 0.8)}
+                        </div>
                     </div>
-                    <div class="hero-adventure-line">
-                        ${animateText('Adventure', 0.8)}
-                    </div>
-                </div>
-                
-                <p class="hero-subtitle">
-                    Journey through the world of programming with interactive<br>
-                    courses, challenges, and a supportive community.
-                </p>
-                
-                <div class="hero-buttons">
-                    <button class="btn-nes-primary btn-glow" onclick="navigateTo('signup')">
-                        <span class="btn-icon">▶</span>
-                        START FOR FREE
-                    </button>
-                    <button class="btn-nes-secondary" onclick="navigateTo('courses')">
-                        EXPLORE COURSES
-                    </button>
-                </div>
-                
-                <!-- Stats Row -->
-                <div class="hero-stats">
-                    <div class="stat-item">
-                        <span class="stat-number">15+</span>
-                        <span class="stat-label">Courses</span>
-                    </div>
-                    <div class="stat-divider"></div>
-                    <div class="stat-item">
-                        <span class="stat-number">100+</span>
-                        <span class="stat-label">Lessons</span>
-                    </div>
-                    <div class="stat-divider"></div>
-                    <div class="stat-item">
-                        <span class="stat-number">∞</span>
-                        <span class="stat-label">Fun</span>
+                    
+                    <p class="hero-subtitle">
+                        Learn to code the fun way with interactive lessons,<br>
+                        real projects, and a supportive community.
+                    </p>
+                    
+                    <div class="hero-buttons">
+                        <button class="btn-nes-primary btn-glow" onclick="navigateTo('signup')">
+                            <span class="btn-icon">▶</span>
+                            START FOR FREE
+                        </button>
+                        <button class="btn-nes-secondary" onclick="navigateTo('courses')">
+                            EXPLORE COURSES
+                        </button>
                     </div>
                 </div>
             </div>
