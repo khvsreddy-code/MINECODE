@@ -420,12 +420,10 @@ window.navigateTo = function (route) {
         renderCoursesCatalog();
         breadcrumbs.push({ label: 'Catalog', route: 'courses' });
     } else if (route === 'practice') {
-        // Simple Practice View
-        document.getElementById('main-content').innerHTML = `<h1>Practice Area (Work in Progress)</h1>`;
+        renderPracticeSection();
         breadcrumbs.push({ label: 'Practice', route: 'practice' });
     } else if (route === 'builds') {
-        // Builds View
-        document.getElementById('main-content').innerHTML = `<h1>Builds Gallery (Work in Progress)</h1>`;
+        renderBuildGallery();
         breadcrumbs.push({ label: 'Builds', route: 'builds' });
     } else if (route === 'community') {
         renderCommunityHub();
@@ -1590,6 +1588,134 @@ function renderCoursesCatalog() {
     grid.innerHTML = html;
 }
 
+// === PRACTICE SECTION ===
+function renderPracticeSection() {
+    const mainContent = document.getElementById('main-content');
+
+    // Challenge Packs Data
+    const CHALLENGE_PACKS = [
+        { id: 'python-basics', title: '30 Days of Python', icon: '🐍', difficulty: 'Beginner', challenges: 30, color: '#306998' },
+        { id: 'js-fundamentals', title: 'JavaScript Fundamentals', icon: '⚡', difficulty: 'Beginner', challenges: 25, color: '#f0db4f' },
+        { id: 'web-daily', title: 'Daily Web Challenges', icon: '🌐', difficulty: 'Intermediate', challenges: 15, color: '#e34c26' },
+        { id: 'algo-arena', title: 'Algorithm Arena', icon: '🧠', difficulty: 'Advanced', challenges: 20, color: '#a855f7' }
+    ];
+
+    const challengeCardsHtml = CHALLENGE_PACKS.map(pack => `
+        <div class="practice-card" onclick="GameState.showToast('${pack.title} coming soon!', 'info')" style="border-left: 4px solid ${pack.color};">
+            <div class="practice-icon">${pack.icon}</div>
+            <div class="practice-info">
+                <h3>${pack.title}</h3>
+                <p>${pack.challenges} Challenges • ${pack.difficulty}</p>
+            </div>
+            <div class="practice-progress">
+                <span>0/${pack.challenges}</span>
+            </div>
+        </div>
+    `).join('');
+
+    mainContent.innerHTML = `
+        <div class="practice-header" style="text-align: center; margin-bottom: 48px;">
+            <h1 style="font-family: 'Press Start 2P'; font-size: 24px; color: white; margin-bottom: 16px;">Practice Arena</h1>
+            <p style="color: var(--text-secondary); max-width: 500px; margin: 0 auto;">
+                Sharpen your skills with daily challenges, coding exercises, and timed competitions.
+            </p>
+        </div>
+
+        <div class="practice-section">
+            <h2 class="section-heading"><span class="icon">🔥</span> Challenge Packs</h2>
+            <div class="practice-grid">
+                ${challengeCardsHtml}
+            </div>
+        </div>
+
+        <div class="practice-section" style="margin-top: 48px;">
+            <h2 class="section-heading"><span class="icon">📅</span> 30 Days of Code</h2>
+            <div class="streak-banner cyber-card" style="padding: 24px; display: flex; align-items: center; gap: 24px;">
+                <div style="font-size: 48px;">🔥</div>
+                <div>
+                    <h3 style="color: var(--text-bright); margin: 0 0 8px 0;">Current Streak: ${GameState.data.user.streak} Days</h3>
+                    <p style="color: var(--text-secondary); margin: 0;">Code every day for 30 days and earn exclusive badges!</p>
+                </div>
+                <button class="btn-cyber-primary" style="margin-left: auto;">Start Today's Challenge</button>
+            </div>
+        </div>
+
+        <div class="practice-section" style="margin-top: 48px;">
+            <h2 class="section-heading"><span class="icon">🏆</span> Leaderboard</h2>
+            <div class="cyber-card" style="overflow: hidden;">
+                <table class="leaderboard-table" style="width: 100%; border-collapse: collapse;">
+                    <thead>
+                        <tr style="background: var(--bg-deep);">
+                            <th style="padding: 12px; text-align: left; color: var(--text-muted);">Rank</th>
+                            <th style="padding: 12px; text-align: left; color: var(--text-muted);">User</th>
+                            <th style="padding: 12px; text-align: right; color: var(--text-muted);">XP</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr style="border-bottom: 1px solid var(--border-subtle);">
+                            <td style="padding: 12px; color: var(--codedex-gold);">🥇 1</td>
+                            <td style="padding: 12px; color: var(--text-bright);">CodeMaster99</td>
+                            <td style="padding: 12px; text-align: right; color: var(--neon-cyan);">12,450 XP</td>
+                        </tr>
+                        <tr style="border-bottom: 1px solid var(--border-subtle);">
+                            <td style="padding: 12px; color: #c0c0c0;">🥈 2</td>
+                            <td style="padding: 12px; color: var(--text-bright);">PixelNinja</td>
+                            <td style="padding: 12px; text-align: right; color: var(--neon-cyan);">11,200 XP</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 12px; color: #cd7f32;">🥉 3</td>
+                            <td style="padding: 12px; color: var(--text-bright);">ByteRunner</td>
+                            <td style="padding: 12px; text-align: right; color: var(--neon-cyan);">9,875 XP</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    `;
+}
+
+// === BUILD GALLERY ===
+function renderBuildGallery() {
+    const mainContent = document.getElementById('main-content');
+
+    const BUILDS = [
+        { id: 'calc', title: 'Calculator App', author: 'PixelDev', likes: 42, tags: ['JavaScript', 'CSS'] },
+        { id: 'weather', title: 'Weather Dashboard', author: 'CloudCoder', likes: 38, tags: ['API', 'Python'] },
+        { id: 'snake', title: 'Snake Game', author: 'RetroGamer', likes: 55, tags: ['Python', 'Pygame'] },
+        { id: 'portfolio', title: 'Portfolio Site', author: 'WebWizard', likes: 29, tags: ['HTML', 'CSS', 'JS'] }
+    ];
+
+    const buildCardsHtml = BUILDS.map(build => `
+        <div class="build-card cyber-card" onclick="GameState.showToast('View ${build.title}', 'info')">
+            <div class="build-preview" style="height: 140px; background: var(--bg-deep); display: flex; align-items: center; justify-content: center; font-size: 32px;">📦</div>
+            <div class="build-info" style="padding: 16px;">
+                <h3 style="color: var(--text-bright); margin: 0 0 8px 0; font-size: 14px;">${build.title}</h3>
+                <p style="color: var(--text-muted); font-size: 12px; margin: 0 0 12px 0;">by ${build.author}</p>
+                <div style="display: flex; gap: 6px; flex-wrap: wrap;">
+                    ${build.tags.map(t => `<span class="build-tag">${t}</span>`).join('')}
+                </div>
+                <div style="margin-top: 12px; display: flex; align-items: center; gap: 6px; color: var(--text-muted); font-size: 12px;">
+                    <span>❤️ ${build.likes}</span>
+                </div>
+            </div>
+        </div>
+    `).join('');
+
+    mainContent.innerHTML = `
+        <div class="builds-header" style="text-align: center; margin-bottom: 48px;">
+            <h1 style="font-family: 'Press Start 2P'; font-size: 24px; color: white; margin-bottom: 16px;">Build Gallery</h1>
+            <p style="color: var(--text-secondary); max-width: 500px; margin: 0 auto 24px auto;">
+                Explore projects built by the MineCode community. Get inspired and share your own!
+            </p>
+            <button class="btn-cyber-primary">+ Submit Your Build</button>
+        </div>
+
+        <div class="codedex-grid">
+            ${buildCardsHtml}
+        </div>
+    `;
+}
+
 function renderCourseRoadmap(id) {
     const course = COURSES.find(c => c.id === id) || COURSES[0];
     const content = document.getElementById('course-content');
@@ -1799,6 +1925,31 @@ function renderLessonWorkspace() {
                 print("Hello, World!")
             </div>
             ${isCompleted ? '<div style="color: var(--neon-green);">✅ LESSON COMPLETE</div>' : ''}
+            
+            <!-- Hints System -->
+            <div class="hints-container" style="margin-top: 24px;">
+                <button class="hint-toggle" onclick="this.nextElementSibling.classList.toggle('hidden'); this.textContent = this.nextElementSibling.classList.contains('hidden') ? '💡 Show Hint' : '💡 Hide Hint';" style="
+                    background: transparent;
+                    border: 1px dashed var(--border-subtle);
+                    color: var(--text-muted);
+                    padding: 8px 16px;
+                    border-radius: 6px;
+                    cursor: pointer;
+                    font-size: 13px;
+                    transition: all 0.2s;
+                ">💡 Show Hint</button>
+                <div class="hint-content hidden" style="
+                    margin-top: 12px;
+                    padding: 16px;
+                    background: rgba(251, 191, 36, 0.1);
+                    border-left: 3px solid var(--codedex-gold);
+                    border-radius: 0 8px 8px 0;
+                    font-size: 14px;
+                    color: var(--text-secondary);
+                ">
+                    <strong style="color: var(--codedex-gold);">Hint:</strong> Remember to use quotation marks around your text in the print function!
+                </div>
+            </div>
         </div>
     `;
 
