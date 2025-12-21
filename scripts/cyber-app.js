@@ -1431,6 +1431,119 @@ function renderPost(post, prepend = false) {
     }
 }
 
+// === COMMUNITY HUB ===
+function renderCommunityHub() {
+    const mainContent = document.getElementById('main-content');
+
+    // Forum Channels Data
+    const CHANNELS = [
+        { id: 'python', name: '🐍 Python', members: 1240, posts: 342 },
+        { id: 'javascript', name: '⚡ JavaScript', members: 980, posts: 278 },
+        { id: 'html-css', name: '🌐 HTML/CSS', members: 750, posts: 195 },
+        { id: 'general', name: '💬 General', members: 2100, posts: 523 },
+        { id: 'show-your-work', name: '🎨 Show Your Work', members: 890, posts: 167 }
+    ];
+
+    // Mock Posts
+    const RECENT_POSTS = [
+        { author: 'CodeNinja42', avatar: '🧑‍💻', content: 'Just finished the Python loops chapter! The FizzBuzz project was challenging but fun.', time: '2 hours ago', likes: 12, channel: 'python' },
+        { author: 'PixelQueen', avatar: '👩‍🎨', content: 'Check out my new portfolio site! Built with HTML, CSS, and a touch of magic ✨', time: '4 hours ago', likes: 28, channel: 'show-your-work' },
+        { author: 'ByteMaster', avatar: '🤖', content: 'Anyone else struggling with async/await? Would love some tips!', time: '6 hours ago', likes: 8, channel: 'javascript' }
+    ];
+
+    const channelsHtml = CHANNELS.map(ch => `
+        <div class="channel-item" onclick="GameState.showToast('${ch.name} channel coming soon!', 'info')">
+            <span class="channel-name">${ch.name}</span>
+            <span class="channel-meta">${ch.members} members</span>
+        </div>
+    `).join('');
+
+    const postsHtml = RECENT_POSTS.map(post => `
+        <div class="community-post cyber-card">
+            <div class="post-header">
+                <div class="post-avatar">${post.avatar}</div>
+                <div class="post-author">
+                    <span class="author-name">${post.author}</span>
+                    <span class="post-time">${post.time}</span>
+                </div>
+                <span class="post-channel">#${post.channel}</span>
+            </div>
+            <div class="post-content">${post.content}</div>
+            <div class="post-actions">
+                <button class="post-btn">❤️ ${post.likes}</button>
+                <button class="post-btn">💬 Reply</button>
+                <button class="post-btn">🔗 Share</button>
+            </div>
+        </div>
+    `).join('');
+
+    mainContent.innerHTML = `
+        <div class="community-header" style="text-align: center; margin-bottom: 48px;">
+            <h1 style="font-family: 'Press Start 2P'; font-size: 24px; color: white; margin-bottom: 16px;">Community Hub</h1>
+            <p style="color: var(--text-secondary); max-width: 500px; margin: 0 auto;">
+                Connect with fellow coders, share your projects, and get help from the community.
+            </p>
+        </div>
+
+        <div class="community-layout" style="display: grid; grid-template-columns: 280px 1fr; gap: 32px;">
+            <!-- Channels Sidebar -->
+            <div class="channels-sidebar">
+                <div class="cyber-card" style="padding: 20px;">
+                    <h3 style="font-size: 12px; color: var(--text-muted); margin: 0 0 16px 0;">CHANNELS</h3>
+                    <div class="channels-list">
+                        ${channelsHtml}
+                    </div>
+                </div>
+
+                <div class="cyber-card" style="padding: 20px; margin-top: 20px;">
+                    <h3 style="font-size: 12px; color: var(--text-muted); margin: 0 0 16px 0;">TOP CONTRIBUTORS</h3>
+                    <div class="leaderboard-mini">
+                        <div class="leader-item">
+                            <span class="leader-rank">🥇</span>
+                            <span class="leader-name">CodeMaster99</span>
+                            <span class="leader-xp">12,450 XP</span>
+                        </div>
+                        <div class="leader-item">
+                            <span class="leader-rank">🥈</span>
+                            <span class="leader-name">PixelNinja</span>
+                            <span class="leader-xp">11,200 XP</span>
+                        </div>
+                        <div class="leader-item">
+                            <span class="leader-rank">🥉</span>
+                            <span class="leader-name">ByteRunner</span>
+                            <span class="leader-xp">9,875 XP</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main Feed -->
+            <div class="community-feed">
+                <div class="post-composer cyber-card" style="padding: 20px; margin-bottom: 24px;">
+                    <textarea placeholder="Share something with the community..." style="
+                        width: 100%;
+                        min-height: 80px;
+                        background: var(--bg-deep);
+                        border: 1px solid var(--border-subtle);
+                        border-radius: 8px;
+                        padding: 12px;
+                        color: var(--text-primary);
+                        font-family: 'Outfit', sans-serif;
+                        resize: none;
+                    "></textarea>
+                    <div style="display: flex; justify-content: flex-end; margin-top: 12px;">
+                        <button class="btn-cyber-primary">Post</button>
+                    </div>
+                </div>
+
+                <div class="posts-list">
+                    ${postsHtml}
+                </div>
+            </div>
+        </div>
+    `;
+}
+
 // RENDERERS
 function renderDashboard() {
     renderCoursesCatalog(); // Ensure catalog is ready
