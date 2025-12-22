@@ -8,14 +8,17 @@
 
     <script src="https://unpkg.com/lucide@latest"></script>
     <link href="https://unpkg.com/pixelarticons@1.8.1/css/pixelarticons.css" rel="stylesheet">
-    <link href="https://fonts.cdnfonts.com/css/monocraft" rel="stylesheet">
+    <!-- Using local Minecraft fonts in CSS -->
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles/cyber-engine.css">
-    <link rel="stylesheet" href="styles/hero-effects.css">
-    <link rel="stylesheet" href="styles/components.css">
-    <link rel="stylesheet" href="styles/pixel-icons.css">
-    <link rel="stylesheet" href="styles/gamification.css">
-    <link rel="stylesheet" href="styles/mobile.css">
+    <link rel="stylesheet" href="styles/cyber-engine.css?v=1.6">
+    <link rel="stylesheet" href="styles/ui-engine.css?v=1.6">
+    <link rel="stylesheet" href="styles/app.css?v=1.6">
+    <link rel="stylesheet" href="styles/hero-effects.css?v=1.6">
+    <link rel="stylesheet" href="styles/components.css?v=1.6">
+    <link rel="stylesheet" href="styles/pixel-icons.css?v=1.6">
+    <link rel="stylesheet" href="styles/gamification.css?v=1.6">
+    <link rel="stylesheet" href="styles/mobile.css?v=1.6">
+    <link rel="stylesheet" href="styles/ide-cozy.css?v=1.6">
 
     <!-- True Pixel Fonts from Google -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -43,14 +46,6 @@
 <body>
     <div id="app">
 
-        <!-- Video Background for Dashboard -->
-        <video id="dashboard-video-bg" autoplay muted loop playsinline
-            style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0;">
-            <source src="assets/_looped_video_1080p_202512201349.mp4" type="video/mp4">
-        </video>
-        <!-- Dark overlay for readability -->
-        <div style="position: fixed; inset: 0; background: rgba(0, 0, 0, 0.5); z-index: 0; pointer-events: none;"></div>
-
         <!-- Top Navigation -->
         <nav id="topnav" class="topnav">
             <div class="nav-left">
@@ -58,14 +53,14 @@
                     style="display: none; background: none; border: none; color: white; margin-right: 12px; cursor: pointer;">
                     <i data-lucide="menu"></i>
                 </button>
-                <a href="#" class="nav-brand" data-route="home">
+                <a href="#" class="nav-brand" data-route="home" onclick="navigateTo('home')">
                     <span class="brand-icon cyber-glow"><i data-lucide="zap"
                             style="width:24px;height:24px;color:#4600c9;"></i></span>
                     <span class="brand-text">MineCode</span>
                 </a>
                 <div class="nav-menu">
                     <div class="nav-item has-dropdown">
-                        <button class="nav-btn" id="learn-btn">Learn
+                        <button class="nav-btn" id="learn-btn">Protocols
                             ▾</button>
                         <div class="mega-menu">
                             <div class="mega-menu-content">
@@ -110,9 +105,9 @@
                                     </a>
                                 </div>
 
-                                <!-- Column 3: Tools -->
+                                <!-- Column 3: Tech Arsenal -->
                                 <div class="mega-column">
-                                    <h4>TOOLS</h4>
+                                    <h4>TECH ARSENAL</h4>
                                     <a href="#" class="mega-link">
                                         <i data-lucide="terminal-square" style="width:16px; color: #a3a3a3;"></i>
                                         Command Line
@@ -145,16 +140,9 @@
                             </div>
                         </div>
                     </div>
-                    <div class="nav-dropdown">
-                        <button class="nav-btn">Practice ▾</button>
-                        <div class="dropdown-content">
-                            <a href="#" data-route="practice">Challenge Packs</a>
-                            <a href="#" data-route="builds">Project Builds</a>
-                            <a href="#" data-route="practice">#DailyCipher</a>
-                        </div>
-                    </div>
-                    <button class="nav-btn" data-route="builds">Build</button>
-                    <button class="nav-btn" data-route="community" onclick="navigateTo('community')">Community</button>
+                    <button class="nav-btn" data-route="practice" onclick="navigateTo('practice')">Forge</button>
+                    <button class="nav-btn" data-route="builds" onclick="navigateTo('builds')">Fabricate</button>
+                    <button class="nav-btn" data-route="community" onclick="navigateTo('community')">Nexus</button>
                     <button class="nav-btn" data-route="profile" onclick="navigateTo('profile')">Profile</button>
                 </div>
             </div>
@@ -252,18 +240,18 @@
         </div>
 
         <!-- FULL PAGE VIEWS (Hidden by default) -->
-        <div id="courses-view" class="hidden" style="padding-top: 80px;">
-            <!-- Z-INDEX FIX: cyber-bg is 0. We need video > 0 to be seen. -->
+        <div id="courses-view" class="hidden"
+            style="position: fixed; inset: 0; z-index: 1000; background: #0a0a0f; overflow-y: auto; padding-top: 80px;">
+            <!-- Video background for courses page -->
             <video autoplay muted loop playsinline
-                style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: 1;">
+                style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: -1;">
                 <source src="assets/pixel_art/loop.mp4" type="video/mp4">
             </video>
-            <!-- Hero Effects Overlays -->
-            <!-- Hero Effects Overlays - Simplified for Performance -->
-            <div style="position: fixed; inset: 0; background: rgba(0, 0, 0, 0.6); z-index: 2; pointer-events: none;">
+            <!-- Dark overlay for readability -->
+            <div style="position: fixed; inset: 0; background: rgba(0, 0, 0, 0.6); z-index: 0; pointer-events: none;">
             </div>
             <div id="all-courses-grid" class="container"
-                style="max-width: 1200px; margin: 0 auto; position: relative; z-index: 3;"></div>
+                style="max-width: 1200px; margin: 0 auto; position: relative; z-index: 1;"></div>
         </div>
 
         <div id="course-view" class="hidden" style="padding-top: 80px;">
@@ -308,38 +296,39 @@
 
     </div>
 
+    <!-- Marked.js for Markdown Rendering -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
     <!-- Supabase JS -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
     <!-- Scripts -->
-    <script src="scripts/effects/matrix-rain.js"></script>
-    <script src="scripts/effects/tilt-effect.js"></script>
-    <script src="scripts/effects/rain-effect.js"></script>
-    <script src="scripts/supabase-client.js"></script>
-    <script src="scripts/effects/reveal-text.js"></script>
-    <script src="scripts/modules/ui-utils.js"></script>
-    <script src="scripts/modules/auth.js"></script>
-    <script src="scripts/modules/components.js"></script>
-    <script src="scripts/core/nav.js"></script>
-    <script src="scripts/data/courses-data.js"></script>
-    <script src="scripts/data/curriculum-data.js"></script>
-    <script src="scripts/cyber-app.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-    <script src="scripts/modules/catalog.js"></script>
-    <script src="scripts/modules/challenges.js"></script>
-    <script src="scripts/modules/cyber-buttons.js"></script>
-    <!-- Gamification module removed (obsolete) -->
+    <script src="scripts/effects/matrix-rain.js?v=1.1"></script>
+    <script src="scripts/effects/tilt-effect.js?v=1.1"></script>
+    <script src="scripts/effects/rain-effect.js?v=1.1"></script>
+    <script src="scripts/supabase-client.js?v=1.1"></script>
+    <script src="scripts/effects/reveal-text.js?v=1.1"></script>
+    <script src="scripts/modules/ui-utils.js?v=1.1"></script>
+    <script src="scripts/modules/auth.js?v=1.1"></script>
+    <script src="scripts/modules/components.js?v=1.1"></script>
+    <script src="scripts/core/nav.js?v=1.1"></script>
 
-    <!-- Curriculum Data Shards -->
-    <script src="scripts/data/curriculum/python.js"></script>
-    <script src="scripts/data/curriculum/web.js"></script>
-    <script src="scripts/data/curriculum/systems.js"></script>
-    <script src="scripts/data/curriculum/misc.js"></script>
-    <script src="scripts/data/curriculum-data.js"></script>
-    <script src="scripts/data/courses-data.js"></script>
+    <!-- Data Modules -->
+    <script src="scripts/data/courses-data.js?v=1.1"></script>
+    <script src="scripts/data/syntax-db.js?v=1.1"></script>
+    <script src="scripts/data/curriculum-data.js?v=1.1"></script>
+
+    <!-- Compiler must load BEFORE learning-engine -->
+    <script src="scripts/modules/compiler.js?v=1.1"></script>
+    <script src="scripts/modules/learning-engine.js?v=1.1"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <script src="scripts/modules/catalog.js?v=1.1"></script>
+    <script src="scripts/modules/challenges.js?v=1.1"></script>
+    <script src="scripts/modules/cyber-buttons.js?v=1.1"></script>
 
     <!-- Main App Logic -->
-    <script src="scripts/cyber-app.js"></script>
+    <script src="scripts/cyber-app.js?v=1.6"></script>
 
 
     <!-- Initialize Lucide Icons on page load -->

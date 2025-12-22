@@ -1,0 +1,360 @@
+/* === CYBER COZY IDE === */
+/* Glassmorphism, Neon, and Pixel Perfect */
+
+:root {
+    --ide-bg: #0d1117;
+    --ide-panel-bg: rgba(13, 17, 23, 0.7);
+    --ide-border: rgba(255, 255, 255, 0.1);
+    --ide-accent: #00d4ff;
+    /* Cyan */
+    --ide-text: #c9d1d9;
+    --ide-keyword: #ff7b72;
+    --ide-string: #a5d6ff;
+    --ide-function: #d2a8ff;
+    --ide-comment: #8b949e;
+
+    --term-bg: #0a0a0a;
+    --term-text: #33ff00;
+}
+
+/* --- WORKSPACE LAYOUT --- */
+.workspace {
+    display: grid;
+    grid-template-columns: 350px 1fr;
+    height: calc(100vh - 80px);
+    /* Minus navbar */
+    gap: 0;
+    overflow: hidden;
+    background: radial-gradient(circle at center, #1a1e29 0%, #0d1117 100%);
+}
+
+@media (max-width: 900px) {
+    .workspace {
+        grid-template-columns: 1fr;
+        grid-template-rows: 1fr 1fr;
+        height: auto;
+        overflow-y: auto;
+    }
+}
+
+/* --- INSTRUCTIONS PANEL --- */
+.workspace-instructions {
+    background: var(--ide-panel-bg);
+    border-right: 1px solid var(--ide-border);
+    backdrop-filter: blur(10px);
+    padding: 24px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.lesson-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.lesson-title {
+    font-family: 'Press Start 2P', cursive;
+    font-size: 18px;
+    line-height: 1.5;
+    margin: 0;
+    background: linear-gradient(90deg, #fff, #aaa);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.lesson-story {
+    font-family: 'Inter', sans-serif;
+    line-height: 1.6;
+    color: var(--ide-text);
+    font-size: 15px;
+    background: rgba(255, 255, 255, 0.03);
+    padding: 16px;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.section-label {
+    font-family: 'Outfit', sans-serif;
+    font-weight: 700;
+    color: var(--ide-accent);
+    text-transform: uppercase;
+    font-size: 12px;
+    letter-spacing: 1px;
+    margin-bottom: 12px;
+}
+
+.instruction-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.instruction-item {
+    display: flex;
+    gap: 12px;
+    padding: 12px;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
+    border-left: 3px solid transparent;
+    transition: all 0.3s ease;
+}
+
+.instruction-item.completed {
+    border-left-color: #2ecc71;
+    background: rgba(46, 204, 113, 0.1);
+}
+
+.instruction-item .step-check {
+    color: var(--ide-comment);
+    font-family: var(--font-code);
+}
+
+.instruction-item.completed .step-check {
+    color: #2ecc71;
+}
+
+/* --- EDITOR PANEL --- */
+.workspace-editor {
+    display: grid;
+    grid-template-rows: 50px 1fr 200px;
+    background: #0d1117;
+}
+
+.editor-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 16px;
+    background: #161b22;
+    border-bottom: 1px solid var(--ide-border);
+}
+
+.editor-tabs {
+    display: flex;
+    gap: 2px;
+}
+
+.editor-tab {
+    background: #0d1117;
+    color: white;
+    padding: 10px 20px;
+    border-top: 2px solid var(--ide-accent);
+    font-family: var(--font-code);
+    font-size: 13px;
+    cursor: default;
+}
+
+.editor-actions {
+    display: flex;
+    gap: 10px;
+}
+
+#run-code-btn {
+    background: #238636;
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    font-family: 'Outfit', sans-serif;
+    padding: 6px 16px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-weight: 600;
+    transition: all 0.2s;
+    box-shadow: 0 0 10px rgba(35, 134, 54, 0.4);
+}
+
+#run-code-btn:hover {
+    background: #2ea043;
+    transform: translateY(-1px);
+    box-shadow: 0 0 15px rgba(35, 134, 54, 0.6);
+}
+
+/* --- CODE AREA --- */
+.editor-area {
+    position: relative;
+    display: flex;
+    font-family: 'Monocraft', monospace;
+    font-size: 14px;
+    line-height: 1.5;
+    background: #0d1117;
+    overflow: hidden;
+}
+
+.line-numbers {
+    width: 50px;
+    padding: 16px 0;
+    text-align: right;
+    padding-right: 12px;
+    color: #484f58;
+    background: #0d1117;
+    user-select: none;
+    font-size: 13px;
+    border-right: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.line-num {
+    height: 21px;
+    /* Matches textarea line-height */
+}
+
+.code-editor {
+    flex: 1;
+    background: transparent;
+    border: none;
+    color: var(--ide-text);
+    padding: 16px;
+    resize: none;
+    outline: none;
+    white-space: pre;
+    font-family: inherit;
+    font-size: inherit;
+    line-height: 1.5;
+    overflow: auto;
+    tab-size: 4;
+}
+
+/* Basic Syntax Highlighting Colors (Applied via JS logic later if needed, mostly plain text for textarea) */
+.code-editor::placeholder {
+    color: #30363d;
+}
+
+/* --- TERMINAL --- */
+.terminal-panel {
+    background: var(--term-bg);
+    border-top: 1px solid var(--ide-border);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.terminal-header {
+    background: #161b22;
+    padding: 8px 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.terminal-title {
+    font-family: var(--font-code);
+    font-size: 12px;
+    color: #8b949e;
+}
+
+.terminal-output {
+    flex: 1;
+    padding: 16px;
+    font-family: 'Monocraft', monospace;
+    font-size: 13px;
+    color: var(--ide-text);
+    overflow-y: auto;
+    white-space: pre-wrap;
+    position: relative;
+}
+
+/* CRT SCANLINE EFFECT */
+.terminal-panel::after {
+    content: " ";
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+    z-index: 2;
+    background-size: 100% 2px, 3px 100%;
+    pointer-events: none;
+}
+
+/* MISSION BOX */
+.mission-box {
+    background: rgba(0, 212, 255, 0.05);
+    /* Cyan tint */
+    border: 1px solid rgba(0, 212, 255, 0.2);
+    border-radius: 8px;
+    padding: 16px;
+    margin-top: 16px;
+    box-shadow: 0 0 15px rgba(0, 212, 255, 0.05);
+}
+
+.badge-neon {
+    background: var(--ide-accent);
+    color: #000;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 4px;
+    box-shadow: 0 0 10px var(--ide-accent);
+    font-size: 10px;
+}
+
+.terminal-line.success {
+    color: #3fb950;
+    text-shadow: 0 0 5px rgba(63, 185, 80, 0.4);
+}
+
+.terminal-line.error {
+    color: #f85149;
+}
+
+.terminal-line.dim {
+    color: #484f58;
+}
+
+/* --- HINTS & MARKDOWN --- */
+.hints-panel {
+    margin-top: auto;
+    border: 1px solid rgba(255, 215, 0, 0.2);
+    border-radius: 8px;
+    background: rgba(255, 215, 0, 0.05);
+}
+
+.hints-toggle {
+    padding: 12px;
+    cursor: pointer;
+    font-weight: 600;
+    color: #fbca04;
+    list-style: none;
+    font-family: 'Outfit', sans-serif;
+}
+
+.hints-list {
+    padding: 0 24px 16px 24px;
+    color: #d2a8ff;
+    font-size: 14px;
+}
+
+code {
+    background: rgba(110, 118, 129, 0.4);
+    padding: 0.2em 0.4em;
+    border-radius: 6px;
+    font-family: 'Monocraft', monospace;
+    font-size: 0.9em;
+}
+
+/* --- SCROLLBARS --- */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #0d1117;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #30363d;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #484f58;
+}

@@ -5195,9 +5195,12 @@ html {
 }
 
 .codedex-card:hover {
-    transform: translateY(-5px);
+    transform: translateY(-8px) scale(1.02);
     border-color: var(--neon-cyan);
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    box-shadow:
+        0 20px 40px rgba(0, 0, 0, 0.5),
+        0 0 40px rgba(34, 211, 238, 0.4),
+        inset 0 0 30px rgba(34, 211, 238, 0.05);
 }
 
 .card-visual {
@@ -5265,23 +5268,64 @@ html {
 
 .progress-bar-thin {
     flex: 1;
-    height: 4px;
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 2px;
+    height: 6px;
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 3px;
     overflow: hidden;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.3);
 }
 
 .progress-bar-thin .fill {
     height: 100%;
-    background: var(--neon-green);
+    background: linear-gradient(90deg, var(--neon-green), #22d3ee);
+    box-shadow: 0 0 12px rgba(34, 211, 238, 0.5);
+    border-radius: 3px;
 }
 
 .section-heading {
     font-family: var(--font-display);
-    font-size: 20px;
-    margin: 40px 24px 24px;
+    font-size: 22px;
+    margin: 48px 24px 16px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     color: var(--text-bright);
     display: flex;
     align-items: center;
     gap: 12px;
+    text-shadow: 0 0 20px rgba(34, 211, 238, 0.3);
+}
+
+.section-heading .icon {
+    filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.5));
+}
+
+/* Filter Button Styles */
+.filter-btn {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 10px;
+    padding: 10px 18px;
+    background: rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: var(--text-secondary);
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.25s ease;
+}
+
+.filter-btn:hover {
+    border-color: var(--neon-cyan);
+    color: white;
+    background: rgba(34, 211, 238, 0.1);
+}
+
+.filter-btn.active {
+    background: linear-gradient(135deg, rgba(34, 211, 238, 0.3), rgba(34, 211, 238, 0.1));
+    border-color: var(--neon-cyan);
+    color: var(--neon-cyan);
+    box-shadow: 0 0 15px rgba(34, 211, 238, 0.3);
+}
+
+/* Catalog Subtitle Enhancement */
+.catalog-header p {
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.8);
 }

@@ -158,6 +158,32 @@
     gap: 20px;
 }
 
+/* === COURSE LAYOUT GRID (2-Column) === */
+.course-layout-grid {
+    display: grid;
+    grid-template-columns: 1fr 300px;
+    gap: 32px;
+    align-items: start;
+}
+
+.course-sidebar-col {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    position: sticky;
+    top: 24px;
+}
+
+@media (max-width: 1000px) {
+    .course-layout-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .course-sidebar-col {
+        position: static;
+    }
+}
+
 /* === COURSE CARD (Codedex Style) === */
 
 .course-card {
@@ -167,6 +193,57 @@
     overflow: hidden;
     cursor: pointer;
     transition: all 0.25s ease;
+}
+
+/* === COURSE ROADMAP HERO FIX === */
+.course-hero-full {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    background-size: cover;
+    background-position: center;
+    position: relative;
+    border-radius: 24px;
+    margin-bottom: 32px;
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.6), inset 0 0 60px rgba(0, 0, 0, 0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: all 0.5s ease;
+}
+
+/* Cool Hover Effect */
+.course-hero-full:hover {
+    box-shadow: 0 0 50px rgba(0, 245, 255, 0.2), inset 0 0 20px rgba(0, 0, 0, 0.5);
+    border-color: rgba(0, 245, 255, 0.3);
+    transform: scale(1.01);
+}
+
+/* CRT Scanline Effect */
+.course-hero-full::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to bottom,
+            rgba(255, 255, 255, 0),
+            rgba(255, 255, 255, 0) 50%,
+            rgba(0, 0, 0, 0.1) 50%,
+            rgba(0, 0, 0, 0.1));
+    background-size: 100% 4px;
+    pointer-events: none;
+    z-index: 1;
+    opacity: 0.6;
+}
+
+/* Vignette & Cinematic Tint */
+.course-hero-full::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at center, transparent 40%, rgba(0, 0, 0, 0.8) 100%);
+    pointer-events: none;
+    z-index: 2;
 }
 
 .course-card:hover {
@@ -229,6 +306,58 @@
     margin-top: 12px;
 }
 
+/* === HERO SCROLL EFFECTS === */
+.hero-scroll-bg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-size: cover;
+    background-position: center;
+    z-index: 0;
+    /* Changed from -1 to 0 to be visible above app background */
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    filter: brightness(0.2) blur(8px);
+    /* Increased darken/blur for better text contrast */
+    pointer-events: none;
+}
+
+.hero-scroll-bg.visible {
+    opacity: 1;
+}
+
+/* Fixed Back Button (Always Top Left) */
+.fixed-back-btn {
+    position: fixed;
+    top: 84px;
+    /* Below TopNav */
+    left: 24px;
+    z-index: 1000;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: var(--text-bright);
+    padding: 8px 16px;
+    border-radius: 4px;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 0.7rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.fixed-back-btn:hover {
+    border-color: var(--neon-cyan);
+    color: var(--neon-cyan);
+    transform: translateY(-2px);
+}
+
 .progress-text {
     display: flex;
     justify-content: space-between;
@@ -248,6 +377,73 @@
     height: 100%;
     background: linear-gradient(90deg, var(--primary), var(--success));
     border-radius: var(--radius-full);
+}
+
+/* === UNIVERSAL BACK BUTTON === */
+.neon-back-btn {
+    position: absolute;
+    top: 24px;
+    left: 24px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(0, 245, 255, 0.3);
+    color: var(--neon-cyan);
+    padding: 8px 16px;
+    border-radius: 50px;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 10px;
+    cursor: pointer;
+    z-index: 20;
+    transition: all 0.3s ease;
+    box-shadow: 0 0 10px rgba(0, 245, 255, 0.1);
+    text-decoration: none;
+    /* Ensure no underline if used on anchors */
+}
+
+.neon-back-btn:hover {
+    background: rgba(0, 245, 255, 0.1);
+    border-color: var(--neon-cyan);
+    box-shadow: 0 0 20px rgba(0, 245, 255, 0.4);
+    transform: translateX(-4px);
+    color: var(--neon-cyan);
+}
+
+.neon-back-btn svg {
+    filter: drop-shadow(0 0 4px var(--neon-cyan));
+}
+
+/* === FILTER BUTTON (Restored for Back Button) === */
+.filter-btn {
+    background: var(--bg-panel);
+    border: 1px solid var(--border-subtle);
+    color: var(--text-secondary);
+    padding: 8px 16px;
+    border-radius: var(--radius-md);
+    font-family: 'Press Start 2P', monospace;
+    font-size: 0.7rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-transform: uppercase;
+}
+
+.filter-btn:hover {
+    border-color: var(--neon-cyan);
+    color: var(--text-bright);
+    box-shadow: 0 0 10px rgba(0, 245, 255, 0.2);
+}
+
+.card-visual {
+    height: 140px;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-color: var(--bg-card);
+    /* Fallback */
+    position: relative;
+    border-bottom: 1px solid var(--border-subtle);
 }
 
 /* === RIGHT SIDEBAR === */
@@ -519,4 +715,68 @@
         margin: 0;
         padding: 16px;
     }
+}
+
+/* === NES BUTTONS === */
+.btn-nes-primary {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 14px 28px;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    color: #000;
+    background: var(--neon-cyan, #00f5ff);
+    border: 4px solid #000;
+    box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.8);
+    cursor: pointer;
+    transition: all 0.1s;
+    text-decoration: none;
+    line-height: 1;
+    margin: 4px;
+}
+
+.btn-nes-primary:active {
+    transform: translate(4px, 4px);
+    box-shadow: none;
+}
+
+.btn-nes-primary:hover {
+    filter: brightness(1.1);
+}
+
+.btn-nes-primary.btn-nes-cyan {
+    background: var(--neon-cyan, #00f5ff);
+}
+
+.btn-nes-secondary {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 14px 28px;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    color: var(--text-bright, #fff);
+    background: #161b22;
+    border: 4px solid #30363d;
+    box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.8);
+    cursor: pointer;
+    transition: all 0.1s;
+    text-decoration: none;
+    line-height: 1;
+    margin: 4px;
+}
+
+.btn-nes-secondary:hover {
+    border-color: var(--text-bright, #fff);
+    background: #21262d;
+}
+
+.btn-nes-secondary:active {
+    transform: translate(4px, 4px);
+    box-shadow: none;
 }

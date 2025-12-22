@@ -394,20 +394,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const path = window.location.pathname;
 
     // Multi-page Routing Logic
-    if (path.includes('dashboard.html')) {
+    if (path.includes('dashboard.html') || !path.includes('.html')) {
         // App / Dashboard Logic
         console.log(" [SYSTEM] Initializing Dashboard...");
-        renderHomeDashboard();
 
-        // Default to 'courses' or 'home' view if not specified
-        const urlParams = new URLSearchParams(window.location.search);
-        const view = urlParams.get('view');
-        if (view) {
-            navigateTo(view);
-        } else {
-            // Init defaults 
-            if (window.UIComponents) UIComponents.renderBreadcrumbs([{ label: 'Home', route: 'home' }]);
-        }
+        // Use new URL handler instead of manual query parsing
+        handleUrlRouting();
     } else {
         // Landing / Index Logic
         console.log(" [SYSTEM] Initializing Landing Sequence...");
@@ -426,27 +418,71 @@ window.loginAsGuest = function () {
 };
 
 // GLOBAL: Navigation Handler
-window.navigateTo = function (route) {
-    console.log(` [NAV] Extracting to sector: ${route}`);
+window.navigateTo = function (route, replaceState = false) {
+    console.log(` [NAV] Moving to: ${route}`);
 
-    // Handle Page Redirection
+    // External/Auth Routes
     if (route === 'landing' || route === 'logout') {
-        localStorage.removeItem('minecode_save_v1'); // Clear session on logout
-        window.location.href = 'index.html';
+        localStorage.removeItem('minecode_save_v1');
+        window.location.href = '/index.html';
         return;
     }
     if (route === 'signup') {
-        renderSignupPage(); // Render locally on index.html
-        return;
-    }
-    if (route === 'home' && !window.location.pathname.includes('dashboard.html')) {
-        window.location.href = 'dashboard.html';
+        renderSignupPage();
         return;
     }
 
-    // Handle Internal Dashboard Routing (SPA-like)
-    // Hide all views
-    document.querySelectorAll('.view').forEach(el => el.classList.add('hidden'));
+    // Determine target URL path based on route ID
+    let path = '/dashboard';
+    if (route === 'home') path = '/dashboard';
+    else if (route === 'courses') path = '/dashboard/courses';
+    else if (route.startsWith('course-')) path = `/dashboard/courses/${route.replace('course-', '')}`;
+    else if (route.startsWith('lesson-')) {
+        const lessonId = route.replace('lesson-', '');
+        const courseId = lessonId.split('-')[0];
+        path = `/dashboard/courses/${courseId}/lesson/${lessonId}`;
+    }
+    else if (route === 'practice') path = '/dashboard/practice';
+    else if (route === 'builds') path = '/dashboard/builds';
+    else if (route === 'community') path = '/dashboard/community';
+    else if (route === 'profile') path = '/dashboard/profile';
+
+    // Update History
+    if (window.location.protocol.includes('file')) {
+        // FILE PROTOCOL MODE: Use Query Params (Browser Security Restriction for paths)
+        const url = new URL(window.location);
+        url.searchParams.set('view', route);
+        if (replaceState) {
+            window.history.replaceState({ route }, '', url);
+        } else {
+            window.history.pushState({ route }, '', url);
+        }
+    } else {
+        // SERVER MODE: Use Clean URLs
+        if (!window.location.protocol.includes('file')) {
+            if (replaceState) {
+                window.history.replaceState({ route }, '', path);
+            } else {
+                window.history.pushState({ route }, '', path);
+            }
+        }
+    }
+
+    // INTERNAL DASHBOARD ROUTING
+    document.querySelectorAll('.view, #courses-view').forEach(el => el.classList.add('hidden'));
+
+    // Handle Layout Visibility
+    const mainLayoutEl = document.getElementById('main-layout');
+    // If we are in "courses" catalog view, hide main layout
+    if (route === 'courses') {
+        if (mainLayoutEl) mainLayoutEl.style.display = 'none';
+        const coursesView = document.getElementById('courses-view');
+        if (coursesView) coursesView.classList.remove('hidden');
+        window.scrollTo(0, 0);
+        renderCoursesCatalog();
+    } else {
+        if (mainLayoutEl) mainLayoutEl.style.display = 'block';
+    }
 
     const mainContent = document.getElementById('main-content');
     if (mainContent) {
@@ -454,35 +490,24 @@ window.navigateTo = function (route) {
         mainContent.classList.remove('view-fade-in');
     }
 
-    // Update URL without reload (for bookmarking)
-    const url = new URL(window.location);
-    url.searchParams.set('view', route);
-    window.history.pushState({}, '', url);
-
-    // Route Dispatch & Breadcrumbs
+    // --- RENDER LOGIC ---
     let breadcrumbs = [{ label: 'Home', route: 'home' }];
 
-    if (route.startsWith('course-')) {
-        // Course Detail
+    if (route === 'home') {
+        renderHomeDashboard();
+    } else if (route.startsWith('course-')) {
         const courseId = route.replace('course-', '');
-        renderCourseView(courseId);
+        renderCourseRoadmap(courseId);
         breadcrumbs.push({ label: 'Courses', route: 'courses' });
         breadcrumbs.push({ label: courseId.toUpperCase(), route: route });
     } else if (route.startsWith('lesson-')) {
-        // Lesson View (NEW!)
         const lessonId = route.replace('lesson-', '');
         renderLessonView(lessonId);
-        // Extract course from lessonId (e.g., 'python-1-1' -> 'python')
         const courseId = lessonId.split('-')[0];
         breadcrumbs.push({ label: 'Courses', route: 'courses' });
         breadcrumbs.push({ label: courseId.toUpperCase(), route: `course-${courseId}` });
         breadcrumbs.push({ label: 'Lesson', route: route });
     } else if (route === 'courses') {
-        // Ensure main-content has the grid container before rendering
-        if (mainContent && !document.getElementById('all-courses-grid')) {
-            mainContent.innerHTML = '<div id="all-courses-grid"></div>';
-        }
-        renderCoursesCatalog();
         breadcrumbs.push({ label: 'Catalog', route: 'courses' });
     } else if (route === 'practice') {
         renderPracticeSection();
@@ -494,37 +519,74 @@ window.navigateTo = function (route) {
         renderCommunityHub();
         breadcrumbs.push({ label: 'Community', route: 'community' });
     } else if (route === 'profile') {
-        // Profile View
         const sidebar = document.querySelector('.right-sidebar');
-        const mainLayout = document.getElementById('main-layout');
         if (sidebar) sidebar.style.display = 'block';
-        if (mainLayout) mainLayout.style.display = 'grid'; // Enable sidebar
+        if (mainLayoutEl) mainLayoutEl.style.display = 'grid';
         renderProfilePage();
         breadcrumbs.push({ label: 'Profile', route: 'profile' });
-    } else {
-        // Default: Home Dashboard
-        renderHomeDashboard();
     }
 
     // Trigger Fade-In
     if (mainContent) {
-        // Force reflow
-        void mainContent.offsetWidth;
-        requestAnimationFrame(() => {
-            mainContent.classList.add('view-fade-in');
-        });
+        void mainContent.offsetWidth; // Force Reflow
+        requestAnimationFrame(() => mainContent.classList.add('view-fade-in'));
     }
 
-    // Render Breadcrumbs
-    if (window.UIComponents && window.UIComponents.renderBreadcrumbs) {
-        UIComponents.renderBreadcrumbs(breadcrumbs);
-    }
-
-    // Update Active Nav State
+    // Navigation Active States
     document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
-    const activeBtn = document.querySelector(`[data-route="${route}"]`);
+    // Map complicated routes back to nav buttons
+    let activeNav = 'home';
+    if (route.includes('course') || route.includes('lesson')) activeNav = 'courses';
+    else if (route === 'practice') activeNav = 'practice';
+    else if (route === 'community') activeNav = 'community';
+    else if (route === 'profile') activeNav = 'profile';
+
+    const activeBtn = document.querySelector(`[onclick="navigateTo('${activeNav}')"]`);
     if (activeBtn) activeBtn.classList.add('active');
 };
+
+// GLOBAL: Handle URL Routing (Popstate + Initial Load)
+window.handleUrlRouting = function () {
+    const path = window.location.pathname;
+    const urlParams = new URLSearchParams(window.location.search);
+
+    // Parse Path to Route
+    let route = 'home';
+
+    // Check Query Params first (Priority for File Protocol)
+    if (urlParams.has('view')) {
+        route = urlParams.get('view');
+    }
+    // Fallback to Path Parsing (Server Mode)
+    else if (path.includes('/dashboard/courses')) {
+        const segments = path.split('/');
+        // ex: /dashboard/courses/python -> python
+        const courseIndex = segments.indexOf('courses');
+        if (segments[courseIndex + 1]) {
+            route = `course-${segments[courseIndex + 1]}`;
+            // check for lesson
+            if (segments[courseIndex + 2] === 'lesson' && segments[courseIndex + 3]) {
+                route = `lesson-${segments[courseIndex + 3]}`;
+            }
+        } else {
+            route = 'courses';
+        }
+    } else if (path.includes('/dashboard/practice')) route = 'practice';
+    else if (path.includes('/dashboard/builds')) route = 'builds';
+    else if (path.includes('/dashboard/community')) route = 'community';
+    else if (path.includes('/dashboard/profile')) route = 'profile';
+
+    navigateTo(route, true); // replaceState on initial alignment
+};
+
+// Listen for Back/Forward
+window.addEventListener('popstate', (e) => {
+    if (e.state && e.state.route) {
+        navigateTo(e.state.route, true);
+    } else {
+        handleUrlRouting();
+    }
+});
 
 function initNavigation() {
     // Mobile Menu Toggle
@@ -1044,10 +1106,10 @@ function renderHomeDashboard() {
                             
                             <div class="hero-buttons" style="margin-top: 32px;">
                                 <button class="btn-nes-primary" onclick="navigateTo('courses')">
-                                    START LEARNING
+                                    ACCESS PROTOCOLS
                                 </button>
                                 <button class="btn-nes-secondary" onclick="navigateTo('practice')">
-                                    PRACTICE NOW
+                                    ENTER FORGE
                                 </button>
                             </div>
                         </div>
@@ -1059,41 +1121,41 @@ function renderHomeDashboard() {
         <div class="cyber-dashboard fade-in-up" style="max-width: 1400px; margin: 0 auto; padding: 0 clamp(16px, 4vw, 32px); animation-delay: 0.1s;">
             <div class="dash-main">
                 <div class="dash-content-container" style="padding: 40px 0;">
-                    <!-- EXPLORE SECTION -->
+                    <!-- SECTORS SECTION -->
                     <div class="section-header">
-                        <h2 class="section-title"><span class="title-accent">//</span> EXPLORE</h2>
+                        <h2 class="section-title"><span class="title-accent">//</span> SECTORS</h2>
                     </div>
                     <!-- CHANGED: Use section-grid-4 for responsive full-width layout -->
                     <div class="section-grid-4">
                         <div class="cyber-cozy-card" onclick="navigateTo('practice')" style="--card-accent: #00f5ff; width: 100%;">
-                            <div class="card-icon"><i data-lucide="zap" style="width:32px;height:32px;"></i></div>
-                            <div class="card-label">PRACTICE</div>
-                            <h3>Challenge Packs</h3>
-                            <p>Sharpen your skills with coding challenges</p>
+                            <div class="card-icon"><i data-lucide="hammer" style="width:32px;height:32px;"></i></div>
+                            <div class="card-label">FORGE</div>
+                            <h3>Logic Shards</h3>
+                            <p>Refine your core skills with algorithmic challenges</p>
                         </div>
                         <div class="cyber-cozy-card" onclick="navigateTo('builds')" style="--card-accent: #a855f7; width: 100%;">
-                            <div class="card-icon"><i data-lucide="wrench" style="width:32px;height:32px;"></i></div>
-                            <div class="card-label">BUILD</div>
-                            <h3>Project Tutorials</h3>
-                            <p>Create real-world applications step by step</p>
+                            <div class="card-icon"><i data-lucide="layers" style="width:32px;height:32px;"></i></div>
+                            <div class="card-label">FABRICATE</div>
+                            <h3>System Blueprints</h3>
+                            <p>Construct complex architectures step by step</p>
                         </div>
                         <div class="cyber-cozy-card" onclick="navigateTo('community')" style="--card-accent: #4ade80; width: 100%;">
-                            <div class="card-icon"><i data-lucide="moon" style="width:32px;height:32px;"></i></div>
-                            <div class="card-label">COMMIT</div>
-                            <h3>#30NitesOfCode</h3>
-                            <p>Join the coding streak challenge</p>
+                            <div class="card-icon"><i data-lucide="activity" style="width:32px;height:32px;"></i></div>
+                            <div class="card-label">PULSE</div>
+                            <h3>#MinePulse30</h3>
+                            <p>Maintain your operational coding streak</p>
                         </div>
                         <div class="cyber-cozy-card" onclick="navigateTo('community')" style="--card-accent: #ffc800; width: 100%;">
-                            <div class="card-icon"><i data-lucide="globe" style="width:32px;height:32px;"></i></div>
-                            <div class="card-label">COMMUNITY</div>
-                            <h3>Builds Gallery</h3>
-                            <p>Share your creations with others</p>
+                            <div class="card-icon"><i data-lucide="archive" style="width:32px;height:32px;"></i></div>
+                            <div class="card-label">NEXUS</div>
+                            <h3>The Armory</h3>
+                            <p>Inspect community-built components and tools</p>
                         </div>
                     </div>
 
-                    <!-- CONTINUE LEARNING -->
+                    <!-- ACTIVE PROTOCOLS -->
                     <div class="section-header">
-                        <h2 class="section-title"><span class="title-accent">//</span> CONTINUE LEARNING</h2>
+                        <h2 class="section-title"><span class="title-accent">//</span> ACTIVE PROTOCOLS</h2>
                         <a href="#" class="section-link" onclick="navigateTo('courses')">View All →</a>
                     </div>
                     <div class="cyber-course-row">
@@ -1268,10 +1330,12 @@ function navigateTo(route) {
         // HOME DASHBOARD LAYOUT
         if (sidebar) sidebar.style.display = 'none'; // Custom sidebar in dashboard
         if (mainLayout) mainLayout.style.display = 'block'; // Full width container
+        window.scrollTo(0, 0);
         renderHomeDashboard();
     } else if (route === 'courses') {
         if (mainLayout) mainLayout.style.display = 'none';
         document.getElementById('courses-view').classList.remove('hidden');
+        window.scrollTo(0, 0); // Scroll to top
         renderCoursesCatalog();
     } else if (route === 'practice') {
         // PRACTICE PAGE (Challenge Packs)
@@ -1368,7 +1432,13 @@ function renderProfilePage() {
     ];
 
     const html = `
-        <div class="profile-container">
+        <div class="profile-container" style="position: relative;">
+            <button class="neon-back-btn" onclick="navigateTo('home')" style="top: -60px; left: 0;">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M19 12H5M12 19l-7-7 7-7"/>
+                </svg>
+                Back to Home
+            </button>
             <div class="profile-header-large cyber-card">
                 <div class="profile-avatar-large">
                     <img src="./assets/avatars/avatar-1.png" style="width: 80%; opacity: 0.8;" onerror="this.src=''; this.style.display='none'">
@@ -1652,6 +1722,166 @@ function renderPost(post, prepend = false) {
     }
 }
 
+// RENDER: Course Roadmap (Gamified with Clouds)
+function renderCourseRoadmap(id) {
+    const mainContent = document.getElementById('main-content');
+    if (!mainContent) return;
+
+    mainContent.innerHTML = '';
+
+    // Find course data
+    const course = COURSES.find(c => c.id === id);
+    if (!course) {
+        mainContent.innerHTML = `<div class="container text-center" style="padding:40px;">Course not found.</div>`;
+        return;
+    }
+
+    // Get Progress
+    const progress = GameState.data.progress[id] || { completedLessons: [] };
+    const completedCount = progress.completedLessons.length;
+
+    // Determine Current Level (Next Lesson Index)
+    // If 0 completed, current is 0. If 1 completed, current is 1.
+    const currentLevelIdx = completedCount;
+
+    // GENERATE NODES (Mocking a path of 20 lessons for now)
+    // In real app, this matches Curriculm length
+    const totalNodes = 20;
+
+    // Create Map Container
+    const mapContainer = document.createElement('div');
+    mapContainer.className = 'rpg-map-viewport';
+    mapContainer.innerHTML = `
+        <div class="rpg-map-overlay">
+            <!-- Connection Lines (SVG) -->
+            <svg class="map-connections" width="100%" height="100%" style="position:absolute; top:0; left:0; pointer-events:none; overflow:visible;">
+                <!-- Lines generated by JS -->
+            </svg>
+        </div>
+    `;
+
+    // Generate Nodes Logic
+    const nodes = [];
+    const positions = generateSnakePath(totalNodes); // Helper to generate X,Y
+
+    positions.forEach((pos, i) => {
+        const node = document.createElement('div');
+        node.className = 'map-node';
+        node.style.left = `${pos.x}px`;
+        node.style.top = `${pos.y}px`;
+
+        // --- GAME STATES ---
+        // 1. COMPLETED: Index < Current
+        // 2. ACTIVE: Index == Current
+        // 3. LOCKED: Index == Current + 1
+        // 4. CLOUDED: Index > Current + 1
+
+        let stateClass = '';
+        let icon = i + 1;
+        let label = `Level ${i + 1}`;
+        let onclick = '';
+
+        if (i < currentLevelIdx) {
+            stateClass = 'completed';
+            icon = '✓';
+            onclick = `showMissionBriefing('${id}-${Math.floor(i / 5) + 1}-${i % 5}', '${course.title} ${i + 1}')`;
+        } else if (i === currentLevelIdx) {
+            stateClass = 'active-current';
+            label = 'NEXT MISSION';
+            onclick = `showMissionBriefing('${id}-${Math.floor(i / 5) + 1}-${i % 5}', '${course.title} ${i + 1}')`;
+        } else if (i === currentLevelIdx + 1) {
+            stateClass = 'locked';
+            label = 'LOCKED';
+            icon = '🔒';
+        } else {
+            stateClass = 'clouded';
+            // Cloud Overlay
+            const cloud = document.createElement('div');
+            cloud.className = 'pixel-cloud-layer';
+            // Randomize cloud position slightly
+            cloud.style.left = `${pos.x - 100}px`;
+            cloud.style.top = `${pos.y - 60}px`;
+            cloud.style.animationDelay = `${Math.random() * 2}s`;
+            mapContainer.appendChild(cloud);
+        }
+
+        node.classList.add(stateClass);
+        node.innerHTML = `
+            <div class="node-icon">${icon}</div>
+            <div class="node-label">${label}</div>
+        `;
+
+        if (onclick) {
+            node.onclick = () => eval(onclick); // Using eval for string simplicity in this specific mock context, normally use function ref
+        }
+
+        mapContainer.appendChild(node);
+        nodes.push({ x: pos.x, y: pos.y, el: node });
+    });
+
+    // Draw Lines
+    const svg = mapContainer.querySelector('svg');
+    let pathD = '';
+    nodes.forEach((node, i) => {
+        if (i === 0) {
+            pathD += `M ${node.x} ${node.y}`;
+        } else {
+            // Cubic bezier for smooth curves
+            pathD += ` L ${node.x} ${node.y}`;
+        }
+    });
+
+    const pathEl = document.createElementNS("http://www.w3.org/2000/svg", "path");
+    pathEl.setAttribute("d", pathD);
+    pathEl.setAttribute("stroke", "var(--border-subtle)");
+    pathEl.setAttribute("stroke-width", "4");
+    pathEl.setAttribute("fill", "none");
+    pathEl.setAttribute("stroke-dasharray", "8 4");
+    svg.appendChild(pathEl);
+
+    // Header
+    mainContent.innerHTML = `
+        <div class="course-hero-small" style="background:${course.gradient}; padding: 30px; border-radius: 12px; margin-bottom: 20px; text-align:center;">
+             <h1 style="font-family:'Press Start 2P'; color:white; margin-bottom:10px;">${course.title} ROADMAP</h1>
+             <div style="font-family:'VT323'; color:rgba(255,255,255,0.8); font-size: 20px;">
+                PROGRESS: ${Math.floor((completedCount / totalNodes) * 100)}%
+             </div>
+        </div>
+    `;
+    mainContent.appendChild(mapContainer);
+
+    // Scroll to current
+    setTimeout(() => {
+        if (nodes[currentLevelIdx]) {
+            nodes[currentLevelIdx].el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+    }, 100);
+}
+
+// Helper for Snake Path
+function generateSnakePath(count) {
+    const points = [];
+    let x = 100;
+    let y = 100;
+    let direction = 1; // 1 = right, -1 = left
+    const stepX = 120;
+    const stepY = 100;
+    const maxWidth = 800; // Constrain width
+
+    for (let i = 0; i < count; i++) {
+        points.push({ x, y });
+        x += stepX * direction;
+
+        // Turn around
+        if (x > maxWidth || x < 100) {
+            x -= stepX * direction; // Backtrack
+            y += stepY; // Move down
+            direction *= -1; // Flip
+        }
+    }
+    return points;
+}
+
 // === COMMUNITY HUB ===
 function renderCommunityHub() {
     const mainContent = document.getElementById('main-content');
@@ -1699,7 +1929,13 @@ function renderCommunityHub() {
         `).join('');
 
     mainContent.innerHTML = `
-        <div class="community-header" style="text-align: center; margin-bottom: 48px;">
+        <div class="community-header" style="text-align: center; margin-bottom: 48px; position: relative;">
+            <button class="neon-back-btn" onclick="navigateTo('home')" style="top: 0;">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M19 12H5M12 19l-7-7 7-7"/>
+                </svg>
+                Back to Home
+            </button>
             <h1 style="font-family: 'Press Start 2P'; font-size: 24px; color: white; margin-bottom: 16px;">Community Hub</h1>
             <p style="color: var(--text-secondary); max-width: 500px; margin: 0 auto;">
                 Connect with fellow coders, share your projects, and get help from the community.
@@ -1833,18 +2069,24 @@ window.renderCoursesCatalog = function (filter = 'all') {
     grid.innerHTML = '';
     grid.style.display = 'block';
 
-    // 1. HEADER BANNER
+    // 1. HEADER BANNER with Back Button
     const headerHTML = `
-        <div class="catalog-header" style="text-align: center; margin-bottom: 16px; padding-top: 0;">
-            <h1 style="font-family: 'Press Start 2P'; font-size: 28px; margin-top: 0; margin-bottom: 8px; color: white;">Course Catalog</h1>
-            <p style="font-family: 'Outfit'; color: var(--text-secondary); font-size: 16px; max-width: 600px; margin: 0 auto;">
+        <div style="display: flex; align-items: center; margin-bottom: 16px;">
+            <button class="filter-btn" onclick="navigateTo('home')" style="display: flex; align-items: center; gap: 8px;">
+                ← BACK
+            </button>
+        </div>
+        <div class="catalog-header" style="text-align: center; margin-bottom: 24px; padding-top: 0;">
+            <h1 style="font-family: 'Press Start 2P'; font-size: 28px; margin-top: 0; margin-bottom: 12px; color: white; text-shadow: 0 0 30px rgba(34, 211, 238, 0.4);">Course Catalog</h1>
+            <p style="font-family: 'Outfit'; color: var(--text-secondary); font-size: 16px; max-width: 600px; margin: 0 auto; line-height: 1.6;">
                 Browse our full curriculum of interactive coding courses. From Python to Web Development, start your journey today.
             </p>
             
-            <div class="catalog-filters" style="display: flex; justify-content: center; gap: 12px; margin-top: 16px;">
+            <div class="catalog-filters" style="display: flex; justify-content: center; gap: 12px; margin-top: 24px;">
                 <button class="filter-btn ${filter === 'all' ? 'active' : ''}" onclick="renderCoursesCatalog('all')">All</button>
                 <button class="filter-btn ${filter === 'python' ? 'active' : ''}" onclick="renderCoursesCatalog('python')">Python</button>
                 <button class="filter-btn ${filter === 'web' ? 'active' : ''}" onclick="renderCoursesCatalog('web')">Web Dev</button>
+                <button class="filter-btn ${filter === 'game-dev' ? 'active' : ''}" onclick="renderCoursesCatalog('game-dev')">Game Dev</button>
                 <button class="filter-btn ${filter === 'misc' ? 'active' : ''}" onclick="renderCoursesCatalog('misc')">Electives</button>
             </div>
         </div>
@@ -1911,6 +2153,15 @@ window.renderCoursesCatalog = function (filter = 'all') {
             </div>`;
         }
 
+        const gameDevCourses = COURSES.filter(c => c.category === 'game-dev');
+        if (gameDevCourses.length) {
+            html += `
+            <div class="course-section">
+                <h2 class="section-heading"><span class="icon">🎮</span> Game Development</h2>
+                ${wrapGrid(gameDevCourses.map(createCodedexCard).join(''))}
+            </div>`;
+        }
+
         const otherCourses = COURSES.filter(c => !c.category);
         if (otherCourses.length) {
             html += `
@@ -1924,6 +2175,7 @@ window.renderCoursesCatalog = function (filter = 'all') {
         let filtered = [];
         if (filter === 'python') filtered = COURSES.filter(c => c.category === 'python-legend' || c.id.includes('python'));
         else if (filter === 'web') filtered = COURSES.filter(c => c.category === 'origins' || c.id === 'react' || c.id === 'html' || c.id === 'css');
+        else if (filter === 'game-dev') filtered = COURSES.filter(c => c.category === 'game-dev');
         else if (filter === 'misc') filtered = COURSES.filter(c => !c.category && c.id !== 'react');
 
         if (filtered.length > 0) {
@@ -1962,7 +2214,13 @@ function renderPracticeSection() {
         `).join('');
 
     mainContent.innerHTML = `
-        <div class="practice-header" style="text-align: center; margin-bottom: 48px;">
+        <div class="practice-header" style="text-align: center; margin-bottom: 48px; position: relative;">
+            <button class="neon-back-btn" onclick="navigateTo('home')" style="top: 0;">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M19 12H5M12 19l-7-7 7-7"/>
+                </svg>
+                Back to Home
+            </button>
             <h1 style="font-family: 'Press Start 2P'; font-size: 24px; color: white; margin-bottom: 16px;">Practice Arena</h1>
             <p style="color: var(--text-secondary); max-width: 500px; margin: 0 auto;">
                 Sharpen your skills with daily challenges, coding exercises, and timed competitions.
@@ -2050,7 +2308,13 @@ function renderBuildGallery() {
         `).join('');
 
     mainContent.innerHTML = `
-        <div class="builds-header" style="text-align: center; margin-bottom: 48px;">
+        <div class="builds-header" style="text-align: center; margin-bottom: 48px; position: relative;">
+            <button class="neon-back-btn" onclick="navigateTo('home')" style="top: 0;">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M19 12H5M12 19l-7-7 7-7"/>
+                </svg>
+                Back to Home
+            </button>
             <h1 style="font-family: 'Press Start 2P'; font-size: 24px; color: white; margin-bottom: 16px;">Build Gallery</h1>
             <p style="color: var(--text-secondary); max-width: 500px; margin: 0 auto 24px auto;">
                 Explore projects built by the MineCode community. Get inspired and share your own!
@@ -2068,7 +2332,7 @@ function renderCourseRoadmap(id) {
     const course = COURSES.find(c => c.id === id);
     if (!course) return;
 
-    const content = document.getElementById('course-content');
+    const content = document.getElementById('main-content');
     if (!content) return;
 
     // Get Data
@@ -2100,73 +2364,121 @@ function renderCourseRoadmap(id) {
         });
     });
 
-    // --- BUILD MAIN MAP (Zig-Zag) ---
+    // --- BUILD CODEDEX-STYLE CHAPTERS ---
     const chaptersHtml = chapters.map((chapter, index) => {
-        const align = ['flex-start', 'center', 'flex-end', 'center'][index % 4];
-
         // Chapter Locked Logic
         const prevChapter = chapters[index - 1];
-        const isLocked = index > 0 && prevChapter && !prevChapter.lessons.every(l => completedIds.includes(l.id));
+        const isChapterLocked = index > 0 && prevChapter && !prevChapter.lessons.every(l => completedIds.includes(l.id));
 
-        const lessonsHtml = chapter.lessons.map(lesson => {
+        // Check if any lesson in chapter is completed to show progress
+        const chapterLessonsCompleted = chapter.lessons.filter(l => completedIds.includes(l.id)).length;
+        const isChapterComplete = chapterLessonsCompleted === chapter.lessons.length;
+
+        // First chapter is expanded by default
+        const isExpanded = index === 0 || chapterLessonsCompleted > 0;
+
+        // Build exercise rows (Codedex style)
+        const lessonsHtml = chapter.lessons.map((lesson, lessonIdx) => {
             const isCompleted = completedIds.includes(lesson.id);
-            const isNext = !isCompleted && !isLocked && (index === 0 || chapters[index - 1].lessons.every(l => completedIds.includes(l.id)));
-            // Simple next logic: if acceptable, and not completed, and previous completed. 
-            // Better: find first incomplete.
+            const isNext = !isCompleted && !isChapterLocked && (lessonIdx === 0 || completedIds.includes(chapter.lessons[lessonIdx - 1]?.id));
+            const isLessonLocked = isChapterLocked || (!isCompleted && !isNext);
 
-            const isLessonLocked = isLocked || (!isCompleted && !isNext && !completedIds.includes(lesson.id));
+            const statusIcon = isCompleted ? '✓' : (isNext ? '►' : '🔒');
+            const buttonClass = isCompleted ? 'btn-completed' : (isNext ? 'btn-start' : 'btn-locked');
+            const buttonText = isCompleted ? 'Review' : (isNext ? 'Start' : '???');
 
             return `
-            <div class="map-node ${isCompleted ? 'completed' : ''} ${isNext ? 'current' : ''} ${isLessonLocked ? 'locked' : ''}" 
-                 onclick="${!isLessonLocked ? `showMissionBriefing('${lesson.id}', '${lesson.title}')` : ''}"
-                 title="${lesson.title}">
-                <div class="node-icon">${isCompleted ? '⚡' : (isNext ? '💠' : (isLessonLocked ? '🔒' : '○'))}</div>
-                <div class="node-label">${lesson.title}</div>
+            <div class="exercise-row ${isCompleted ? 'completed' : ''} ${isNext ? 'current' : ''} ${isLessonLocked ? 'locked' : ''}" 
+                 onclick="${!isLessonLocked ? `showMissionBriefing('${lesson.id}', '${lesson.title}')` : ''}">
+                <div class="exercise-number">
+                    <span class="ex-label">Exercise ${lessonIdx + 1}</span>
+                </div>
+                <div class="exercise-title">${lesson.title}</div>
+                <div class="exercise-action">
+                    <button class="ex-btn ${buttonClass}" ${isLessonLocked ? 'disabled' : ''}>
+                        ${buttonText}
+                    </button>
+                </div>
             </div>`;
-        }).join('<div class="path-line"></div>');
+        }).join('');
+
+        // Chapter description (if available)
+        const chapterDesc = chapter.description || `Master the fundamentals of ${chapter.title.toLowerCase()}.`;
 
         return `
-        <div class="map-island" style="align-self: ${align};">
-            <div class="island-visual ${isLocked ? 'locked' : ''}">
-                <div class="island-icon">${chapter.icon}</div>
-                <div class="island-title">${chapter.title}</div>
+        <div class="cdx-chapter ${isChapterLocked ? 'locked' : ''} ${isChapterComplete ? 'complete' : ''}" data-chapter="${index}">
+            <!-- Chapter Header -->
+            <div class="cdx-chapter-header" onclick="toggleChapter(${index})">
+                <div class="chapter-number-badge">${index + 1}</div>
+                <div class="chapter-info">
+                    <h3 class="chapter-title">${chapter.icon} ${chapter.title}</h3>
+                    <p class="chapter-desc">${chapterDesc}</p>
+                    <div class="chapter-meta">
+                        <span class="meta-item">${chapter.lessons.length} exercises</span>
+                        <span class="meta-dot">•</span>
+                        <span class="meta-item">${chapterLessonsCompleted}/${chapter.lessons.length} completed</span>
+                    </div>
+                </div>
+                <div class="chapter-toggle">
+                    <span class="toggle-icon">${isExpanded ? '▼' : '▶'}</span>
+                </div>
             </div>
-            <div class="island-path">
-                ${lessonsHtml}
+            
+            <!-- Chapter Content (Exercises) -->
+            <div class="cdx-chapter-content ${isExpanded ? 'expanded' : 'collapsed'}">
+                <div class="exercises-list">
+                    ${lessonsHtml}
+                </div>
             </div>
         </div>
-        ${index < chapters.length - 1 ? '<div class="ocean-path"></div>' : ''}
+        
+        ${index < chapters.length - 1 ? '<div class="chapter-connector"><div class="connector-line"></div></div>' : ''}
         `;
     }).join('');
 
     // --- RENDER 2-COLUMN LAYOUT ---
+    // Determine banner image (use pixel art or fallback to panoramic)
+    const bannerImage = course.image || './assets/pixel_art/cyber_cozy_lofi_lounge_panoramic.png';
+
     content.innerHTML = `
+        <!-- Fixed Background Layer (Hidden initially) -->
+        <div id="hero-scroll-bg" class="hero-scroll-bg" style="background-image: url('${bannerImage}');"></div>
+
+        <!-- Fixed Back Button (Always Top Left) -->
+        <button id="fixed-back-btn" class="fixed-back-btn" onclick="navigateTo('courses')">
+            ← BACK TO CATALOG
+        </button>
+
         <div class="course-layout-grid">
-            
-            <!-- LEFT COLUMN: Hero & Map -->
+            <!-- LEFT COLUMN: Main Content -->
             <div class="course-main-col">
-                <!-- Hero Section -->
-                <div class="course-hero-banner" style="background: ${course.gradient};">
+                <!-- Hero Section with Pixel Art Banner -->
+                <div id="course-hero-box" class="course-hero-full" style="background-image: url('${bannerImage}');">
+                    <div class="hero-overlay-cinematic"></div>
+                    
                     <div class="hero-content">
+                        <div class="hero-badge-row">
+                            <span class="hero-badge-capsule" style="background: ${course.gradient};">${course.difficulty}</span>
+                            <span class="hero-badge-capsule">LESSONS: ${course.lessons}</span>
+                        </div>
                         <div class="hero-text">
-                            <span class="difficulty-badge">${course.difficulty}</span>
                             <h1>${course.title}</h1>
                             <p>${course.desc}</p>
-                            <button class="btn-start" onclick="navigateTo('lesson-${chapters[0].lessons[0].id}')">START LEARNING</button>
-                        </div>
-                        <div class="hero-image">
-                            <!-- Pixel Art Asset -->
-                            ${course.image ? `<img src="${course.image}" class="pixel-mascot">` : `<span style="font-size: 80px;">${course.icon}</span>`}
+                            <button class="btn-cyber-start" onclick="navigateTo('lesson-${chapters[0].lessons[0].id}')">
+                                <span class="btn-icon">▶</span> START LEARNING
+                            </button>
                         </div>
                     </div>
                 </div>
 
+                <!-- Back Button (Legacy placeholder to maintain spacing, hidden visually if needed) -->
+                <div style="height: 48px;"></div> 
+
                 <!-- RPG Map -->
                 <div class="rpg-map-container">
-                    <div class="map-guide-line"></div>
                     ${chaptersHtml}
                 </div>
-            </div>
+            </div> <!-- End Left Column -->
 
             <!-- RIGHT COLUMN: Sidebar Stats -->
             <aside class="course-sidebar-col">
@@ -2229,8 +2541,9 @@ function renderCourseRoadmap(id) {
             /* LAYOUT */
             .course-layout-grid {
                 display: grid;
-                grid-template-columns: 1fr 300px;
+                grid-template-columns: 1fr 320px;
                 gap: 32px;
+                padding: 24px;
                 padding-bottom: 80px;
                 animation: fadeIn 0.5s ease;
             }
@@ -2238,93 +2551,479 @@ function renderCourseRoadmap(id) {
                 .course-layout-grid { grid-template-columns: 1fr; }
             }
 
-            /* HERO */
+            /* HERO BANNER - 16:9 with Pixel Art Background */
             .course-hero-banner {
-                border-radius: 24px;
-                padding: 40px;
+                position: relative;
+                aspect-ratio: 16 / 9;
+                border-radius: 20px;
+                overflow: hidden;
+                margin-bottom: 24px;
+                box-shadow: 
+                    0 20px 50px rgba(0,0,0,0.5),
+                    0 0 40px rgba(34, 211, 238, 0.15);
+            }
+            
+            .hero-banner-bg {
+                position: absolute;
+                inset: 0;
+                background-size: cover;
+                background-position: center;
+                image-rendering: pixelated;
+                filter: brightness(0.7);
+            }
+            
+            .hero-overlay {
+                position: absolute;
+                inset: 0;
+                background: linear-gradient(
+                    135deg, 
+                    rgba(0, 0, 0, 0.7) 0%, 
+                    rgba(0, 0, 0, 0.4) 50%,
+                    rgba(0, 0, 0, 0.6) 100%
+                );
+            }
+            
+            .hero-content { 
+                position: absolute;
+                inset: 0;
                 display: flex;
                 align-items: center;
-                justify-content: space-between;
-                margin-bottom: 40px;
-                box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-                position: relative;
-                overflow: hidden;
+                padding: 48px;
+                z-index: 2;
             }
-            .hero-content { display: flex; justify-content: space-between; width: 100%; align-items: center; z-index: 2; position: relative; }
-            .hero-text h1 { font-family: 'Press Start 2P'; font-size: 32px; color: white; margin: 16px 0; text-shadow: 2px 2px 0px rgba(0,0,0,0.5); }
-            .hero-text p { color: rgba(255,255,255,0.9); max-width: 400px; line-height: 1.6; margin-bottom: 24px; font-weight: 500; }
-            .difficulty-badge { background: rgba(0,0,0,0.3); padding: 4px 12px; border-radius: 100px; font-size: 10px; font-weight: 700; color: white; border: 1px solid rgba(255,255,255,0.2); }
-            .btn-start { background: #ffd700; color: black; border: 2px solid black; padding: 12px 32px; font-family: 'Press Start 2P'; font-size: 12px; cursor: pointer; box-shadow: 4px 4px 0 black; transition: transform 0.1s; }
-            .btn-start:active { transform: translate(2px, 2px); box-shadow: 2px 2px 0 black; }
-            .pixel-mascot { width: 150px; image-rendering: pixelated; filter: drop-shadow(0 10px 20px rgba(0,0,0,0.4)); animation: float 3s infinite ease-in-out; }
+            
+            .hero-text {
+                max-width: 500px;
+            }
+            
+            .hero-text h1 { 
+                font-family: 'Press Start 2P'; 
+                font-size: 36px; 
+                color: white; 
+                margin: 16px 0; 
+                text-shadow: 
+                    0 0 20px rgba(34, 211, 238, 0.5),
+                    3px 3px 0px rgba(0,0,0,0.8);
+                line-height: 1.3;
+            }
+            
+            .hero-text p { 
+                color: rgba(255,255,255,0.9); 
+                font-size: 16px;
+                line-height: 1.6; 
+                margin-bottom: 24px; 
+                font-weight: 500;
+                text-shadow: 1px 1px 3px rgba(0,0,0,0.8);
+            }
+            
+            .difficulty-badge { 
+                background: rgba(34, 211, 238, 0.2); 
+                backdrop-filter: blur(10px);
+                padding: 8px 16px; 
+                border-radius: 100px; 
+                font-size: 10px; 
+                font-weight: 700; 
+                color: var(--neon-cyan); 
+                border: 1px solid rgba(34, 211, 238, 0.4);
+                font-family: 'Press Start 2P';
+                letter-spacing: 1px;
+            }
+            
+            .btn-cyber-start { 
+                background: linear-gradient(135deg, #22d3ee, #06b6d4);
+                color: #000; 
+                border: none;
+                padding: 16px 32px; 
+                font-family: 'Press Start 2P'; 
+                font-size: 12px; 
+                cursor: pointer; 
+                border-radius: 8px;
+                box-shadow: 
+                    0 4px 0 #0891b2,
+                    0 0 30px rgba(34, 211, 238, 0.4);
+                transition: all 0.15s;
+                display: flex;
+                align-items: center;
+                gap: 12px;
+            }
+            
+            .btn-cyber-start:hover {
+                transform: translateY(-3px);
+                box-shadow: 
+                    0 7px 0 #0891b2,
+                    0 0 50px rgba(34, 211, 238, 0.6);
+            }
+            
+            .btn-cyber-start:active { 
+                transform: translateY(2px); 
+                box-shadow: 0 2px 0 #0891b2; 
+            }
+            
+            .btn-cyber-start .btn-icon {
+                font-size: 14px;
+            }
 
             /* SIDEBAR */
-            .course-sidebar-col { display: flex; flex-direction: column; gap: 24px; position: sticky; top: 100px; height: fit-content; }
-            .sidebar-card { background: var(--bg-panel); border: 1px solid var(--border-subtle); border-radius: 16px; padding: 20px; }
-            .sidebar-card h3 { font-size: 14px; margin-bottom: 16px; color: var(--text-bright); font-weight: 700; }
+            .course-sidebar-col { 
+                display: flex; 
+                flex-direction: column; 
+                gap: 20px; 
+                position: sticky; 
+                top: 100px; 
+                height: fit-content; 
+            }
+            
+            /* Sidebar - Cyber Cozy */
+            .sidebar-widget {
+                background: linear-gradient(135deg, rgba(16, 18, 27, 0.95), rgba(25, 20, 30, 0.95));
+                border: 1px solid rgba(255, 200, 150, 0.1);
+                border-radius: 16px;
+                padding: 24px;
+                margin-bottom: 24px;
+                box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+            }
+            
+            .sidebar-title {
+                font-family: 'Press Start 2P';
+                font-size: 13px;
+                color: #ffb366;
+                margin-bottom: 16px;
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                text-shadow: 0 0 10px rgba(255, 150, 80, 0.3);
+            }
+            
+            .sidebar-card { 
+                background: rgba(16, 18, 27, 0.95); 
+                border: 1px solid rgba(255,255,255,0.1); 
+                border-radius: 16px; 
+                padding: 20px;
+                backdrop-filter: blur(10px);
+            }
+            
+            .sidebar-card h3 { 
+                font-size: 12px; 
+                margin-bottom: 16px; 
+                color: var(--text-bright); 
+                font-weight: 700;
+                font-family: 'Press Start 2P';
+                letter-spacing: 0.5px;
+            }
             
             .profile-card { display: flex; align-items: center; gap: 12px; }
-            .avatar-circle-sm { width: 40px; height: 40px; background: var(--bg-elevated); border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+            .avatar-circle-sm { width: 40px; height: 40px; background: var(--bg-elevated); border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 2px solid var(--neon-cyan); }
             .user-meta h4 { font-size: 14px; margin: 0; color: white; }
             .user-meta span { font-size: 10px; color: var(--neon-cyan); }
-            .btn-outline-xs { margin-left: auto; background: transparent; border: 1px solid var(--border-subtle); color: var(--text-muted); padding: 4px 8px; font-size: 10px; border-radius: 4px; cursor: pointer; }
+            .btn-outline-xs { margin-left: auto; background: transparent; border: 1px solid var(--border-subtle); color: var(--text-muted); padding: 6px 12px; font-size: 10px; border-radius: 6px; cursor: pointer; transition: all 0.2s; }
+            .btn-outline-xs:hover { border-color: var(--neon-cyan); color: white; }
 
             .progress-row { margin-bottom: 16px; }
-            .prog-label { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--text-secondary); margin-bottom: 4px; }
+            .prog-label { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--text-secondary); margin-bottom: 6px; }
             .prog-val { font-size: 12px; font-weight: 700; color: white; float: right; }
-            .prog-bar { height: 6px; background: var(--bg-deep); border-radius: 10px; overflow: hidden; margin-top: 4px; }
-            .prog-bar .fill { height: 100%; background: var(--neon-cyan); border-radius: 10px; }
+            .prog-bar { height: 6px; background: rgba(255,255,255,0.1); border-radius: 10px; overflow: hidden; margin-top: 4px; }
+            .prog-bar .fill { height: 100%; background: linear-gradient(90deg, #ffb366, #ff8533); border-radius: 10px; box-shadow: 0 0 10px rgba(255, 150, 80, 0.4); }
 
-            .badge-grid-sm { display: grid; grid-template-columns: repeats(4, 1fr); gap: 8px; }
-            .badge-slot { width: 100%; aspect-ratio: 1; background: var(--bg-deep); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 20px; filter: grayscale(1); opacity: 0.5; }
-            .badge-slot.unlocked { filter: none; opacity: 1; border: 1px solid var(--neon-cyan); background: rgba(0,255,255,0.1); }
+            .badge-grid-sm { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+            .badge-slot { aspect-ratio: 1; background: rgba(255,255,255,0.03); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 20px; filter: grayscale(1); opacity: 0.4; transition: all 0.3s; border: 1px solid transparent; }
+            .badge-slot.unlocked { filter: none; opacity: 1; border: 1px solid rgba(255, 180, 100, 0.4); background: rgba(255, 180, 100, 0.1); box-shadow: 0 0 15px rgba(255, 150, 80, 0.2); }
             
-            .cheat-sheet-item { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--text-secondary); padding: 8px; border-radius: 8px; cursor: pointer; transition: background 0.2s; }
-            .cheat-sheet-item:hover { background: var(--bg-elevated); color: white; }
+            .cheat-sheet-item { display: flex; align-items: center; gap: 10px; font-size: 13px; color: var(--text-secondary); padding: 10px 12px; border-radius: 8px; cursor: pointer; transition: all 0.2s; }
+            .cheat-sheet-item:hover { background: rgba(34,211,238,0.1); color: white; }
 
-            /* MAP STYLES (Cyber Cozy) */
-            .rpg-map-container { display: flex; flex-direction: column; gap: 48px; padding: 20px 0; position: relative; width: 100%; max-width: 600px; margin: 0 auto; }
-            .map-guide-line { position: absolute; top: 0; bottom: 0; left: 50%; width: 2px; background: linear-gradient(to bottom, transparent, var(--neon-cyan), transparent); opacity: 0.1; pointer-events: none; }
-            
-            .map-island {
-                background: rgba(16, 18, 27, 0.9);
-                border: 1px solid var(--border-subtle);
-                border-radius: 20px;
-                padding: 24px;
-                width: 280px;
-                position: relative;
-                z-index: 2;
-                transition: all 0.3s ease;
-                box-shadow: 0 0 20px rgba(0,0,0,0.2);
-                background-image: radial-gradient(circle at 10% 20%, rgba(0, 255, 255, 0.03) 0%, transparent 20%);
+            /* CODEDEX-STYLE CHAPTERS */
+            .rpg-map-container { 
+                display: flex; 
+                flex-direction: column; 
+                gap: 0; 
+                padding: 20px 0; 
+                position: relative; 
+                width: 100%; 
             }
-            .map-island:hover { transform: translateY(-5px); border-color: var(--neon-cyan); box-shadow: 0 0 30px rgba(0, 255, 255, 0.15); }
-            .map-island::before { content: ''; position: absolute; top: -2px; left: -2px; right: -2px; bottom: -2px; border-radius: 22px; background: linear-gradient(45deg, var(--neon-cyan), transparent, var(--neon-purple)); z-index: -1; opacity: 0; transition: opacity 0.3s; }
-            .map-island:hover::before { opacity: 0.3; }
-            .island-visual { text-align: center; margin-bottom: 16px; }
-            .island-icon { font-size: 32px; margin-bottom: 8px; filter: drop-shadow(0 0 10px rgba(255,255,255,0.3)); }
-            .island-title { font-family: 'Press Start 2P'; font-size: 12px; line-height: 1.4; color: var(--text-bright); text-shadow: 0 0 5px rgba(0,255,255,0.5); }
-            .island-path { display: flex; flex-direction: column; align-items: center; gap: 12px; }
             
-            .map-node { width: 100%; padding: 12px 16px; background: var(--bg-deep); border-radius: 12px; display: flex; align-items: center; gap: 12px; cursor: pointer; border: 1px solid rgba(255,255,255,0.05); transition: all 0.2s; position: relative; }
-            .map-node:hover { background: var(--bg-elevated); border-color: var(--neon-cyan); }
-            .map-node.current { border-color: var(--neon-cyan); box-shadow: 0 0 15px rgba(0, 255, 255, 0.2); background: rgba(0, 255, 255, 0.05); }
-            .map-node.completed { border-color: var(--codedex-green); background: rgba(0, 255, 0, 0.05); }
-            .map-node.completed .node-icon { color: var(--codedex-green); text-shadow: 0 0 10px rgba(0,255,0,0.5); }
-            .map-node.current .node-icon { animation: pulse 1.5s infinite; }
-            .map-node.locked { opacity: 0.5; cursor: not-allowed; filter: grayscale(1); }
-            .node-icon { width: 24px; text-align: center; font-size: 14px; }
-            .node-label { font-size: 12px; font-weight: 600; font-family: var(--font-code); letter-spacing: 0.5px; }
-            .path-line { width: 2px; height: 16px; background: var(--border-subtle); box-shadow: 0 0 5px var(--neon-cyan); }
-            .ocean-path { height: 60px; border-left: 2px dashed var(--border-subtle); margin: 0 auto; width: 0; opacity: 0.5; }
+            /* Chapter Cards - Cyber Cozy */
+            .cdx-chapter {
+                background: linear-gradient(135deg, rgba(16, 18, 27, 0.95), rgba(25, 20, 30, 0.95));
+                border: 1px solid rgba(255, 200, 150, 0.1);
+                border-radius: 20px;
+                overflow: hidden;
+                transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+                box-shadow: 
+                    0 8px 32px rgba(0, 0, 0, 0.3),
+                    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+            }
+            
+            .cdx-chapter:hover {
+                border-color: rgba(255, 180, 100, 0.3);
+                box-shadow: 
+                    0 12px 40px rgba(0, 0, 0, 0.4),
+                    0 0 30px rgba(255, 180, 100, 0.08),
+                    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+                transform: translateY(-2px);
+            }
+            
+            .cdx-chapter.locked {
+                opacity: 0.6;
+            }
+            
+            .cdx-chapter.complete {
+                border-color: rgba(34, 197, 94, 0.4);
+            }
+            
+            /* Chapter Header */
+            .cdx-chapter-header {
+                display: flex;
+                align-items: center;
+                gap: 16px;
+                padding: 20px 24px;
+                cursor: pointer;
+                transition: background 0.2s;
+            }
+            
+            .cdx-chapter-header:hover {
+                background: rgba(255,255,255,0.03);
+            }
+            
+            .chapter-number-badge {
+                width: 52px;
+                height: 52px;
+                background: linear-gradient(135deg, #ffb366, #ff8533);
+                border-radius: 14px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-family: 'Press Start 2P';
+                font-size: 16px;
+                color: #000;
+                font-weight: bold;
+                flex-shrink: 0;
+                box-shadow: 
+                    0 4px 12px rgba(255, 150, 80, 0.3),
+                    inset 0 2px 0 rgba(255, 255, 255, 0.3);
+            }
+            
+            .cdx-chapter.locked .chapter-number-badge {
+                background: rgba(255,255,255,0.2);
+                color: rgba(255,255,255,0.5);
+            }
+            
+            .cdx-chapter.complete .chapter-number-badge {
+                background: linear-gradient(135deg, #22c55e, #16a34a);
+            }
+            
+            .chapter-info {
+                flex: 1;
+            }
+            
+            .chapter-title {
+                font-family: 'Press Start 2P';
+                font-size: 14px;
+                color: white;
+                margin: 0 0 8px 0;
+                line-height: 1.4;
+            }
+            
+            .chapter-desc {
+                font-size: 13px;
+                color: var(--text-secondary);
+                margin: 0 0 8px 0;
+                line-height: 1.5;
+            }
+            
+            .chapter-meta {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                font-size: 11px;
+                color: var(--text-muted);
+            }
+            
+            .meta-dot {
+                opacity: 0.5;
+            }
+            
+            .chapter-toggle {
+                width: 32px;
+                height: 32px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: var(--text-muted);
+                flex-shrink: 0;
+            }
+            
+            .toggle-icon {
+                transition: transform 0.3s;
+            }
+            
+            /* Chapter Content (Collapsible) */
+            .cdx-chapter-content {
+                max-height: 0;
+                overflow: hidden;
+                transition: max-height 0.4s ease;
+            }
+            
+            .cdx-chapter-content.expanded {
+                max-height: 2000px;
+            }
+            
+            .cdx-chapter-content.collapsed {
+                max-height: 0;
+            }
+            
+            .exercises-list {
+                padding: 0 24px 20px 24px;
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+            }
+            
+            /* Exercise Rows - Cyber Cozy */
+            .exercise-row {
+                display: grid;
+                grid-template-columns: 100px 1fr 90px;
+                align-items: center;
+                gap: 16px;
+                padding: 16px 18px;
+                background: rgba(255, 245, 230, 0.02);
+                border-radius: 12px;
+                border: 1px solid rgba(255, 200, 150, 0.08);
+                cursor: pointer;
+                transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            }
+            
+            .exercise-row:hover:not(.locked) {
+                background: rgba(255, 200, 150, 0.08);
+                border-color: rgba(255, 180, 100, 0.25);
+                transform: translateX(4px);
+            }
+            
+            .exercise-row.current {
+                border-color: rgba(255, 180, 100, 0.5);
+                background: rgba(255, 180, 100, 0.1);
+                box-shadow: 0 0 20px rgba(255, 150, 80, 0.15);
+            }
+            
+            .exercise-row.completed {
+                border-color: rgba(34,197,94,0.3);
+                background: rgba(34,197,94,0.05);
+            }
+            
+            .exercise-row.locked {
+                opacity: 0.5;
+                cursor: not-allowed;
+            }
+            
+            .exercise-number {
+                display: flex;
+                align-items: center;
+            }
+            
+            .ex-label {
+                font-size: 11px;
+                font-weight: 600;
+                color: #ffb366;
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+            }
+            
+            .exercise-row.completed .ex-label {
+                color: #22c55e;
+            }
+            
+            .exercise-row.locked .ex-label {
+                color: var(--text-muted);
+            }
+            
+            .exercise-title {
+                font-size: 14px;
+                font-weight: 500;
+                color: rgba(255,255,255,0.9);
+            }
+            
+            .exercise-action {
+                display: flex;
+                justify-content: flex-end;
+            }
+            
+            .ex-btn {
+                padding: 8px 16px;
+                border-radius: 6px;
+                font-size: 11px;
+                font-weight: 700;
+                cursor: pointer;
+                border: none;
+                transition: all 0.2s;
+                text-transform: uppercase;
+            }
+            
+            .ex-btn.btn-start {
+                background: linear-gradient(135deg, #ffb366, #ff9933);
+                color: #000;
+                box-shadow: 0 3px 0 #cc7a29;
+            }
+            
+            .ex-btn.btn-start:hover {
+                box-shadow: 
+                    0 3px 0 #cc7a29,
+                    0 0 20px rgba(255, 150, 80, 0.4);
+                transform: translateY(-2px);
+            }
+            
+            .ex-btn.btn-completed {
+                background: rgba(34,197,94,0.2);
+                color: #22c55e;
+                border: 1px solid rgba(34,197,94,0.3);
+            }
+            
+            .ex-btn.btn-locked {
+                background: rgba(255,255,255,0.1);
+                color: var(--text-muted);
+                cursor: not-allowed;
+            }
+            
+            /* Chapter Connector */
+            .chapter-connector {
+                display: flex;
+                justify-content: center;
+                padding: 8px 0;
+            }
+            
+            .connector-line {
+                width: 3px;
+                height: 28px;
+                background: linear-gradient(to bottom, rgba(255, 180, 100, 0.3), rgba(255, 180, 100, 0.08));
+                border-radius: 2px;
+            }
 
             @keyframes float { 0% { transform: translateY(0px); } 50% { transform: translateY(-10px); } 100% { transform: translateY(0px); } }
+            @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
         </style>
     `;
 
     // Re-init Lucide icons
     if (window.lucide) window.lucide.createIcons();
 }
+
+// Toggle Chapter Collapse
+function toggleChapter(index) {
+    const chapter = document.querySelector(`[data-chapter="${index}"]`);
+    if (!chapter) return;
+
+    const content = chapter.querySelector('.cdx-chapter-content');
+    const toggle = chapter.querySelector('.toggle-icon');
+
+    if (content.classList.contains('expanded')) {
+        content.classList.remove('expanded');
+        content.classList.add('collapsed');
+        toggle.textContent = '▶';
+    } else {
+        content.classList.remove('collapsed');
+        content.classList.add('expanded');
+        toggle.textContent = '▼';
+    }
+}
+
 // Helper (Quick fix, ideal solution in GameState)
 function getNextLessonId(completed) {
     // Logic to find next ID. For now return hardcoded if empty
@@ -2450,308 +3149,217 @@ function renderProfile() {
     `;
 
     if (window.lucide) window.lucide.createIcons();
+
+    // --- ROBUST SCROLL HANDLER (Global) ---
+    // We attach this once to the window to handle ANY scroll on the page
+    // and check if we are in the course view.
+
+    if (!window.courseScrollInitialized) {
+        window.addEventListener('scroll', () => {
+            const scrollBg = document.getElementById('hero-scroll-bg');
+            const heroBox = document.getElementById('course-hero-box');
+
+            if (scrollBg && heroBox) {
+                const scrollY = window.scrollY;
+                const triggerPoint = 50; // Trigger earlier for smoother effect
+
+                if (scrollY > triggerPoint) {
+                    if (!scrollBg.classList.contains('visible')) {
+                        scrollBg.classList.add('visible');
+                        heroBox.style.opacity = '0';
+                        heroBox.style.pointerEvents = 'none'; // Disable clicks when hidden
+                    }
+                } else {
+                    if (scrollBg.classList.contains('visible')) {
+                        scrollBg.classList.remove('visible');
+                        heroBox.style.opacity = '1';
+                        heroBox.style.pointerEvents = 'auto';
+                    }
+                }
+            }
+        });
+        window.courseScrollInitialized = true;
+        console.log("Course scroll listener initialized (Global)");
+    }
 }
+
 function renderLessonView(lessonId) {
     const mainContent = document.getElementById('main-content');
     if (!mainContent) return;
 
-    // Find lesson in CURRICULUM
+    // FIND LESSON DATA
     let lesson = null;
     let courseId = null;
-    let chapterNum = null;
-    let lessonIndex = null;
-    let allLessonsFlat = [];
+    let nextLessonId = null;
 
-    // Search through all courses and chapters
+    // Helper: Flatten all lessons to find current and next
+    let allLessons = [];
     if (window.CURRICULUM) {
-        for (const [cId, courseData] of Object.entries(window.CURRICULUM)) {
-            for (const chapter of courseData.chapters) {
-                for (let i = 0; i < chapter.lessons.length; i++) {
-                    const l = chapter.lessons[i];
-                    allLessonsFlat.push({ ...l, courseId: cId, chapterId: chapter.id });
-                    if (l.id === lessonId) {
-                        lesson = l;
-                        courseId = cId;
-                        chapterNum = chapter.id;
-                        lessonIndex = i;
-                    }
-                }
+        Object.entries(window.CURRICULUM).forEach(([cId, cData]) => {
+            cData.chapters.forEach(chap => {
+                chap.lessons.forEach(l => {
+                    allLessons.push({ ...l, courseId: cId, chapterId: chap.id });
+                });
+            });
+        });
+    }
+
+    const currentIndex = allLessons.findIndex(l => l.id === lessonId);
+    if (currentIndex !== -1) {
+        lesson = allLessons[currentIndex];
+        courseId = lesson.courseId;
+        if (currentIndex < allLessons.length - 1) {
+            // Only suggest next lesson if it's in the same course
+            if (allLessons[currentIndex + 1].courseId === courseId) {
+                nextLessonId = allLessons[currentIndex + 1].id;
             }
         }
     }
 
+    // ERROR STATE
     if (!lesson) {
         mainContent.innerHTML = `
-            <div style="padding: 60px; text-align: center;">
-                <h2 style="color: var(--text-bright);">Lesson Not Found</h2>
-                <p style="color: var(--text-secondary);">The lesson "${lessonId}" could not be found.</p>
-                <button class="btn-cyber-primary" onclick="navigateTo('courses')">Back to Courses</button>
+            <div style="height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;">
+                <div style="font-size: 48px; margin-bottom: 16px;">👾</div>
+                <h2 style="font-family: 'Press Start 2P'; color: var(--text-bright); margin-bottom: 16px;">Lesson Not Found</h2>
+                <p style="color: var(--text-secondary); margin-bottom: 32px;">The requested data fragment "${lessonId}" is corrupted or missing.</p>
+                <button class="btn-cyber-primary" onclick="navigateTo('courses')">RETURN TO HUB</button>
             </div>
         `;
         return;
     }
 
-    const { story, instructions, hints, starterCode, solution, expectedOutput } = lesson.content;
+    // PREPARE CONTENT
+    // Handle both string content (simple) and object content (complex)
+    const isComplex = typeof lesson.content === 'object';
+    const instructionsText = isComplex ? (lesson.content.story || lesson.content.instructions) : lesson.content;
+    const starterCode = lesson.code || (isComplex ? lesson.content.starterCode : '# Write your code here\n');
 
-    // Check if completed
+    // Check progress
     const state = GameState.data.progress[courseId] || { completedLessons: [] };
     const isCompleted = state.completedLessons.includes(lessonId);
 
-    // Find next lesson
-    const currentFlatIndex = allLessonsFlat.findIndex(l => l.id === lessonId);
-    const nextLesson = allLessonsFlat[currentFlatIndex + 1];
-
-    // Parse markdown helper
-    const parseMarkdown = (text) => {
-        return text
-            .replace(/```python\n([\s\S]*?)```/g, '<pre class="code-block"><code>$1</code></pre>')
-            .replace(/```([\s\S]*?)```/g, '<pre class="code-block"><code>$1</code></pre>')
-            .replace(/`([^`]+)`/g, '<code class="inline-code">$1</code>')
-            .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
-            .replace(/^# (.+)$/gm, '<h1>$1</h1>')
-            .replace(/^## (.+)$/gm, '<h2>$1</h2>')
-            .replace(/^### (.+)$/gm, '<h3>$1</h3>')
-            .replace(/\n\n/g, '</p><p>')
-            .replace(/\n/g, '<br>');
-    };
-
+    // RENDER: CYBER COZY LESSON UI
     mainContent.innerHTML = `
-        <div class="lesson-container fade-in-up" style="display: grid; grid-template-columns: 1fr 1fr; gap: 0; height: calc(100vh - 120px); max-width: 100%; margin: 0;">
-            <!-- LEFT: Instructions Panel -->
-            <div class="lesson-instructions-panel" style="
-                background: var(--bg-panel);
-                border-right: 1px solid var(--border-subtle);
-                overflow-y: auto;
-                padding: 32px;
+        <div class="lesson-layout" style="display: grid; grid-template-columns: 40% 60%; height: calc(100vh - 72px); overflow: hidden;">
+            
+            <!-- LEFT PANEL: INSTRUCTIONS -->
+            <div class="lesson-left" style="
+                background: var(--bg-panel); 
+                border-right: 1px solid var(--border-subtle); 
+                display: flex; 
+                flex-direction: column;
+                position: relative;
+                z-index: 10;
+                box-shadow: 20px 0 50px rgba(0,0,0,0.5);
             ">
-                <!-- Back Button & Meta -->
-                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px;">
-                    <button class="btn-back" onclick="navigateTo('course-${courseId}')" style="
-                        background: transparent;
-                        border: 1px solid var(--border-subtle);
-                        color: var(--text-secondary);
-                        padding: 8px 16px;
-                        border-radius: 6px;
-                        cursor: pointer;
-                        display: flex;
-                        align-items: center;
-                        gap: 8px;
-                    ">
-                        ← Back to Course
+                <!-- Header -->
+                <div class="lesson-header" style="padding: 24px; border-bottom: 1px solid var(--border-subtle); position: relative;">
+                     <button class="neon-back-btn" onclick="navigateTo('course-${courseId}')" style="position: relative; top: 0; left: 0; margin-bottom: 16px;">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M19 12H5M12 19l-7-7 7-7"/>
+                        </svg>
+                        Back to Course
                     </button>
-                    <div style="display: flex; gap: 8px; align-items: center;">
-                        <span class="lesson-badge" style="
-                            background: ${lesson.type === 'project' ? 'var(--codedex-purple)' : 'var(--codedex-cyan)'};
-                            color: black;
-                            padding: 4px 12px;
-                            border-radius: 4px;
-                            font-size: 10px;
-                            font-weight: 700;
-                            text-transform: uppercase;
-                        ">${lesson.type}</span>
-                        <span class="xp-badge" style="
-                            background: var(--codedex-gold);
-                            color: black;
-                            padding: 4px 12px;
-                            border-radius: 4px;
-                            font-size: 10px;
-                            font-weight: 700;
-                        ">+${lesson.xp} XP</span>
+
+                    <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 8px;">
+                        <span class="course-tag" style="font-family: 'Press Start 2P'; font-size: 10px; color: var(--text-muted); text-transform: uppercase;">
+                            ${courseId} MODULE
+                        </span>
                     </div>
+                    <h1 style="font-family: 'Press Start 2P'; font-size: 16px; line-height: 1.5; color: white;">${lesson.title}</h1>
                 </div>
 
-                <!-- Title -->
-                <h1 style="
-                    font-family: 'Press Start 2P', monospace;
-                    font-size: 18px;
-                    color: var(--text-bright);
-                    margin-bottom: 24px;
-                    line-height: 1.4;
-                ">${lesson.title}</h1>
+                <!-- Content Scroll -->
+                <div class="lesson-content-scroll" style="flex: 1; overflow-y: auto; padding: 32px;">
+                    <div class="prose cyber-prose" style="font-size: 15px; line-height: 1.7; color: var(--text-secondary);">
+                        ${marked.parse(instructionsText || 'No instructions provided.')}
+                    </div>
 
-                <!-- Story Content -->
-                <div class="lesson-story" style="
-                    font-family: var(--font-body);
-                    font-size: 15px;
-                    line-height: 1.7;
-                    color: var(--text-secondary);
-                    margin-bottom: 32px;
-                ">
-                    ${parseMarkdown(story)}
+                    ${isCompleted ? `
+                        <div class="completion-banner" style="
+                            margin-top: 32px; background: rgba(34, 197, 94, 0.1); border: 1px solid rgba(34, 197, 94, 0.3);
+                            padding: 16px; border-radius: 12px; display: flex; align-items: center; gap: 12px;
+                        ">
+                            <div style="background: #22c55e; color: black; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold;">✓</div>
+                            <div style="color: #22c55e; font-weight: 600; font-size: 13px;">LESSON COMPLETED</div>
+                        </div>
+                    ` : ''}
                 </div>
 
-                <!-- Instructions -->
-                <div class="lesson-instructions" style="margin-bottom: 24px;">
-                    <h3 style="
-                        font-family: 'Press Start 2P', monospace;
-                        font-size: 10px;
-                        color: var(--codedex-cyan);
-                        margin-bottom: 16px;
-                    ">📋 INSTRUCTIONS</h3>
-                    <ol style="padding-left: 24px; margin: 0;">
-                        ${instructions.map(i => `
-                            <li style="
-                                color: var(--text-secondary);
-                                margin-bottom: 12px;
-                                line-height: 1.6;
-                            " data-step="${i.step}">${parseMarkdown(i.text)}</li>
-                        `).join('')}
-                    </ol>
-                </div>
-
-                <!-- Hints -->
-                <details class="hints-panel" style="
-                    background: rgba(251, 191, 36, 0.1);
-                    border-left: 3px solid var(--codedex-gold);
-                    border-radius: 0 8px 8px 0;
-                    padding: 16px;
-                    margin-bottom: 24px;
-                ">
-                    <summary style="
-                        cursor: pointer;
-                        color: var(--codedex-gold);
-                        font-weight: 600;
-                    ">💡 Need a hint?</summary>
-                    <ul style="padding-left: 20px; margin-top: 12px;">
-                        ${hints.map(h => `<li style="color: var(--text-secondary); margin-bottom: 8px;">${h}</li>`).join('')}
-                    </ul>
-                </details>
-
-                ${isCompleted ? `
-                    <div style="
-                        background: rgba(34, 197, 94, 0.1);
-                        border: 1px solid var(--codedex-green);
-                        border-radius: 8px;
-                        padding: 16px;
-                        text-align: center;
-                        color: var(--codedex-green);
+                <!-- Footer / Nav -->
+                <div class="lesson-footer" style="padding: 20px 24px; border-top: 1px solid var(--border-subtle); display: flex; justify-content: space-between; align-items: center; background: rgba(0,0,0,0.2);">
+                    <div class="xp-pill" style="
+                        background: rgba(255, 179, 102, 0.1); border: 1px solid rgba(255, 179, 102, 0.3);
+                        color: #ffb366; font-family: 'Press Start 2P'; font-size: 10px; padding: 6px 12px; border-radius: 100px;
                     ">
-                        ✓ LESSON COMPLETED
+                        +${lesson.xp} XP
                     </div>
-                ` : ''}
+                    
+                    ${nextLessonId && isCompleted ? `
+                        <button onclick="navigateTo('lesson-${nextLessonId}')" class="btn-cyber-primary" style="padding: 10px 20px; font-size: 11px;">
+                            NEXT LESSON →
+                        </button>
+                    ` : ''}
+                </div>
             </div>
 
-            <!-- RIGHT: Code Editor & Terminal -->
-            <div class="lesson-editor-panel" style="
-                display: flex;
-                flex-direction: column;
-                background: var(--bg-deep);
-            ">
-                <!-- Editor Header -->
-                <div style="
-                    display: flex;
-                    justify-content: space-between;
-                    align-items: center;
-                    padding: 12px 16px;
-                    background: var(--bg-panel);
-                    border-bottom: 1px solid var(--border-subtle);
+            <!-- RIGHT PANEL: CODE EDITOR -->
+            <div class="lesson-right" style="display: flex; flex-direction: column; background: #0d0f15; position: relative;">
+                
+                <!-- Editor Toolbar -->
+                <div class="editor-toolbar" style="
+                    height: 48px; border-bottom: 1px solid var(--border-subtle); display: flex; align-items: center; justify-content: space-between; padding: 0 16px;
+                    background: #111;
                 ">
-                    <span style="
-                        font-family: var(--font-code);
-                        color: var(--text-muted);
-                        font-size: 14px;
-                    ">main.py</span>
-                    <button id="run-code-btn" class="btn-cyber-primary" style="
-                        padding: 8px 20px;
-                        font-size: 12px;
-                    ">▶ RUN</button>
+                    <div class="file-tab" style="
+                        background: #1e1e1e; padding: 6px 16px; border-radius: 6px 6px 0 0; color: #ccc; font-size: 12px; font-family: var(--font-code); border-top: 2px solid #ffb366;
+                    ">main.py</div>
+                    
+                    <button id="run-code-btn" class="btn-cyber-primary" style="padding: 6px 16px; font-size: 10px; min-width: auto;">
+                        ▶ RUN CODE
+                    </button>
                 </div>
 
-                <!-- Code Editor -->
-                <div style="flex: 1; display: flex; overflow: hidden;">
-                    <div id="line-numbers" style="
-                        padding: 16px 8px;
-                        background: rgba(0,0,0,0.2);
-                        color: var(--text-muted);
-                        font-family: var(--font-code);
-                        font-size: 14px;
-                        text-align: right;
-                        user-select: none;
-                        border-right: 1px solid var(--border-subtle);
-                        line-height: 1.6;
-                    ">1</div>
+                <!-- Ace Editor Container (or TextArea fallback) -->
+                <div style="flex: 1; position: relative; display: flex;">
+                    <div id="line-numbers" class="line-numbers" style="
+                        width: 48px; background: #111; border-right: 1px solid #333; color: #555; font-family: var(--font-code); font-size: 14px; line-height: 1.5; padding: 16px 0; text-align: center;
+                    ">
+                        ${Array.from({ length: 20 }, (_, i) => i + 1).join('<br>')}
+                    </div>
                     <textarea id="code-input" spellcheck="false" style="
-                        flex: 1;
-                        background: transparent;
-                        color: var(--text-bright);
-                        border: none;
-                        padding: 16px;
-                        font-family: var(--font-code);
-                        font-size: 14px;
-                        line-height: 1.6;
-                        resize: none;
-                        outline: none;
+                        flex: 1; background: #0d0f15; color: #e0e0e0; border: none; padding: 16px;
+                        font-family: 'Fira Code', 'Consolas', monospace; font-size: 14px; line-height: 1.5; resize: none; outline: none;
                     ">${starterCode}</textarea>
                 </div>
 
-                <!-- Terminal -->
-                <div style="
-                    height: 200px;
-                    border-top: 1px solid var(--border-subtle);
-                    display: flex;
-                    flex-direction: column;
-                ">
-                    <div style="
-                        padding: 8px 16px;
-                        background: var(--bg-panel);
-                        border-bottom: 1px solid var(--border-subtle);
-                        font-family: var(--font-code);
-                        font-size: 12px;
-                        color: var(--text-muted);
-                    ">OUTPUT</div>
-                    <div id="terminal-output" style="
-                        flex: 1;
-                        padding: 16px;
-                        font-family: var(--font-code);
-                        font-size: 14px;
-                        color: var(--neon-green);
-                        overflow-y: auto;
-                        background: rgba(0,0,0,0.3);
-                    ">
-                        <div style="color: var(--text-muted);">Ready to run your code...</div>
-                    </div>
-                </div>
-
-                <!-- Navigation -->
-                <div style="
-                    display: flex;
-                    justify-content: space-between;
-                    padding: 16px;
-                    background: var(--bg-panel);
-                    border-top: 1px solid var(--border-subtle);
-                ">
-                    <button onclick="navigateTo('course-${courseId}')" style="
-                        background: transparent;
-                        border: 1px solid var(--border-subtle);
-                        color: var(--text-secondary);
-                        padding: 10px 20px;
-                        border-radius: 6px;
-                        cursor: pointer;
-                    ">EXIT</button>
+                <!-- Terminal Output -->
+                <div class="terminal-panel" style="height: 200px; background: #0a0c10; border-top: 1px solid var(--border-subtle); padding: 16px; overflow-y: auto; font-family: var(--font-code); font-size: 13px;">
+                    <div style="color: #666; font-size: 11px; margin-bottom: 8px;">▶ CONSOLE OUTPUT</div>
+                    <div id="terminal-output" style="color: #ccc;">Ready to execute...</div>
+                    
+                    <!-- Next Lesson Button (Hidden by default) -->
                     <button id="next-lesson-btn" style="
-                        background: var(--codedex-cyan);
-                        color: black;
+                        display: none;
+                        margin-top: 16px;
+                        background: linear-gradient(135deg, #22c55e, #16a34a);
+                        color: white;
                         border: none;
-                        padding: 10px 24px;
-                        border-radius: 6px;
+                        padding: 12px 24px;
+                        border-radius: 8px;
+                        font-family: 'Press Start 2P';
+                        font-size: 11px;
                         cursor: pointer;
-                        font-weight: 700;
-                        display: ${isCompleted && nextLesson ? 'block' : 'none'};
-                    " onclick="${nextLesson ? `navigateTo('lesson-${nextLesson.id}')` : ''}">
-                        NEXT →
+                        box-shadow: 0 4px 0 #15803d;
+                        transition: transform 0.1s, box-shadow 0.1s;
+                    " onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 0 #15803d';"
+                       onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 0 #15803d';">
+                        NEXT LESSON →
                     </button>
                 </div>
-            </div>
-        </div>
+                </div>
 
-        <style>
-            .lesson-story h1, .lesson-story h2 { margin: 16px 0 8px 0; color: var(--text-bright); }
-            .lesson-story h1 { font-size: 20px; }
-            .lesson-story h2 { font-size: 16px; }
-            .code-block { background: var(--bg-deep); padding: 16px; border-radius: 8px; overflow-x: auto; margin: 12px 0; }
-            .code-block code { color: var(--neon-green); font-family: var(--font-code); }
-            .inline-code { background: var(--bg-elevated); padding: 2px 6px; border-radius: 4px; color: var(--codedex-cyan); }
-        </style>
     `;
 
     // Initialize line numbers
@@ -2766,39 +3374,51 @@ function renderLessonView(lessonId) {
         updateLineNumbers();
     }
 
-    // Run Code Handler
+    // Run Code Handler - Using Real Piston Compiler
     const runBtn = document.getElementById('run-code-btn');
     const terminalOutput = document.getElementById('terminal-output');
-    const nextBtn = document.getElementById('next-lesson-btn');
 
-    if (runBtn) {
-        runBtn.addEventListener('click', () => {
+    if (runBtn && codeInput && terminalOutput) {
+        runBtn.addEventListener('click', async () => {
             const code = codeInput.value;
-            terminalOutput.innerHTML = '<div style="color: var(--text-muted);">▶ Running...</div>';
+            terminalOutput.innerHTML = '<div style="color: #888;">▶ Compiling...</div>';
 
-            setTimeout(() => {
-                // Polyglot simulation
-                const output = simulateCodeExecution(code, courseId);
-                terminalOutput.innerHTML += `<div>${output}</div>`;
+            try {
+                // Use the real Piston Compiler API
+                if (window.App && window.App.Compiler) {
+                    const result = await window.App.Compiler.execute(courseId, code);
 
-                // Check solution
-                const isCorrect = output.trim() === expectedOutput.trim();
-
-                if (isCorrect) {
-                    terminalOutput.innerHTML += '<div style="color: var(--neon-green); margin-top: 8px;">✓ CORRECT!</div>';
-
-                    // Award XP
-                    if (firstTime) {
-                        // Codedex-style Gamified Modal
-                        showGamifiedSuccessModal(lesson, courseId);
+                    if (result.error) {
+                        terminalOutput.innerHTML += `<div style="color: #ff5555;">❌ ${result.error}</div>`;
                     } else {
-                        GameState.showToast(`+0 XP (Review Mode)`, 'info');
-                        if (nextBtn && nextLesson) nextBtn.style.display = 'block';
+                        // Show output
+                        const lines = result.output.split('\n');
+                        lines.forEach(line => {
+                            terminalOutput.innerHTML += `<div style="color: #55ff55;">${line}</div>`;
+                        });
+
+                        // Mark as complete
+                        terminalOutput.innerHTML += '<div style="color: #55ff55; margin-top: 8px;">✓ PROTOCOL VERIFIED</div>';
+
+                        // Show Next Lesson button if there is a next lesson
+                        const nextBtn = document.getElementById('next-lesson-btn');
+                        if (nextBtn && nextLessonId) {
+                            nextBtn.style.display = 'inline-block';
+                            nextBtn.onclick = () => navigateTo('lesson-' + nextLessonId);
+                        }
+
+                        // Update progress
+                        if (GameState && !isCompleted) {
+                            GameState.completeLesson(courseId, lessonId);
+                            showGamifiedSuccessModal(lesson, courseId, nextLessonId);
+                        }
                     }
                 } else {
-                    terminalOutput.innerHTML += `<div style="color: var(--neon-orange); margin-top: 8px;">✗ Expected: ${expectedOutput}</div>`;
+                    terminalOutput.innerHTML += '<div style="color: #ff5555;">❌ Compiler module not loaded</div>';
                 }
-            }, 500);
+            } catch (err) {
+                terminalOutput.innerHTML += `<div style="color: #ff5555;">ERROR: ${err.message}</div>`;
+            }
         });
     }
 }
@@ -2806,7 +3426,7 @@ function renderLessonView(lessonId) {
 // ============================================
 // GAMIFICATION OVERLAY
 // ============================================
-function showGamifiedSuccessModal(lesson, courseId) {
+function showGamifiedSuccessModal(lesson, courseId, nextLessonId = null) {
     // Play Sound (Optional - simulating visual "noise")
 
     // Create Modal
@@ -2818,6 +3438,9 @@ function showGamifiedSuccessModal(lesson, courseId) {
             z-index: 9999; display: flex; align-items: center; justify-content: center;
             animation: fadeIn 0.3s forwards;
         `;
+
+    // Determine button text based on whether there's a next lesson
+    const buttonText = nextLessonId ? 'NEXT LESSON →' : 'CONTINUE →';
 
     modal.innerHTML = `
             <div class="levelup-card" style="
@@ -2851,7 +3474,7 @@ function showGamifiedSuccessModal(lesson, courseId) {
                 </div>
 
                 <div style="margin-bottom: 32px; color: var(--text-secondary); font-size: 14px;">
-                    Great job completing customizable code!
+                    Great job completing the lesson!
                     <div style="margin-top: 8px; font-family: var(--font-code); color: var(--text-bright);"> Streak: ${GameState.data.user.streak} Days 🔥</div>
                 </div>
 
@@ -2867,7 +3490,7 @@ function showGamifiedSuccessModal(lesson, courseId) {
                     width: 100%;
                     box-shadow: 0 4px 0 #15803d;
                     transition: transform 0.1s;
-                ">CONTINUE →</button>
+                ">${buttonText}</button>
             </div>
         `;
 
@@ -2889,11 +3512,14 @@ function showGamifiedSuccessModal(lesson, courseId) {
         fire(0.1, { spread: 120, startVelocity: 45 });
     }
 
-    // Handle Continue
+    // Handle Continue - Navigate to next lesson if available
     document.getElementById('modal-continue-btn').onclick = () => {
         modal.remove();
-        navigateTo('course-' + courseId);
-        // Ideally navigate to next lesson, but map is cooler to see progress
+        if (nextLessonId) {
+            navigateTo('lesson-' + nextLessonId);
+        } else {
+            navigateTo('course-' + courseId);
+        }
     };
 }
 
