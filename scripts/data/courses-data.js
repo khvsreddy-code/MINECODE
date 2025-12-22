@@ -195,6 +195,71 @@ const COURSES = [
         completed: 0,
         image: './assets/pixel_art/Gemini_Generated_Image_imgei3imgei3imge.png',
         gradient: 'linear-gradient(135deg, #000000, #4078c0)',
+    },
+    {
+        id: 'ts',
+        title: 'TYPESCRIPT',
+        icon: 'pixel-icon-code',
+        desc: 'JavaScript with superpowers.',
+        lessons: 35,
+        completed: 0,
+        image: './assets/pixel_art/card_ts.png',
+        gradient: 'linear-gradient(135deg, #3178c6, #235a97)',
+        difficulty: 'INTERMEDIATE'
+    },
+    {
+        id: 'swift',
+        title: 'SWIFT',
+        icon: 'pixel-icon-device-mobile',
+        desc: 'Build apps for iOS and Mac.',
+        lessons: 40,
+        completed: 0,
+        image: './assets/pixel_art/card_swift.png',
+        gradient: 'linear-gradient(135deg, #f05138, #c13019)',
+        difficulty: 'INTERMEDIATE'
+    },
+    {
+        id: 'kotlin',
+        title: 'KOTLIN',
+        icon: 'pixel-icon-android',
+        desc: 'Modern Android development.',
+        lessons: 30,
+        completed: 0,
+        image: './assets/pixel_art/card_kotlin.png',
+        gradient: 'linear-gradient(135deg, #7f52ff, #c711e1)',
+        difficulty: 'INTERMEDIATE'
+    },
+    {
+        id: 'php',
+        title: 'PHP',
+        icon: 'pixel-icon-server',
+        desc: 'Server-side web scripting.',
+        lessons: 25,
+        completed: 0,
+        image: './assets/pixel_art/card_php.png',
+        gradient: 'linear-gradient(135deg, #777bb4, #4f5b93)',
+        difficulty: 'BEGINNER'
+    },
+    {
+        id: 'ruby',
+        title: 'RUBY',
+        icon: 'pixel-icon-gem',
+        desc: 'A programmer\'s best friend.',
+        lessons: 20,
+        completed: 0,
+        image: './assets/pixel_art/card_ruby.png',
+        gradient: 'linear-gradient(135deg, #cc342d, #8f231e)',
+        difficulty: 'BEGINNER'
+    },
+    {
+        id: 'bash',
+        title: 'BASH',
+        icon: 'pixel-icon-terminal',
+        desc: 'Master the command line.',
+        lessons: 15,
+        completed: 0,
+        image: './assets/pixel_art/card_bash.png',
+        gradient: 'linear-gradient(135deg, #4e4e4e, #292929)',
         difficulty: 'BEGINNER'
     }
 ];

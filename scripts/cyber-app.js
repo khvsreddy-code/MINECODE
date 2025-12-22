@@ -255,8 +255,133 @@ const GameState = {
         `;
         document.body.appendChild(toast);
         setTimeout(() => toast.remove(), 3000);
+    },
+
+    showMissionBriefing(lessonId, title) {
+        // Find metadata (simplified for now)
+        const xpReward = 100; // Dynamic later
+
+        const modal = document.createElement('div');
+        modal.className = 'mission-modal-overlay';
+        modal.innerHTML = `
+            <div class="mission-card cyber-card">
+                <div class="mission-header">
+                    <div class="mission-badge">M</div>
+                    <div class="mission-info">
+                        <h3>MISSION BRIEFING</h3>
+                        <h1>${title || 'Unknown Mission'}</h1>
+                    </div>
+                </div>
+                
+                <div class="mission-body">
+                    <div class="mission-visual">
+                        <div class="pixel-grid-anim"></div>
+                    </div>
+                    <div class="mission-details">
+                        <div class="detail-row">
+                            <span class="label">OBJECTIVE</span>
+                            <span class="value">Master the concepts of this sector.</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="label">REWARD</span>
+                            <span class="value highlight-gold">${xpReward} XP</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="label">DIFFICULTY</span>
+                            <span class="value">Novice</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mission-actions">
+                    <button class="btn-nes-secondary" onclick="this.closest('.mission-modal-overlay').remove()">ABORT</button>
+                    <button class="btn-nes-primary blink-anim" id="start-mission-btn">🚀 START MISSION</button>
+                </div>
+            </div>
+            
+            <style>
+                .mission-modal-overlay {
+                    position: fixed; inset: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(8px);
+                    display: flex; align-items: center; justify-content: center; z-index: 2000;
+                    animation: fadeIn 0.2s ease-out;
+                }
+                .mission-card {
+                    width: 90%; max-width: 600px;
+                    border: 2px solid var(--neon-cyan);
+                    box-shadow: 0 0 50px rgba(0, 245, 255, 0.2);
+                    background: #0d1117;
+                    padding: 0;
+                    overflow: visible;
+                    animation: slideUp 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+                }
+                .mission-header {
+                    background: rgba(34, 211, 238, 0.1);
+                    padding: 24px;
+                    display: flex; gap: 20px; align-items: center;
+                    border-bottom: 1px solid var(--border-subtle);
+                }
+                .mission-badge {
+                    width: 48px; height: 48px; background: var(--neon-cyan); color: black;
+                    font-family: 'Press Start 2P'; font-size: 24px;
+                    display: flex; align-items: center; justify-content: center;
+                    box-shadow: 4px 4px 0 white;
+                }
+                .mission-info h3 { color: var(--neon-cyan); font-family: 'Press Start 2P'; font-size: 10px; margin-bottom: 8px; letter-spacing: 2px; }
+                .mission-info h1 { color: white; font-family: var(--font-display); font-size: 24px; margin: 0; }
+                
+                .mission-body { padding: 32px; display: grid; grid-template-columns: 1fr 1.5fr; gap: 32px; }
+                .mission-visual { 
+                    background: #000; border: 1px solid var(--border-subtle); 
+                    border-radius: 8px; min-height: 150px; position: relative; overflow: hidden;
+                }
+                .pixel-grid-anim {
+                    position: absolute; inset: 0;
+                    background-image: linear-gradient(var(--neon-cyan) 1px, transparent 1px),
+                                    linear-gradient(90deg, var(--neon-cyan) 1px, transparent 1px);
+                    background-size: 20px 20px;
+                    opacity: 0.2;
+                    animation: scrollGrid 20s linear infinite;
+                }
+                @keyframes scrollGrid { to { transform: translate(20px, 20px); } }
+                
+                .detail-row { display: flex; justify-content: space-between; margin-bottom: 16px; border-bottom: 1px dashed var(--border-subtle); padding-bottom: 8px; }
+                .detail-row .label { color: var(--text-muted); font-size: 12px; font-family: var(--font-code); }
+                .detail-row .value { color: white; font-family: var(--font-display); font-size: 14px; }
+                .highlight-gold { color: var(--neon-orange) !important; text-shadow: 0 0 10px rgba(255, 165, 0, 0.5); }
+                
+                .mission-actions { padding: 24px; display: flex; justify-content: flex-end; gap: 16px; border-top: 1px solid var(--border-subtle); }
+                .blink-anim { animation: pulse 1.5s infinite; }
+            </style>
+        `;
+
+        document.body.appendChild(modal);
+
+        // Handle Start
+        document.getElementById('start-mission-btn').onclick = () => {
+            modal.remove();
+
+            // Transition Effect
+            const overlay = document.createElement('div');
+            overlay.style.cssText = 'position:fixed;inset:0;background:black;z-index:9999;transition:opacity 0.5s;opacity:0;pointer-events:none;';
+            document.body.appendChild(overlay);
+
+            // Flash black then go
+            requestAnimationFrame(() => {
+                overlay.style.opacity = '1';
+                setTimeout(() => {
+                    navigateTo('lesson-' + lessonId);
+                    setTimeout(() => {
+                        overlay.style.opacity = '0';
+                        setTimeout(() => overlay.remove(), 500);
+                    }, 500);
+                }, 500);
+            });
+        };
     }
 };
+
+// Global helper for the HTML onclick
+window.showMissionBriefing = (id, title) => GameState.showMissionBriefing(id, title);
 
 // INIT
 document.addEventListener('DOMContentLoaded', () => {
@@ -418,6 +543,26 @@ function initNavigation() {
         });
     }
 
+    // LEARN BUTTON TOGGLE (Fix for Hover Glitch)
+    const learnBtn = document.getElementById('learn-btn');
+    if (learnBtn) {
+        learnBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const parent = learnBtn.closest('.nav-item');
+            parent.classList.toggle('active');
+
+            // Close other dropdowns if any (future proofing)
+        });
+
+        // Close when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.nav-item.has-dropdown')) {
+                const activeNav = document.querySelector('.nav-item.has-dropdown.active');
+                if (activeNav) activeNav.classList.remove('active');
+            }
+        });
+    }
+
     document.addEventListener('click', (e) => {
         const routeEl = e.target.closest('[data-route]');
         if (routeEl) {
@@ -425,6 +570,8 @@ function initNavigation() {
             navigateTo(routeEl.dataset.route);
             // Close mobile menu on navigation
             document.querySelector('.nav-menu').classList.remove('active');
+            // Close dropdowns
+            document.querySelectorAll('.nav-item.has-dropdown.active').forEach(el => el.classList.remove('active'));
         }
     });
 }
@@ -1918,109 +2065,65 @@ function renderBuildGallery() {
 }
 
 function renderCourseRoadmap(id) {
-    const course = COURSES.find(c => c.id === id) || COURSES[0];
+    const course = COURSES.find(c => c.id === id);
+    if (!course) return;
+
     const content = document.getElementById('course-content');
-    const sidebar = document.getElementById('course-sidebar');
+    if (!content) return;
 
-    // --- USE CENTRALIZED CURRICULUM DATA ---
-    // Get chapters from CURRICULUM if available, otherwise fallback to hardcoded
-    let chapters = [];
-    if (window.CURRICULUM && window.CURRICULUM[id]) {
-        chapters = window.CURRICULUM[id].chapters;
-    } else {
-        // Fallback for courses not yet in CURRICULUM
-        chapters = [
-            {
-                id: 1, title: 'Coming Soon', icon: '🚧', lessons: [
-                    { id: `${id}-1-1`, title: 'Content in Progress', type: 'exercise' }
-                ]
-            }
-        ];
-    }
+    // Get Data
+    const courseData = window.CURRICULUM && window.CURRICULUM[id];
+    // Fallback if no detailed curriculum
+    const chapters = courseData ? courseData.chapters : Array.from({ length: 4 }, (_, i) => ({
+        id: i + 1, title: `Chapter ${i + 1}`, icon: '📂',
+        lessons: Array.from({ length: 5 }, (_, j) => ({ id: `${id}-${i}-${j}`, title: `Lesson ${j + 1}`, xp: 50 }))
+    }));
 
-    // Get user progress
-    const state = GameState.data.progress[course.id] || { completedLessons: [] };
+    // Get Progress
+    const state = GameState.data.progress[id] || { completedLessons: [] };
     const completedIds = state.completedLessons;
+
+    // Calculate Stats
     const totalLessons = chapters.reduce((sum, ch) => sum + ch.lessons.length, 0);
-    const progressPercent = Math.floor((completedIds.length / totalLessons) * 100);
+    const completedCount = completedIds.length;
+    const progressPercent = Math.floor((completedCount / totalLessons) * 100) || 0;
 
-    // --- SIDEBAR HTML ---
-    sidebar.innerHTML = `
-        <div class="roadmap-sidebar">
-            <!--User Progress Card-->
-            <div class="cyber-card" style="padding: 20px;">
-                <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 16px;">
-                    <div class="avatar-circle" style="width: 48px; height: 48px;">
-                        <i data-lucide="user" style="width: 24px; height: 24px;"></i>
-                    </div>
-                    <div>
-                        <h4 style="color: var(--text-bright); margin: 0;">${GameState.data.user.name}</h4>
-                        <span class="level-badge">LVL ${GameState.data.user.level}</span>
-                    </div>
-                </div>
-                
-                <div style="margin-bottom: 16px;">
-                    <div style="display: flex; justify-content: space-between; font-size: 12px; color: var(--text-secondary); margin-bottom: 4px;">
-                        <span>Course Progress</span>
-                        <span>${progressPercent}%</span>
-                    </div>
-                    <div class="progress-bar-thin" style="height: 8px;">
-                        <div class="fill" style="width: ${progressPercent}%; background: var(--neon-cyan);"></div>
-                    </div>
-                </div>
+    // Count Projects
+    let totalProjects = 0;
+    let completedProjects = 0;
+    chapters.forEach(ch => {
+        ch.lessons.forEach(l => {
+            if (l.type === 'project') {
+                totalProjects++;
+                if (completedIds.includes(l.id)) completedProjects++;
+            }
+        });
+    });
 
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; text-align: center;">
-                    <div style="background: var(--bg-deep); padding: 12px; border-radius: 8px;">
-                        <div style="font-size: 20px; font-weight: 700; color: var(--text-bright);">${completedIds.length}</div>
-                        <div style="font-size: 10px; color: var(--text-muted);">COMPLETED</div>
-                    </div>
-                    <div style="background: var(--bg-deep); padding: 12px; border-radius: 8px;">
-                        <div style="font-size: 20px; font-weight: 700; color: var(--text-bright);">${totalLessons - completedIds.length}</div>
-                        <div style="font-size: 10px; color: var(--text-muted);">REMAINING</div>
-                    </div>
-                </div>
-            </div>
-
-            <!--Badges Card-->
-        <div class="cyber-card" style="padding: 20px;">
-            <h4 style="margin: 0 0 12px 0; font-size: 12px; color: var(--text-muted);">EARNED BADGES</h4>
-            <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-                <div class="badge-mini" title="First Code">🎯</div>
-                <div class="badge-mini locked" title="Loop Master">🔄</div>
-                <div class="badge-mini locked" title="Function Pro">🧩</div>
-            </div>
-        </div>
-        </div>
-        `;
-
-    // --- MAIN CONTENT (Visual RPG Roadmap) ---
-    // Generate simple zig-zag map layout
+    // --- BUILD MAIN MAP (Zig-Zag) ---
     const chaptersHtml = chapters.map((chapter, index) => {
-        // Alignment: Left, Center, Right, Center...
         const align = ['flex-start', 'center', 'flex-end', 'center'][index % 4];
 
-        // Check chapter completion
-        const chapterLessonIds = chapter.lessons.map(l => l.id);
-        const chapterCompleted = chapterLessonIds.every(id => completedIds.includes(id));
-        const isLocked = index > 0 && !chapters[index - 1].lessons.every(l => completedIds.includes(l.id));
+        // Chapter Locked Logic
+        const prevChapter = chapters[index - 1];
+        const isLocked = index > 0 && prevChapter && !prevChapter.lessons.every(l => completedIds.includes(l.id));
 
         const lessonsHtml = chapter.lessons.map(lesson => {
             const isCompleted = completedIds.includes(lesson.id);
-            const isNext = lesson.id === (completedIds.length > 0 ? getNextLessonId(completedIds) : 'python-1-1'); // Simplified next check
-            // Note: getNextLessonId logic needs to be robust, using first incomplete for now
-            const isLessonLocked = isLocked || (!isCompleted && !isNext && index > 0);
+            const isNext = !isCompleted && !isLocked && (index === 0 || chapters[index - 1].lessons.every(l => completedIds.includes(l.id)));
+            // Simple next logic: if acceptable, and not completed, and previous completed. 
+            // Better: find first incomplete.
 
-            // Allow clicking if not locked (or if it's the very first lesson)
-            const canClick = !isLessonLocked || (index === 0 && lesson.id === 'python-1-1');
+            const isLessonLocked = isLocked || (!isCompleted && !isNext && !completedIds.includes(lesson.id));
 
             return `
             <div class="map-node ${isCompleted ? 'completed' : ''} ${isNext ? 'current' : ''} ${isLessonLocked ? 'locked' : ''}" 
-                 onclick="${canClick ? `navigateTo('lesson-${lesson.id}')` : ''}"
+                 onclick="${!isLessonLocked ? `showMissionBriefing('${lesson.id}', '${lesson.title}')` : ''}"
                  title="${lesson.title}">
                 <div class="node-icon">${isCompleted ? '⚡' : (isNext ? '💠' : (isLessonLocked ? '🔒' : '○'))}</div>
                 <div class="node-label">${lesson.title}</div>
             </div>`;
-        }).join('<div class="path-line"></div>'); // Simple vertical connector between lessons in a chapter
+        }).join('<div class="path-line"></div>');
 
         return `
         <div class="map-island" style="align-self: ${align};">
@@ -2036,29 +2139,153 @@ function renderCourseRoadmap(id) {
         `;
     }).join('');
 
+    // --- RENDER 2-COLUMN LAYOUT ---
     content.innerHTML = `
-        <div class="roadmap-header" style="text-align: center; padding: 40px 0;">
-            <div class="course-badge-large" style="background: ${course.gradient}; width: 80px; height: 80px; border-radius: 20px; margin: 0 auto 16px; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 20px rgba(0,0,0,0.5);">
-                ${course.image ? `<img src="${course.image}" style="width: 50px;">` : `<span style="font-size: 40px;">${course.icon}</span>`}
+        <div class="course-layout-grid">
+            
+            <!-- LEFT COLUMN: Hero & Map -->
+            <div class="course-main-col">
+                <!-- Hero Section -->
+                <div class="course-hero-banner" style="background: ${course.gradient};">
+                    <div class="hero-content">
+                        <div class="hero-text">
+                            <span class="difficulty-badge">${course.difficulty}</span>
+                            <h1>${course.title}</h1>
+                            <p>${course.desc}</p>
+                            <button class="btn-start" onclick="navigateTo('lesson-${chapters[0].lessons[0].id}')">START LEARNING</button>
+                        </div>
+                        <div class="hero-image">
+                            <!-- Pixel Art Asset -->
+                            ${course.image ? `<img src="${course.image}" class="pixel-mascot">` : `<span style="font-size: 80px;">${course.icon}</span>`}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- RPG Map -->
+                <div class="rpg-map-container">
+                    <div class="map-guide-line"></div>
+                    ${chaptersHtml}
+                </div>
             </div>
-            <h1 style="font-family: 'Press Start 2P'; font-size: 24px; color: white; margin-bottom: 8px;">${course.title}</h1>
-            <p style="color: var(--text-secondary);">${course.desc}</p>
-            <div style="margin-top: 16px;">
-                 <span class="tag">${course.difficulty}</span>
-                 <span class="tag">${progressPercent}% Complete</span>
-            </div>
-             <button class="btn-back" onclick="navigateTo('courses')" style="position: absolute; top: 20px; left: 20px;">
-                ← Back
-            </button>
+
+            <!-- RIGHT COLUMN: Sidebar Stats -->
+            <aside class="course-sidebar-col">
+                
+                <!-- Profile Mini -->
+                <div class="sidebar-card profile-card">
+                    <div class="avatar-circle-sm"><i data-lucide="user"></i></div>
+                    <div class="user-meta">
+                        <h4>${GameState.data.user.name}</h4>
+                        <span>Level ${GameState.data.user.level}</span>
+                    </div>
+                    <button class="btn-outline-xs" onclick="navigateTo('profile')">View Profile</button>
+                </div>
+
+                <!-- Course Progress -->
+                <div class="sidebar-card">
+                    <h3>Course Progress</h3>
+                    
+                    <div class="progress-row">
+                        <div class="prog-label"><i data-lucide="book-open"></i> Exercises</div>
+                        <div class="prog-val">${completedCount} / ${totalLessons}</div>
+                        <div class="prog-bar"><div class="fill" style="width: ${progressPercent}%;"></div></div>
+                    </div>
+
+                    <div class="progress-row">
+                        <div class="prog-label"><i data-lucide="folder"></i> Projects</div>
+                        <div class="prog-val">${completedProjects} / ${totalProjects || 2}</div>
+                        <div class="prog-bar"><div class="fill" style="width: ${(completedProjects / (totalProjects || 2)) * 100}%;"></div></div>
+                    </div>
+
+                    <div class="progress-row">
+                        <div class="prog-label"><i data-lucide="zap"></i> XP Earned</div>
+                        <div class="prog-val">0 / 1000</div>
+                        <div class="prog-bar"><div class="fill" style="width: 10%;"></div></div>
+                    </div>
+                </div>
+
+                <!-- Badges -->
+                <div class="sidebar-card">
+                    <h3>Course Badges</h3>
+                    <div class="badge-grid-sm">
+                         <div class="badge-slot unlocked" title="First Steps">🏁</div>
+                         <div class="badge-slot" title="Master">🏆</div>
+                         <div class="badge-slot" title="Speed">⚡</div>
+                         <div class="badge-slot" title="Helper">🤝</div>
+                    </div>
+                </div>
+
+                <!-- Cheat Sheets -->
+                <div class="sidebar-card">
+                    <h3>Cheat Sheets</h3>
+                    <div class="cheat-sheet-item"><i data-lucide="file-text"></i> Syntax Guide</div>
+                    <div class="cheat-sheet-item"><i data-lucide="file-text"></i> Methods List</div>
+                </div>
+
+            </aside>
         </div>
 
-        <div class="rpg-map-container" style="display: flex; flex-direction: column; gap: 40px; padding: 40px; max-width: 800px; margin: 0 auto; position: relative;">
-            <!-- Background Line -->
-            <div class="map-guide-line"></div>
-            ${chaptersHtml}
-        </div>
-        
         <style>
+            /* LAYOUT */
+            .course-layout-grid {
+                display: grid;
+                grid-template-columns: 1fr 300px;
+                gap: 32px;
+                padding-bottom: 80px;
+                animation: fadeIn 0.5s ease;
+            }
+            @media (max-width: 900px) {
+                .course-layout-grid { grid-template-columns: 1fr; }
+            }
+
+            /* HERO */
+            .course-hero-banner {
+                border-radius: 24px;
+                padding: 40px;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                margin-bottom: 40px;
+                box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+                position: relative;
+                overflow: hidden;
+            }
+            .hero-content { display: flex; justify-content: space-between; width: 100%; align-items: center; z-index: 2; position: relative; }
+            .hero-text h1 { font-family: 'Press Start 2P'; font-size: 32px; color: white; margin: 16px 0; text-shadow: 2px 2px 0px rgba(0,0,0,0.5); }
+            .hero-text p { color: rgba(255,255,255,0.9); max-width: 400px; line-height: 1.6; margin-bottom: 24px; font-weight: 500; }
+            .difficulty-badge { background: rgba(0,0,0,0.3); padding: 4px 12px; border-radius: 100px; font-size: 10px; font-weight: 700; color: white; border: 1px solid rgba(255,255,255,0.2); }
+            .btn-start { background: #ffd700; color: black; border: 2px solid black; padding: 12px 32px; font-family: 'Press Start 2P'; font-size: 12px; cursor: pointer; box-shadow: 4px 4px 0 black; transition: transform 0.1s; }
+            .btn-start:active { transform: translate(2px, 2px); box-shadow: 2px 2px 0 black; }
+            .pixel-mascot { width: 150px; image-rendering: pixelated; filter: drop-shadow(0 10px 20px rgba(0,0,0,0.4)); animation: float 3s infinite ease-in-out; }
+
+            /* SIDEBAR */
+            .course-sidebar-col { display: flex; flex-direction: column; gap: 24px; position: sticky; top: 100px; height: fit-content; }
+            .sidebar-card { background: var(--bg-panel); border: 1px solid var(--border-subtle); border-radius: 16px; padding: 20px; }
+            .sidebar-card h3 { font-size: 14px; margin-bottom: 16px; color: var(--text-bright); font-weight: 700; }
+            
+            .profile-card { display: flex; align-items: center; gap: 12px; }
+            .avatar-circle-sm { width: 40px; height: 40px; background: var(--bg-elevated); border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+            .user-meta h4 { font-size: 14px; margin: 0; color: white; }
+            .user-meta span { font-size: 10px; color: var(--neon-cyan); }
+            .btn-outline-xs { margin-left: auto; background: transparent; border: 1px solid var(--border-subtle); color: var(--text-muted); padding: 4px 8px; font-size: 10px; border-radius: 4px; cursor: pointer; }
+
+            .progress-row { margin-bottom: 16px; }
+            .prog-label { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--text-secondary); margin-bottom: 4px; }
+            .prog-val { font-size: 12px; font-weight: 700; color: white; float: right; }
+            .prog-bar { height: 6px; background: var(--bg-deep); border-radius: 10px; overflow: hidden; margin-top: 4px; }
+            .prog-bar .fill { height: 100%; background: var(--neon-cyan); border-radius: 10px; }
+
+            .badge-grid-sm { display: grid; grid-template-columns: repeats(4, 1fr); gap: 8px; }
+            .badge-slot { width: 100%; aspect-ratio: 1; background: var(--bg-deep); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 20px; filter: grayscale(1); opacity: 0.5; }
+            .badge-slot.unlocked { filter: none; opacity: 1; border: 1px solid var(--neon-cyan); background: rgba(0,255,255,0.1); }
+            
+            .cheat-sheet-item { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--text-secondary); padding: 8px; border-radius: 8px; cursor: pointer; transition: background 0.2s; }
+            .cheat-sheet-item:hover { background: var(--bg-elevated); color: white; }
+
+            /* MAP STYLES (Cyber Cozy) */
+            .rpg-map-container { display: flex; flex-direction: column; gap: 48px; padding: 20px 0; position: relative; width: 100%; max-width: 600px; margin: 0 auto; }
+            .map-guide-line { position: absolute; top: 0; bottom: 0; left: 50%; width: 2px; background: linear-gradient(to bottom, transparent, var(--neon-cyan), transparent); opacity: 0.1; pointer-events: none; }
+            
             .map-island {
                 background: rgba(16, 18, 27, 0.9);
                 border: 1px solid var(--border-subtle);
@@ -2071,77 +2298,27 @@ function renderCourseRoadmap(id) {
                 box-shadow: 0 0 20px rgba(0,0,0,0.2);
                 background-image: radial-gradient(circle at 10% 20%, rgba(0, 255, 255, 0.03) 0%, transparent 20%);
             }
-            .map-island:hover { 
-                transform: translateY(-5px); 
-                border-color: var(--neon-cyan); 
-                box-shadow: 0 0 30px rgba(0, 255, 255, 0.15);
-            }
-            .map-island::before {
-                content: '';
-                position: absolute;
-                top: -2px; left: -2px; right: -2px; bottom: -2px;
-                border-radius: 22px;
-                background: linear-gradient(45deg, var(--neon-cyan), transparent, var(--neon-purple));
-                z-index: -1;
-                opacity: 0;
-                transition: opacity 0.3s;
-            }
+            .map-island:hover { transform: translateY(-5px); border-color: var(--neon-cyan); box-shadow: 0 0 30px rgba(0, 255, 255, 0.15); }
+            .map-island::before { content: ''; position: absolute; top: -2px; left: -2px; right: -2px; bottom: -2px; border-radius: 22px; background: linear-gradient(45deg, var(--neon-cyan), transparent, var(--neon-purple)); z-index: -1; opacity: 0; transition: opacity 0.3s; }
             .map-island:hover::before { opacity: 0.3; }
-
             .island-visual { text-align: center; margin-bottom: 16px; }
             .island-icon { font-size: 32px; margin-bottom: 8px; filter: drop-shadow(0 0 10px rgba(255,255,255,0.3)); }
             .island-title { font-family: 'Press Start 2P'; font-size: 12px; line-height: 1.4; color: var(--text-bright); text-shadow: 0 0 5px rgba(0,255,255,0.5); }
             .island-path { display: flex; flex-direction: column; align-items: center; gap: 12px; }
             
-            .map-node {
-                width: 100%;
-                padding: 12px 16px;
-                background: var(--bg-deep);
-                border-radius: 12px;
-                display: flex;
-                align-items: center;
-                gap: 12px;
-                cursor: pointer;
-                border: 1px solid rgba(255,255,255,0.05);
-                transition: all 0.2s;
-                position: relative;
-            }
+            .map-node { width: 100%; padding: 12px 16px; background: var(--bg-deep); border-radius: 12px; display: flex; align-items: center; gap: 12px; cursor: pointer; border: 1px solid rgba(255,255,255,0.05); transition: all 0.2s; position: relative; }
             .map-node:hover { background: var(--bg-elevated); border-color: var(--neon-cyan); }
-            
-            .map-node.current { 
-                border-color: var(--neon-cyan); 
-                box-shadow: 0 0 15px rgba(0, 255, 255, 0.2); 
-                background: rgba(0, 255, 255, 0.05);
-            }
-            .map-node.completed { 
-                border-color: var(--codedex-green); 
-                background: rgba(0, 255, 0, 0.05);
-            }
+            .map-node.current { border-color: var(--neon-cyan); box-shadow: 0 0 15px rgba(0, 255, 255, 0.2); background: rgba(0, 255, 255, 0.05); }
+            .map-node.completed { border-color: var(--codedex-green); background: rgba(0, 255, 0, 0.05); }
             .map-node.completed .node-icon { color: var(--codedex-green); text-shadow: 0 0 10px rgba(0,255,0,0.5); }
             .map-node.current .node-icon { animation: pulse 1.5s infinite; }
-            
             .map-node.locked { opacity: 0.5; cursor: not-allowed; filter: grayscale(1); }
-            
             .node-icon { width: 24px; text-align: center; font-size: 14px; }
             .node-label { font-size: 12px; font-weight: 600; font-family: var(--font-code); letter-spacing: 0.5px; }
-            
             .path-line { width: 2px; height: 16px; background: var(--border-subtle); box-shadow: 0 0 5px var(--neon-cyan); }
-            .ocean-path { 
-                height: 60px; 
-                border-left: 2px dashed var(--border-subtle); 
-                margin: 0 auto; 
-                width: 0; 
-                opacity: 0.5;
-            }
-            
-            .map-guide-line {
-                position: absolute;
-                top: 0; bottom: 0; left: 50%;
-                width: 2px;
-                background: linear-gradient(to bottom, transparent, var(--neon-cyan), transparent);
-                opacity: 0.1;
-                pointer-events: none;
-            }
+            .ocean-path { height: 60px; border-left: 2px dashed var(--border-subtle); margin: 0 auto; width: 0; opacity: 0.5; }
+
+            @keyframes float { 0% { transform: translateY(0px); } 50% { transform: translateY(-10px); } 100% { transform: translateY(0px); } }
         </style>
     `;
 
@@ -2600,8 +2777,8 @@ function renderLessonView(lessonId) {
             terminalOutput.innerHTML = '<div style="color: var(--text-muted);">▶ Running...</div>';
 
             setTimeout(() => {
-                // Simple Python simulation
-                const output = simulatePythonCode(code);
+                // Polyglot simulation
+                const output = simulateCodeExecution(code, courseId);
                 terminalOutput.innerHTML += `<div>${output}</div>`;
 
                 // Check solution
@@ -2611,14 +2788,12 @@ function renderLessonView(lessonId) {
                     terminalOutput.innerHTML += '<div style="color: var(--neon-green); margin-top: 8px;">✓ CORRECT!</div>';
 
                     // Award XP
-                    const firstTime = GameState.completeLesson(courseId, lessonId);
                     if (firstTime) {
-                        GameState.showToast(`+${lesson.xp} XP! Lesson Complete!`, 'success');
-                    }
-
-                    // Show next button
-                    if (nextBtn && nextLesson) {
-                        nextBtn.style.display = 'block';
+                        // Codedex-style Gamified Modal
+                        showGamifiedSuccessModal(lesson, courseId);
+                    } else {
+                        GameState.showToast(`+0 XP (Review Mode)`, 'info');
+                        if (nextBtn && nextLesson) nextBtn.style.display = 'block';
                     }
                 } else {
                     terminalOutput.innerHTML += `<div style="color: var(--neon-orange); margin-top: 8px;">✗ Expected: ${expectedOutput}</div>`;
@@ -2628,69 +2803,256 @@ function renderLessonView(lessonId) {
     }
 }
 
-// Simple Python Simulator
-function simulatePythonCode(code) {
+// ============================================
+// GAMIFICATION OVERLAY
+// ============================================
+function showGamifiedSuccessModal(lesson, courseId) {
+    // Play Sound (Optional - simulating visual "noise")
+
+    // Create Modal
+    const modal = document.createElement('div');
+    modal.className = 'gamification-modal';
+    modal.style.cssText = `
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.85); backdrop-filter: blur(8px);
+            z-index: 9999; display: flex; align-items: center; justify-content: center;
+            animation: fadeIn 0.3s forwards;
+        `;
+
+    modal.innerHTML = `
+            <div class="levelup-card" style="
+                background: linear-gradient(135deg, rgba(30, 41, 59, 1), rgba(15, 23, 42, 1));
+                border: 2px solid var(--neon-cyan);
+                border-radius: 24px;
+                padding: 40px;
+                text-align: center;
+                max-width: 400px;
+                width: 90%;
+                position: relative;
+                transform: scale(0.8);
+                animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+                box-shadow: 0 0 50px rgba(34, 211, 238, 0.3);
+            ">
+                <div style="font-family: 'Press Start 2P'; font-size: 24px; color: var(--neon-cyan); margin-bottom: 24px; text-shadow: 0 0 10px var(--neon-cyan);">
+                    QUEST COMPLETE!
+                </div>
+                
+                <div class="xp-circle" style="
+                    width: 100px; height: 100px; border-radius: 50%;
+                    background: var(--bg-deep);
+                    border: 4px solid var(--neon-purple);
+                    margin: 0 auto 24px;
+                    display: flex; flex-direction: column; align-items: center; justify-content: center;
+                    box-shadow: 0 0 20px rgba(168, 85, 247, 0.5);
+                ">
+                    <span style="font-family: 'Press Start 2P'; font-size: 10px; color: var(--text-muted); margin-bottom: 4px;">EARNED</span>
+                    <span style="font-family: var(--font-heading); font-size: 28px; font-weight: 800; color: white;">+${lesson.xp}</span>
+                    <span style="font-size: 10px; color: var(--text-muted);">XP</span>
+                </div>
+
+                <div style="margin-bottom: 32px; color: var(--text-secondary); font-size: 14px;">
+                    Great job completing customizable code!
+                    <div style="margin-top: 8px; font-family: var(--font-code); color: var(--text-bright);"> Streak: ${GameState.data.user.streak} Days 🔥</div>
+                </div>
+
+                <button id="modal-continue-btn" style="
+                    background: var(--codedex-green);
+                    color: black;
+                    border: none;
+                    padding: 16px 32px;
+                    border-radius: 12px;
+                    font-family: 'Press Start 2P';
+                    font-size: 14px;
+                    cursor: pointer;
+                    width: 100%;
+                    box-shadow: 0 4px 0 #15803d;
+                    transition: transform 0.1s;
+                ">CONTINUE →</button>
+            </div>
+        `;
+
+    document.body.appendChild(modal);
+
+    // Confetti Burst
+    if (window.confetti) {
+        const count = 200;
+        const defaults = { origin: { y: 0.7 } };
+        function fire(particleRatio, opts) {
+            confetti(Object.assign({}, defaults, opts, {
+                particleCount: Math.floor(count * particleRatio)
+            }));
+        }
+        fire(0.25, { spread: 26, startVelocity: 55 });
+        fire(0.2, { spread: 60 });
+        fire(0.35, { spread: 100, decay: 0.91, scalar: 0.8 });
+        fire(0.1, { spread: 120, startVelocity: 25, decay: 0.92, scalar: 1.2 });
+        fire(0.1, { spread: 120, startVelocity: 45 });
+    }
+
+    // Handle Continue
+    document.getElementById('modal-continue-btn').onclick = () => {
+        modal.remove();
+        navigateTo('course-' + courseId);
+        // Ideally navigate to next lesson, but map is cooler to see progress
+    };
+}
+
+// ============================================
+// POLYGLOT SIMULATOR (Heuristic Runner)
+// ============================================
+function simulateCodeExecution(code, language = 'python') {
     const lines = code.split('\n');
     let output = [];
-    let variables = {};
+    const lang = language.toLowerCase();
 
-    for (const line of lines) {
-        const trimmed = line.trim();
-        if (trimmed.startsWith('#') || trimmed === '') continue;
+    // --- HEURISTICS PER LANGUAGE ---
 
-        // Variable assignment
-        const assignMatch = trimmed.match(/^(\w+)\s*=\s*(.+)$/);
-        if (assignMatch && !trimmed.includes('print')) {
-            const [, varName, value] = assignMatch;
-            let parsedValue = value.trim();
-            // String
-            if (parsedValue.match(/^["'](.*)["']$/)) {
-                parsedValue = parsedValue.slice(1, -1);
+    // JAVASCRIPT / TYPESCRIPT / REACT
+    if (lang === 'js' || lang === 'javascript' || lang === 'ts' || lang === 'typescript' || lang === 'react') {
+        // Very basic eval-like mock
+        try {
+            // Check for console.log
+            const logs = code.match(/console\.log\((.*?)\)/g);
+            if (logs) {
+                logs.forEach(log => {
+                    const content = log.match(/console\.log\((.*?)\)/)[1];
+                    // Strip quotes
+                    output.push(content.replace(/^["']|["']$/g, ''));
+                });
             }
-            // Number
-            else if (!isNaN(parsedValue)) {
-                parsedValue = parseFloat(parsedValue);
+            // Check for variables
+            if (code.includes('const') || code.includes('let') || code.includes('var')) {
+                // Just a mock success
             }
-            // Boolean
-            else if (parsedValue === 'True') parsedValue = true;
-            else if (parsedValue === 'False') parsedValue = false;
-            // Variable reference
-            else if (variables[parsedValue] !== undefined) {
-                parsedValue = variables[parsedValue];
-            }
-            variables[varName] = parsedValue;
-            continue;
-        }
+        } catch (e) { output.push('Error: ' + e.message); }
+    }
 
-        // Print statements
-        const printMatch = trimmed.match(/^print\s*\((.+)\)$/);
-        if (printMatch) {
-            let content = printMatch[1].trim();
-
-            // Handle multiple items (comma separated)
-            const items = content.split(',').map(item => {
-                item = item.trim();
-                // String literal
-                if (item.match(/^["'](.*)["']$/)) {
-                    return item.slice(1, -1);
-                }
-                // Variable
-                if (variables[item] !== undefined) {
-                    return String(variables[item]);
-                }
-                // Expression (simplified)
-                try {
-                    return String(eval(item.replace(/True/g, 'true').replace(/False/g, 'false')));
-                } catch {
-                    return item;
-                }
-            });
-            output.push(items.join(' '));
+    // HTML (Render Preview Mock)
+    else if (lang === 'html') {
+        if (code.includes('<h1>') || code.includes('<div>') || code.includes('<p>')) {
+            output.push('Rendering HTML Preview...');
+            output.push('[Preview Updated]');
         }
     }
 
-    return output.join('\n') || 'No output';
+    // CSS
+    else if (lang === 'css') {
+        if (code.includes('{') && code.includes('}')) {
+            output.push('Styles applied.');
+        }
+    }
+
+    // SQL
+    else if (lang === 'sql') {
+        if (code.toUpperCase().includes('SELECT') && code.toUpperCase().includes('FROM')) {
+            output.push('Query executed successfully.');
+            output.push('+----+----------+');
+            output.push('| ID | NAME     |');
+            output.push('+----+----------+');
+            output.push('| 1  | MineCode |');
+            output.push('+----+----------+');
+            output.push('1 row in set (0.00 sec)');
+        }
+    }
+
+    // JAVA
+    else if (lang === 'java') {
+        if (code.includes('System.out.println')) {
+            const match = code.match(/System\.out\.println\((.*?)\)/);
+            if (match) output.push(match[1].replace(/^["']|["']$/g, ''));
+        } else if (code.includes('class ')) {
+            output.push('Compilation successful.');
+        }
+    }
+
+    // C++
+    else if (lang === 'cpp' || lang === 'c++') {
+        if (code.includes('cout') && code.includes('<<')) {
+            const parts = code.split('<<');
+            if (parts.length > 1) {
+                let msg = parts[1].trim().replace(';', '');
+                msg = msg.replace(/^["']|["']$/g, '');
+                output.push(msg);
+            }
+        }
+    }
+
+    // PYTHON (Original Logic Refined)
+    else if (lang === 'python' || lang === 'py' || lang.includes('python')) {
+        // Simple parsing
+        for (const line of lines) {
+            const trimmed = line.trim();
+            if (trimmed.startsWith('print')) {
+                const match = trimmed.match(/print\s*\((.+)\)/);
+                if (match) {
+                    output.push(match[1].replace(/^["']|["']$/g, ''));
+                }
+            }
+        }
+    }
+
+    // RUBY
+    else if (lang === 'ruby') {
+        if (code.includes('puts ') || code.includes('print ')) {
+            const match = code.match(/(puts|print)\s+(.*)/);
+            if (match) output.push(match[2].replace(/^["']|["']$/g, ''));
+        }
+    }
+
+    // PHP
+    else if (lang === 'php') {
+        if (code.includes('echo ')) {
+            const match = code.match(/echo\s+(.*);/);
+            if (match) output.push(match[1].replace(/^["']|["']$/g, ''));
+        }
+    }
+
+    // GO
+    else if (lang === 'go') {
+        if (code.includes('fmt.Println')) {
+            const match = code.match(/fmt\.Println\((.*?)\)/);
+            if (match) output.push(match[1].replace(/^["']|["']$/g, ''));
+        }
+    }
+
+    // RUST
+    else if (lang === 'rust') {
+        if (code.includes('println!')) {
+            const match = code.match(/println!\((.*?)\)/);
+            if (match) output.push(match[1].replace(/^["']|["']$/g, ''));
+        }
+    }
+
+    // BASH
+    else if (lang === 'bash' || lang === 'git') {
+        if (code.startsWith('echo ')) {
+            output.push(code.substring(5).replace(/^["']|["']$/g, ''));
+        } else if (code === 'ls -la') {
+            output.push('total 0');
+            output.push('drwxr-xr-x  1 user  group  0 Dec 21 12:00 .');
+            output.push('drwxr-xr-x  1 user  group  0 Dec 21 12:00 ..');
+        } else if (code.startsWith('git ')) {
+            output.push('Initialized empty Git repository in /home/minecode/project/.git/');
+        }
+    }
+
+    // LUA
+    else if (lang === 'lua') {
+        if (code.includes('print(')) {
+            const match = code.match(/print\((.*?)\)/);
+            if (match) output.push(match[1].replace(/^["']|["']$/g, ''));
+        }
+    }
+
+    // Default Fallback
+    if (output.length === 0 && code.trim() !== '') {
+        output.push('Code executed successfully. (No output captured)');
+    }
+
+    return output.join('\n');
 }
+
+
 
 
 

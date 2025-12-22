@@ -604,121 +604,32 @@ Create a function called \`say_hello\` and call it.`,
                             hints: [
                                 'def keyword defines a function',
                                 'Don\'t forget the colon and indentation',
-                                'Call with function_name()'
-                            ],
-                            starterCode: '# Define your function\ndef say_hello():\n    print("Hello!")\n\n# Call it\nsay_hello()\n',
-                            solution: 'def say_hello():\n    print("Hello!")\n\nsay_hello()',
-                            expectedOutput: 'Hello!'
-                        }
-                    },
-                    {
-                        id: 'python-5-2',
-                        title: 'Parameters',
-                        type: 'exercise',
-                        xp: 75,
-                        content: {
-                            story: `# Customizable Functions 📨
+                                'Call with functi// ============================================
+// CENTRAL CURRICULUM AGGREGATOR
+// ============================================
 
-Parameters let you pass data into functions:
+// Collect shards from window scope (loaded via dashboard.html)
+const pythonData = window.CURRICULUM_PYTHON || {};
+                            const webData = window.CURRICULUM_WEB || {};
+                            const systemsData = window.CURRICULUM_SYSTEMS || {};
+                            const miscData = window.CURRICULUM_MISC || {};
 
-\`\`\`python
-def greet(name):
-    print("Hello, " + name + "!")
+                            // Merge into Master Curriculum
+                            const CURRICULUM = {
+                                ...pythonData,
+                                ...webData,
+                                ...systemsData,
+                                ...miscData
+                            };
 
-greet("Alex")  # Hello, Alex!
-\`\`\`
-
-## Your Mission
-Create a function that takes a name and greets them.`,
-                            instructions: [
-                                { step: 1, text: 'Define `greet(name)` with a parameter' },
-                                { step: 2, text: 'Use the parameter in a print statement' },
-                                { step: 3, text: 'Call the function with your name' }
-                            ],
-                            hints: [
-                                'Parameters go inside the parentheses',
-                                'Use + to combine strings',
-                                'Pass the argument when calling'
-                            ],
-                            starterCode: '# Function with parameter\ndef greet(name):\n    print("Hello, " + name + "!")\n\n# Call with your name\ngreet("Coder")\n',
-                            solution: 'def greet(name):\n    print("Hello, " + name + "!")\n\ngreet("Coder")',
-                            expectedOutput: 'Hello, Coder!'
-                        }
-                    },
-                    {
-                        id: 'python-5-3',
-                        title: 'Return Values',
-                        type: 'exercise',
-                        xp: 100,
-                        content: {
-                            story: `# Getting Results Back 📤
-
-\`return\` sends a value back from a function:
-
-\`\`\`python
-def add(a, b):
-    return a + b
-
-result = add(3, 5)
-print(result)  # 8
-\`\`\`
-
-## Your Mission
-Create a function that doubles a number and returns it.`,
-                            instructions: [
-                                { step: 1, text: 'Define `double(num)` function' },
-                                { step: 2, text: 'Return num * 2' },
-                                { step: 3, text: 'Call it, store result, and print' }
-                            ],
-                            hints: [
-                                'return sends the value back',
-                                'Store the returned value in a variable',
-                                'Then print that variable'
-                            ],
-                            starterCode: '# Function that returns\ndef double(num):\n    return num * 2\n\n# Call and print\nresult = double(5)\nprint(result)\n',
-                            solution: 'def double(num):\n    return num * 2\n\nresult = double(5)\nprint(result)',
-                            expectedOutput: '10'
-                        }
-                    },
-                    {
-                        id: 'python-5-4',
-                        title: 'Currency Converter',
-                        type: 'project',
-                        xp: 200,
-                        content: {
-                            story: `# 💰 Project: Currency Converter
-
-Build a function that converts USD to another currency!
-
-\`\`\`python
-def usd_to_eur(amount):
-    rate = 0.92
-    return amount * rate
-\`\`\`
-
-## Your Mission
-Create a converter from USD to your favorite currency!`,
-                            instructions: [
-                                { step: 1, text: 'Define a conversion function' },
-                                { step: 2, text: 'Set an exchange rate' },
-                                { step: 3, text: 'Return the converted amount' },
-                                { step: 4, text: 'Test with $100' }
-                            ],
-                            hints: [
-                                'Look up a real exchange rate!',
-                                'Use multiplication for conversion',
-                                'Round the result if needed'
-                            ],
-                            starterCode: '# Currency Converter\ndef usd_to_eur(amount):\n    rate = 0.92\n    return amount * rate\n\n# Test with $100\nresult = usd_to_eur(100)\nprint(result)\n',
-                            solution: 'def usd_to_eur(amount):\n    rate = 0.92\n    return amount * rate\n\nresult = usd_to_eur(100)\nprint(result)',
-                            expectedOutput: '92.0'
-                        }
+                            // Export for module systems (Node/ESM)
+                            if(typeof module !== 'undefined' && module.exports) {
+                        module.exports = CURRICULUM;
                     }
-                ]
-            }
-        ]
-    }
-};
 
-// Export for use in other modules
-window.CURRICULUM = CURRICULUM;
+// Ensure global access for browser
+if(typeof window !== 'undefined') {
+                window.CURRICULUM = CURRICULUM;
+                console.log('✅ Curriculum Loaded:', Object.keys(CURRICULUM).length, 'Languages');
+            }
+                ```

@@ -65,76 +65,79 @@
                 </a>
                 <div class="nav-menu">
                     <div class="nav-item has-dropdown">
-                        <button class="nav-btn active" data-route="courses" onclick="navigateTo('courses')">Learn
+                        <button class="nav-btn" id="learn-btn">Learn
                             ▾</button>
                         <div class="mega-menu">
                             <div class="mega-menu-content">
                                 <!-- Column 1: Data Science -->
                                 <div class="mega-column">
                                     <h4>DATA SCIENCE</h4>
-                                    <a href="#" class="mega-link" onclick="navigateTo('course-python')"><img
-                                            src="https://unpkg.com/pixelarticons@1.8.1/svg/script.svg" width="16"
-                                            style="filter: invert(1);"> Python</a>
-                                    <a href="#" class="mega-link"><img
-                                            src="https://unpkg.com/pixelarticons@1.8.1/svg/chart-bar.svg" width="16"
-                                            style="filter: invert(1);"> Intermediate Python</a>
-                                    <a href="#" class="mega-link"><img
-                                            src="https://unpkg.com/pixelarticons@1.8.1/svg/grid.svg" width="16"
-                                            style="filter: invert(1);"> NumPy</a>
-                                    <a href="#" class="mega-link"><img
-                                            src="https://unpkg.com/pixelarticons@1.8.1/svg/database.svg" width="16"
-                                            style="filter: invert(1);"> SQL</a>
-                                    <a href="#" class="mega-link featured"><img
-                                            src="https://unpkg.com/pixelarticons@1.8.1/svg/brain.svg" width="16"
-                                            style="filter: invert(1);"> Machine Learning</a>
+                                    <a href="#" class="mega-link" onclick="navigateTo('course-python')">
+                                        <i data-lucide="file-code" style="width:16px; color: #4ade80;"></i> Python
+                                    </a>
+                                    <a href="#" class="mega-link">
+                                        <i data-lucide="bar-chart-2" style="width:16px; color: #facc15;"></i>
+                                        Intermediate Python
+                                    </a>
+                                    <a href="#" class="mega-link">
+                                        <i data-lucide="grid" style="width:16px; color: #60a5fa;"></i> NumPy
+                                    </a>
+                                    <a href="#" class="mega-link">
+                                        <i data-lucide="database" style="width:16px; color: #c084fc;"></i> SQL
+                                    </a>
+                                    <a href="#" class="mega-link featured">
+                                        <i data-lucide="brain" style="width:16px; color: #fb7185;"></i> Machine Learning
+                                    </a>
                                 </div>
 
                                 <!-- Column 2: Web Development -->
                                 <div class="mega-column">
                                     <h4>WEB DEVELOPMENT</h4>
-                                    <a href="#" class="mega-link" onclick="navigateTo('course-html')"><img
-                                            src="https://unpkg.com/pixelarticons@1.8.1/svg/layout.svg" width="16"
-                                            style="filter: invert(1);"> HTML</a>
-                                    <a href="#" class="mega-link"><img
-                                            src="https://unpkg.com/pixelarticons@1.8.1/svg/art-text.svg" width="16"
-                                            style="filter: invert(1);"> CSS</a>
-                                    <a href="#" class="mega-link" onclick="navigateTo('course-js')"><img
-                                            src="https://unpkg.com/pixelarticons@1.8.1/svg/code.svg" width="16"
-                                            style="filter: invert(1);"> JavaScript</a>
-                                    <a href="#" class="mega-link"><img
-                                            src="https://unpkg.com/pixelarticons@1.8.1/svg/zap.svg" width="16"
-                                            style="filter: invert(1);"> React</a>
-                                    <a href="#" class="mega-link"><img
-                                            src="https://unpkg.com/pixelarticons@1.8.1/svg/server.svg" width="16"
-                                            style="filter: invert(1);"> Node.js</a>
+                                    <a href="#" class="mega-link" onclick="navigateTo('course-html')">
+                                        <i data-lucide="layout" style="width:16px; color: #f97316;"></i> HTML
+                                    </a>
+                                    <a href="#" class="mega-link">
+                                        <i data-lucide="paintbrush" style="width:16px; color: #2dd4bf;"></i> CSS
+                                    </a>
+                                    <a href="#" class="mega-link" onclick="navigateTo('course-js')">
+                                        <i data-lucide="code-2" style="width:16px; color: #ebd023;"></i> JavaScript
+                                    </a>
+                                    <a href="#" class="mega-link">
+                                        <i data-lucide="zap" style="width:16px; color: #06b6d4;"></i> React
+                                    </a>
+                                    <a href="#" class="mega-link">
+                                        <i data-lucide="server" style="width:16px; color: #84cc16;"></i> Node.js
+                                    </a>
                                 </div>
 
                                 <!-- Column 3: Tools -->
                                 <div class="mega-column">
                                     <h4>TOOLS</h4>
-                                    <a href="#" class="mega-link"><img
-                                            src="https://unpkg.com/pixelarticons@1.8.1/svg/terminal.svg" width="16"
-                                            style="filter: invert(1);"> Command Line</a>
-                                    <a href="#" class="mega-link"><img
-                                            src="https://unpkg.com/pixelarticons@1.8.1/svg/git-merge.svg" width="16"
-                                            style="filter: invert(1);"> Git & GitHub</a>
-                                    <a href="#" class="mega-link featured"><img
-                                            src="https://unpkg.com/pixelarticons@1.8.1/svg/android.svg" width="16"
-                                            style="filter: invert(1);"> GitHub Copilot</a>
+                                    <a href="#" class="mega-link">
+                                        <i data-lucide="terminal-square" style="width:16px; color: #a3a3a3;"></i>
+                                        Command Line
+                                    </a>
+                                    <a href="#" class="mega-link">
+                                        <i data-lucide="git-branch" style="width:16px; color: #f43f5e;"></i> Git &
+                                        GitHub
+                                    </a>
+                                    <a href="#" class="mega-link featured">
+                                        <i data-lucide="bot" style="width:16px; color: #38bdf8;"></i> GitHub Copilot
+                                    </a>
                                 </div>
 
-                                <!-- Column 4: Computer Science (New) -->
+                                <!-- Column 4: Computer Science -->
                                 <div class="mega-column">
                                     <h4>COMPUTER SCIENCE</h4>
-                                    <a href="#" class="mega-link"><img
-                                            src="https://unpkg.com/pixelarticons@1.8.1/svg/chip.svg" width="16"
-                                            style="filter: invert(1);"> C++</a>
-                                    <a href="#" class="mega-link"><img
-                                            src="https://unpkg.com/pixelarticons@1.8.1/svg/coffee.svg" width="16"
-                                            style="filter: invert(1);"> Java</a>
-                                    <a href="#" class="mega-link"><img
-                                            src="https://unpkg.com/pixelarticons@1.8.1/svg/device-gamepad.svg"
-                                            width="16" style="filter: invert(1);"> Game Dev</a>
+                                    <a href="#" class="mega-link">
+                                        <i data-lucide="cpu" style="width:16px; color: #6366f1;"></i> C++
+                                    </a>
+                                    <a href="#" class="mega-link">
+                                        <i data-lucide="coffee" style="width:16px; color: #ea580c;"></i> Java
+                                    </a>
+                                    <a href="#" class="mega-link">
+                                        <i data-lucide="gamepad-2" style="width:16px; color: #d946ef;"></i> Game Dev
+                                    </a>
                                     <a href="#" class="mega-link" onclick="navigateTo('courses')"
                                         style="margin-top: 16px; color: var(--neon-cyan); font-weight: 700; font-size: 13px;">VIEW
                                         ALL COURSES →</a>
@@ -147,7 +150,7 @@
                         <div class="dropdown-content">
                             <a href="#" data-route="practice">Challenge Packs</a>
                             <a href="#" data-route="builds">Project Builds</a>
-                            <a href="#" data-route="practice">#30DaysOfCode</a>
+                            <a href="#" data-route="practice">#DailyCipher</a>
                         </div>
                     </div>
                     <button class="nav-btn" data-route="builds">Build</button>
@@ -249,10 +252,10 @@
         </div>
 
         <!-- FULL PAGE VIEWS (Hidden by default) -->
-        <div id="courses-view" class="hidden" style="padding-top: 120px; min-height: 100vh;">
+        <div id="courses-view" class="hidden" style="padding-top: 100px; min-height: 100vh;">
             <video autoplay muted loop playsinline
                 style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: -5;">
-                <source src="assets/pixel_art/I_want_a_1080p_202512211746.mp4" type="video/mp4">
+                <source src="assets/pixel_art/loop.mp4" type="video/mp4">
             </video>
             <div class="overlay-gradient"
                 style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: radial-gradient(circle, rgba(0, 0, 0, 0.1) 0%, rgba(0, 0, 0, 0.8) 100%); z-index: -4; pointer-events: none;">
@@ -319,12 +322,17 @@
     <script src="scripts/data/courses-data.js"></script>
     <script src="scripts/data/curriculum-data.js"></script>
     <script src="scripts/cyber-app.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <script src="scripts/modules/catalog.js"></script>
     <script src="scripts/modules/challenges.js"></script>
     <script src="scripts/modules/cyber-buttons.js"></script>
     <!-- Gamification module removed (obsolete) -->
 
-    <!-- Curriculum Data -->
+    <!-- Curriculum Data Shards -->
+    <script src="scripts/data/curriculum/python.js"></script>
+    <script src="scripts/data/curriculum/web.js"></script>
+    <script src="scripts/data/curriculum/systems.js"></script>
+    <script src="scripts/data/curriculum/misc.js"></script>
     <script src="scripts/data/curriculum-data.js"></script>
     <script src="scripts/data/courses-data.js"></script>
 

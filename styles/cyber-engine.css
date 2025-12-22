@@ -3965,8 +3965,8 @@ html {
     padding: 0 32px;
 }
 
-/* Separate Trigger for Hover */
-.nav-item.has-dropdown:hover .mega-menu {
+/* Separate Trigger for Active (Click) */
+.nav-item.has-dropdown.active .mega-menu {
     display: flex;
     /* Flex to center content */
     opacity: 1;
