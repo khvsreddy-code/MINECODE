@@ -33,8 +33,12 @@ class MatrixRain {
             '#ffffff'  // White (head)
         ];
 
+        this.fps = 30; // Throttle to 30 FPS for performance
+        this.interval = 1000 / this.fps;
+        this.lastTime = 0;
+
         window.addEventListener('resize', () => this.resize());
-        this.animate();
+        this.animate(0);
     }
 
     resize() {
@@ -49,7 +53,14 @@ class MatrixRain {
         }
     }
 
-    animate() {
+    animate(timeStamp) {
+        requestAnimationFrame((t) => this.animate(t));
+
+        const deltaTime = timeStamp - this.lastTime;
+        if (deltaTime < this.interval) return;
+
+        this.lastTime = timeStamp - (deltaTime % this.interval);
+
         // Semi-transparent black to create trail effect
         this.ctx.fillStyle = 'rgba(1, 4, 9, 0.05)'; // --bg-void with low opacity
         this.ctx.fillRect(0, 0, this.width, this.height);
@@ -78,8 +89,6 @@ class MatrixRain {
             }
             this.drops[i]++;
         }
-
-        requestAnimationFrame(() => this.animate());
     }
 }
 

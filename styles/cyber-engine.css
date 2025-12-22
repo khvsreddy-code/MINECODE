@@ -245,6 +245,9 @@ a:hover {
     animation: gridMove 20s linear infinite;
     mask-image: radial-gradient(circle at center, black 40%, transparent 80%);
     -webkit-mask-image: radial-gradient(circle at center, black 40%, transparent 80%);
+    will-change: background-position;
+    /* Optimization */
+    pointer-events: none;
 }
 
 @keyframes gridMove {
@@ -266,6 +269,9 @@ a:hover {
         radial-gradient(1px 1px at 60% 20%, rgba(255, 255, 255, 0.5), transparent);
     background-size: 600px 600px;
     animation: particleDrift 80s linear infinite;
+    will-change: transform;
+    /* Optimization */
+    pointer-events: none;
 }
 
 @keyframes particleDrift {
@@ -5163,4 +5169,119 @@ html {
 
 .skeleton-text.short {
     width: 60%;
+}
+
+/* === CODEDEX CARD STYLES === */
+.codedex-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 24px;
+    padding: 24px;
+    z-index: 5;
+    position: relative;
+}
+
+.codedex-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    backdrop-filter: blur(10px);
+}
+
+.codedex-card:hover {
+    transform: translateY(-5px);
+    border-color: var(--neon-cyan);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.card-visual {
+    height: 160px;
+    background-size: cover;
+    background-position: center;
+    position: relative;
+}
+
+.card-body {
+    padding: 20px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.card-top {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 12px;
+}
+
+.lang-badge {
+    font-family: var(--font-code);
+    font-size: 10px;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 4px 8px;
+    border-radius: 4px;
+    color: var(--text-secondary);
+}
+
+.level-badge-simple {
+    font-family: var(--font-code);
+    font-size: 10px;
+    color: var(--neon-cyan);
+    font-weight: 700;
+}
+
+.codedex-card h3 {
+    font-family: var(--font-display);
+    font-size: 16px;
+    margin-bottom: 8px;
+    color: var(--text-bright);
+}
+
+.codedex-card p {
+    font-size: 14px;
+    color: var(--text-secondary);
+    margin-bottom: 16px;
+    line-height: 1.5;
+    flex: 1;
+}
+
+.card-footer {
+    margin-top: auto;
+}
+
+.progress-wrap {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 12px;
+    color: var(--text-muted);
+}
+
+.progress-bar-thin {
+    flex: 1;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 2px;
+    overflow: hidden;
+}
+
+.progress-bar-thin .fill {
+    height: 100%;
+    background: var(--neon-green);
+}
+
+.section-heading {
+    font-family: var(--font-display);
+    font-size: 20px;
+    margin: 40px 24px 24px;
+    color: var(--text-bright);
+    display: flex;
+    align-items: center;
+    gap: 12px;
 }

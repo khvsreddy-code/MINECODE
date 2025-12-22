@@ -1835,13 +1835,13 @@ window.renderCoursesCatalog = function (filter = 'all') {
 
     // 1. HEADER BANNER
     const headerHTML = `
-        <div class="catalog-header" style="text-align: center; margin-bottom: 0px; padding-top: 0px;">
-            <h1 style="font-family: 'Press Start 2P'; font-size: 28px; margin-bottom: 16px; color: white;">Course Catalog</h1>
+        <div class="catalog-header" style="text-align: center; margin-bottom: 0px; padding-top: 80px;">
+            <h1 style="font-family: 'Press Start 2P'; font-size: 28px; margin-top: 0; margin-bottom: 8px; color: white;">Course Catalog</h1>
             <p style="font-family: 'Outfit'; color: var(--text-secondary); font-size: 16px; max-width: 600px; margin: 0 auto;">
                 Browse our full curriculum of interactive coding courses. From Python to Web Development, start your journey today.
             </p>
             
-            <div class="catalog-filters" style="display: flex; justify-content: center; gap: 12px; margin-top: 32px;">
+            <div class="catalog-filters" style="display: flex; justify-content: center; gap: 12px; margin-top: 16px;">
                 <button class="filter-btn ${filter === 'all' ? 'active' : ''}" onclick="renderCoursesCatalog('all')">All</button>
                 <button class="filter-btn ${filter === 'python' ? 'active' : ''}" onclick="renderCoursesCatalog('python')">Python</button>
                 <button class="filter-btn ${filter === 'web' ? 'active' : ''}" onclick="renderCoursesCatalog('web')">Web Dev</button>

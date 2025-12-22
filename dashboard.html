@@ -259,9 +259,9 @@
                 <source src="assets/pixel_art/loop.mp4" type="video/mp4">
             </video>
             <!-- Hero Effects Overlays -->
-            <div class="crt-overlay" style="position: fixed; z-index: 2; pointer-events: none;"></div>
-            <div class="grid-overlay" style="position: fixed; z-index: 2; pointer-events: none;"></div>
-            <div class="floating-particles" style="position: fixed; z-index: 2; pointer-events: none;"></div>
+            <!-- Hero Effects Overlays - Simplified for Performance -->
+            <div style="position: fixed; inset: 0; background: rgba(0, 0, 0, 0.6); z-index: 2; pointer-events: none;">
+            </div>
             <div id="all-courses-grid" class="container"
                 style="max-width: 1200px; margin: 0 auto; position: relative; z-index: 3;"></div>
         </div>
