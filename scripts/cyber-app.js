@@ -1835,7 +1835,7 @@ window.renderCoursesCatalog = function (filter = 'all') {
 
     // 1. HEADER BANNER
     const headerHTML = `
-        <div class="catalog-header" style="text-align: center; margin-bottom: 0px; padding-top: 80px;">
+        <div class="catalog-header" style="text-align: center; margin-bottom: 16px; padding-top: 0;">
             <h1 style="font-family: 'Press Start 2P'; font-size: 28px; margin-top: 0; margin-bottom: 8px; color: white;">Course Catalog</h1>
             <p style="font-family: 'Outfit'; color: var(--text-secondary); font-size: 16px; max-width: 600px; margin: 0 auto;">
                 Browse our full curriculum of interactive coding courses. From Python to Web Development, start your journey today.
