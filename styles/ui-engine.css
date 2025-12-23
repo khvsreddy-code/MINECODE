@@ -709,16 +709,8 @@
     transform: translateY(-2px);
 }
 
-.guest-btn {
-    background: transparent;
-    color: var(--text-secondary);
-    border: 1px solid var(--border-medium);
-}
 
-.guest-btn:hover {
-    border-color: var(--primary);
-    color: var(--primary);
-}
+/* AUTH SCREENS */
 
 .auth-divider {
     display: flex;

@@ -38,7 +38,7 @@ const animateText = (text, baseDelay = 0) => {
 const GameState = {
     data: {
         user: {
-            name: 'Guest',
+            name: 'Agent',
             xp: 0,
             streak: 0,
             level: 1,
@@ -407,15 +407,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-// GLOBAL: Guest Login
-window.loginAsGuest = function () {
-    console.log(" [AUTH] Logging in as Guest...");
-    // Ensure default data is saved
-    if (!localStorage.getItem('minecode_save_v1')) {
-        GameState.save();
-    }
-    window.location.href = 'dashboard.html';
-};
 
 // GLOBAL: Navigation Handler
 window.navigateTo = function (route, replaceState = false) {

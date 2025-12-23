@@ -129,10 +129,6 @@ function bindEvents() {
         });
     });
 
-    // Guest login
-    document.getElementById('guest-btn')?.addEventListener('click', () => {
-        showMainApp(null);
-    });
 
     // Menu navigation
     document.querySelectorAll('.menu-item').forEach(item => {

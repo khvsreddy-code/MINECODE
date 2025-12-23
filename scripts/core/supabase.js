@@ -184,15 +184,6 @@ const Auth = {
                         </button>
                     </div>
                     
-                    <div class="auth-divider">
-                        <span>or</span>
-                    </div>
-                    
-                    <button class="auth-btn guest-btn" id="guest-continue">
-                        <span>👻</span>
-                        Continue as Guest
-                    </button>
-                    
                     <p class="auth-footer">
                         By signing in, you agree to our <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>
                     </p>
@@ -218,12 +209,6 @@ const Auth = {
         // Bind events
         document.getElementById('google-signin')?.addEventListener('click', () => this.signInWithGoogle());
         document.getElementById('github-signin')?.addEventListener('click', () => this.signInWithGitHub());
-        document.getElementById('guest-continue')?.addEventListener('click', () => {
-            // Guest mode - skip auth
-            if (window.App.Router) {
-                window.App.Router.show('dashboard');
-            }
-        });
     }
 };
 
