@@ -135,11 +135,16 @@ const Auth = {
             body.classList.remove('logged-in');
             body.classList.add('logged-out');
 
-            if (navAvatar) navAvatar.innerHTML = '<i data-lucide="user" style="width:20px;height:20px;color:#22d3ee;"></i>'; if (window.lucide) window.lucide.createIcons();
-            if (welcomeMsg) welcomeMsg.textContent = 'Welcome, Guest. Please Initialize Link.';
+            if (navAvatar) navAvatar.innerHTML = '<i data-lucide="user" style="width:20px;height:20px;color:#22d3ee;"></i>';
+            if (window.lucide) window.lucide.createIcons();
+
+            if (welcomeMsg) welcomeMsg.textContent = 'System Standby. Please initialize link to proceed.';
             if (loginBtn) {
                 loginBtn.textContent = 'Login / Sign Up';
-                loginBtn.onclick = () => window.location.hash = '#auth'; // Placeholder for modal
+                loginBtn.onclick = () => {
+                    if (window.navigateTo) window.navigateTo('login');
+                    else window.location.hash = '#auth';
+                };
             }
         }
     }

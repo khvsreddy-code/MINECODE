@@ -65,7 +65,7 @@ const Curriculum = {
                         id: "p1_3", title: "The Gatekeeper", visualAction: "sequenceAccess",
                         theory: "<h3>Control Flow (If/Else)</h3><p>Code needs to make decisions based on data.</p>",
                         tasks: [{ description: "Check if role == 'Admin'", validate: (c) => c.includes("if role == 'Admin':") }],
-                        initialCode: "role = 'Guest'\n# Add logic check below\n"
+                        initialCode: "role = 'Initiate'\n# Add logic check below\n"
                     }
                 ]
             },

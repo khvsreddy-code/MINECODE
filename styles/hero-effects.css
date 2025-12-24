@@ -22,17 +22,18 @@
 }
 
 /* Full video background - COVER to fill the entire canvas */
-.hero-pixel-scene .video-bg {
+/* Full video background - CONTAIN to fit without crop, centered */
+.hero-pixel-scene .hero-video-strict {
     position: absolute;
     top: 50%;
     left: 50%;
-    min-width: 100%;
-    min-height: 100%;
-    width: auto;
-    height: auto;
     transform: translate(-50%, -50%);
-    object-fit: cover;
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: contain !important;
+    /* Ensures full video is visible, no cropping */
     z-index: 0;
+    max-width: none !important;
 }
 
 /* Subtler dark gradient overlay to ensure text readability over bright video spots */

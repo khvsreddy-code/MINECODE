@@ -394,14 +394,16 @@ document.addEventListener('DOMContentLoaded', () => {
     const path = window.location.pathname;
 
     // Multi-page Routing Logic
-    if (path.includes('dashboard.html') || !path.includes('.html')) {
+    // Multi-page Routing Logic
+    // Fix: Treat '/' as Landing Page (Index) explicitly
+    if (path.includes('dashboard.html')) {
         // App / Dashboard Logic
         console.log(" [SYSTEM] Initializing Dashboard...");
 
         // Use new URL handler instead of manual query parsing
         handleUrlRouting();
     } else {
-        // Landing / Index Logic
+        // Landing / Index Logic (includes '/' and '/index.html')
         console.log(" [SYSTEM] Initializing Landing Sequence...");
         renderLandingPage();
     }
@@ -629,6 +631,22 @@ function initNavigation() {
     });
 }
 
+// Helper for Landing Page Buttons
+function renderAuthButtons() {
+    const isLoggedIn = !!localStorage.getItem('minecode_save_v1');
+    if (isLoggedIn) {
+        return `
+            <button class="btn-nes-primary" onclick="navigateTo('courses')">ACCESS PROTOCOLS</button>
+            <button class="btn-nes-secondary" onclick="navigateTo('practice')">ENTER FORGE</button>
+        `;
+    } else {
+        return `
+            <button class="btn-nes-primary" onclick="navigateTo('login')">LOGIN</button>
+            <button class="btn-nes-secondary" onclick="navigateTo('signup')">SIGN UP</button>
+        `;
+    }
+}
+
 // MINECODE LANDING PAGE (Logged Out View) - CODEDEX-INSPIRED ANIMATION
 function renderLandingPage() {
     const mainContent = document.getElementById('main-content');
@@ -639,166 +657,15 @@ function renderLandingPage() {
     if (sidebar) sidebar.style.display = 'none';
     if (rightSidebar) rightSidebar.style.display = 'none';
 
-    mainContent.innerHTML = `
-        <div class="hero-pixel-scene">
-            <!-- Background Video -->
-            <video id="landing-video-bg" class="video-bg" autoplay muted loop playsinline>
-                <source src="./assets/_looped_video_1080p_202512201349.mp4" type="video/mp4">
-            </video>
-            
-            <!-- Radial overlay for better center focus -->
-            <div class="overlay-gradient"></div>
-            
-            <!-- Hero Content - Full Screen Centered Area -->
-            <div class="hero-content-wrapper">
-                <div class="hero-text-box">
-                    <div class="hero-start-text">START YOUR</div>
-                    
-                    <!-- Main Animated Title - MASSIVE -->
-                    <div class="hero-adventure-container">
-                        <div class="hero-adventure-line">
-                            ${animateText('Coding', 0)}
-                        </div>
-                        <div class="hero-adventure-line">
-                            ${animateText('Adventure', 0.8)}
-                        </div>
-                    </div>
-                    
-                    <p class="hero-subtitle">
-                        Learn to code the fun way with interactive lessons,<br>
-                        real projects, and a supportive community.
-                    </p>
-                    
-                    <div class="hero-buttons">
-                        <button class="btn-nes-primary" onclick="navigateTo('signup')">
-                            START FOR FREE
-                        </button>
-                        <button class="btn-nes-secondary" onclick="navigateTo('courses')">
-                            EXPLORE COURSES
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Features Section -->
-        <div class="features-section" style="background: var(--bg-deep); padding: 80px 24px;">
-            <div style="max-width: 1100px; margin: 0 auto;">
-                <div style="text-align: center; margin-bottom: 60px;">
-                    <h2 style="font-family: 'Press Start 2P'; font-size: 18px; color: var(--text-bright); margin-bottom: 16px;">Why MineCode?</h2>
-                    <p style="color: var(--text-secondary); max-width: 500px; margin: 0 auto;">A gamified learning experience that makes coding fun and addictive.</p>
-                </div>
-                
-                <div class="features-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 32px;">
-                    <div class="feature-card cyber-card" style="padding: 32px; text-align: center;">
-                        <div style="font-size: 48px; margin-bottom: 16px;">🎮</div>
-                        <h3 style="font-family: 'Press Start 2P'; font-size: 12px; color: var(--text-bright); margin-bottom: 12px;">Gamified Learning</h3>
-                        <p style="color: var(--text-secondary); font-size: 14px;">Earn XP, unlock badges, and level up as you complete lessons.</p>
-                    </div>
-                    <div class="feature-card cyber-card" style="padding: 32px; text-align: center;">
-                        <div style="font-size: 48px; margin-bottom: 16px;">💻</div>
-                        <h3 style="font-family: 'Press Start 2P'; font-size: 12px; color: var(--text-bright); margin-bottom: 12px;">Code in Browser</h3>
-                        <p style="color: var(--text-secondary); font-size: 14px;">No setup required. Write and run code directly in your browser.</p>
-                    </div>
-                    <div class="feature-card cyber-card" style="padding: 32px; text-align: center;">
-                        <div style="font-size: 48px; margin-bottom: 16px;">🏆</div>
-                        <h3 style="font-family: 'Press Start 2P'; font-size: 12px; color: var(--text-bright); margin-bottom: 12px;">Real Projects</h3>
-                        <p style="color: var(--text-secondary); font-size: 14px;">Build portfolio-worthy projects like games, apps, and websites.</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Courses Preview Section -->
-        <div class="landing-courses-preview" style="background: var(--bg-panel); padding: 80px 24px;">
-            <div class="landing-section-header" style="text-align: center; margin-bottom: 48px;">
-                <h2 style="font-family: 'Press Start 2P', monospace; font-size: 18px; color: var(--text-bright); margin-bottom: 16px;">
-                    Journey through the world of programming
-                </h2>
-                <p style="font-family: var(--font-body); color: var(--text-secondary); max-width: 500px; margin: 0 auto;">
-                    Learn to code with fun, interactive courses handcrafted by industry experts.
-                </p>
-            </div>
-            
-            <div id="landing-grid" class="section-grid-3" style="max-width: 1100px; margin: 0 auto;">
-                <!-- Courses injected here -->
-            </div>
-            
-            <div style="text-align: center; margin-top: 48px;">
-                <button class="btn-nes-primary btn-nes-cyan" onclick="navigateTo('signup')">
-                    Explore All Courses
-                </button>
-            </div>
-        </div>
-
-        <!-- CTA Section -->
-        <div class="cta-section" style="background: linear-gradient(135deg, #0a0e17 0%, #1a1a2e 100%); padding: 100px 24px; text-align: center;">
-            <h2 style="font-family: 'Press Start 2P'; font-size: 22px; color: var(--text-bright); margin-bottom: 16px;">Ready to Start?</h2>
-            <p style="color: var(--text-secondary); max-width: 500px; margin: 0 auto 32px auto; font-size: 16px;">
-                Join thousands of learners and begin your coding journey today. It's free!
-            </p>
-            <button class="btn-nes-primary" onclick="navigateTo('signup')" style="font-size: 14px; padding: 16px 32px;">
-                🚀 START LEARNING NOW
-            </button>
-        </div>
-
-        <!-- Footer -->
-        <footer class="landing-footer" style="background: #0a0b10; padding: 60px 24px 30px; border-top: 1px solid var(--border-subtle);">
-            <div style="max-width: 1100px; margin: 0 auto;">
-                <div class="footer-grid" style="display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 48px; margin-bottom: 48px;">
-                    <!-- Brand -->
-                    <div>
-                        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 16px;">
-                            <span style="font-size: 28px;">⛏️</span>
-                            <span style="font-family: 'Press Start 2P'; font-size: 14px; color: var(--text-bright);">MINECODE</span>
-                        </div>
-                        <p style="color: var(--text-muted); font-size: 13px; line-height: 1.6; max-width: 280px;">
-                            The gamified way to learn coding. Earn XP, collect badges, and build real projects.
-                        </p>
-                    </div>
-                    
-                    <!-- Learn -->
-                    <div>
-                        <h4 style="color: var(--text-bright); font-size: 12px; margin-bottom: 16px;">LEARN</h4>
-                        <ul style="list-style: none; padding: 0; margin: 0;">
-                            <li style="margin-bottom: 8px;"><a href="#" onclick="navigateTo('courses')" style="color: var(--text-muted); font-size: 13px; text-decoration: none;">All Courses</a></li>
-                            <li style="margin-bottom: 8px;"><a href="#" onclick="navigateTo('practice')" style="color: var(--text-muted); font-size: 13px; text-decoration: none;">Practice</a></li>
-                            <li style="margin-bottom: 8px;"><a href="#" onclick="navigateTo('builds')" style="color: var(--text-muted); font-size: 13px; text-decoration: none;">Projects</a></li>
-                        </ul>
-                    </div>
-                    
-                    <!-- Community -->
-                    <div>
-                        <h4 style="color: var(--text-bright); font-size: 12px; margin-bottom: 16px;">COMMUNITY</h4>
-                        <ul style="list-style: none; padding: 0; margin: 0;">
-                            <li style="margin-bottom: 8px;"><a href="#" onclick="navigateTo('community')" style="color: var(--text-muted); font-size: 13px; text-decoration: none;">Forum</a></li>
-                            <li style="margin-bottom: 8px;"><a href="#" style="color: var(--text-muted); font-size: 13px; text-decoration: none;">Discord</a></li>
-                            <li style="margin-bottom: 8px;"><a href="#" style="color: var(--text-muted); font-size: 13px; text-decoration: none;">Twitter/X</a></li>
-                        </ul>
-                    </div>
-                    
-                    <!-- Company -->
-                    <div>
-                        <h4 style="color: var(--text-bright); font-size: 12px; margin-bottom: 16px;">COMPANY</h4>
-                        <ul style="list-style: none; padding: 0; margin: 0;">
-                            <li style="margin-bottom: 8px;"><a href="#" style="color: var(--text-muted); font-size: 13px; text-decoration: none;">About</a></li>
-                            <li style="margin-bottom: 8px;"><a href="#" style="color: var(--text-muted); font-size: 13px; text-decoration: none;">Blog</a></li>
-                            <li style="margin-bottom: 8px;"><a href="#" style="color: var(--text-muted); font-size: 13px; text-decoration: none;">Contact</a></li>
-                        </ul>
-                    </div>
-                </div>
-                
-                <!-- Bottom Bar -->
-                <div style="border-top: 1px solid var(--border-subtle); padding-top: 24px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
-                    <p style="color: var(--text-muted); font-size: 12px; margin: 0;">© 2025 MineCode. Made with ❤️ for coders.</p>
-                    <div style="display: flex; gap: 24px;">
-                        <a href="#" style="color: var(--text-muted); font-size: 12px; text-decoration: none;">Privacy</a>
-                        <a href="#" style="color: var(--text-muted); font-size: 12px; text-decoration: none;">Terms</a>
-                    </div>
-                </div>
-            </div>
-        </footer>
-    `;
+    // ANIMATE TEXT (Targeting the IDs we added to index.html)
+    const codingText = document.getElementById('hero-text-coding');
+    if (codingText && codingText.innerHTML === 'Coding') {
+        codingText.innerHTML = animateText('Coding', 0);
+    }
+    const journeyText = document.getElementById('hero-text-journey');
+    if (journeyText && journeyText.innerHTML === 'Adventure') {
+        journeyText.innerHTML = animateText('Adventure', 0.8);
+    }
 
     // Play video
     const v = document.getElementById('landing-video-bg');
@@ -809,11 +676,11 @@ function renderLandingPage() {
         setTimeout(() => window.RainEffect.init(), 200);
     }
 
-    // Inject courses
+    // Inject courses dynamically into the static grid container
     const featuredCourses = COURSES.filter(c => ['python', 'html', 'javascript'].includes(c.id));
     const grid = document.getElementById('landing-grid');
 
-    if (grid) {
+    if (grid && grid.innerHTML.trim() === '') {
         grid.innerHTML = featuredCourses.map((c, i) => {
             const bgStyle = c.image
                 ? `background-image: url('${c.image}'); background-size: cover; background-position: center;`
@@ -1030,6 +897,148 @@ function renderSignupPage() {
     document.getElementById('main-content').innerHTML = contentHTML;
 }
 
+// LOGIN PAGE - CLONED FROM SIGNUP
+function renderLoginPage() {
+    // Reusing the signup style but with Login text
+    const contentHTML = `
+        <div style="
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+            background: linear-gradient(180deg, #0a0e17 0%, #0d1117 50%, #161b22 100%);
+            position: relative;
+            overflow: hidden;
+        ">
+            <!-- Pixel Stars Background -->
+            <div style="position: absolute; inset: 0; background-image: 
+                radial-gradient(2px 2px at 10% 20%, rgba(255,255,255,0.3), transparent),
+                radial-gradient(2px 2px at 30% 15%, rgba(255,255,255,0.2), transparent),
+                radial-gradient(2px 2px at 50% 25%, rgba(255,255,255,0.4), transparent),
+                radial-gradient(2px 2px at 70% 10%, rgba(255,255,255,0.2), transparent),
+                radial-gradient(2px 2px at 90% 30%, rgba(255,255,255,0.3), transparent),
+                radial-gradient(1px 1px at 20% 80%, rgba(255,255,255,0.2), transparent),
+                radial-gradient(1px 1px at 80% 70%, rgba(255,255,255,0.3), transparent);
+                pointer-events: none;
+            "></div>
+
+            <!-- Auth Card (NES Style with Cyber Glow) -->
+            <div style="
+                background: #0d1117;
+                border: 4px solid #30363d;
+                border-radius: 16px;
+                padding: 40px;
+                max-width: 420px;
+                width: 100%;
+                position: relative;
+                box-shadow: 
+                    8px 8px 0 rgba(0,0,0,0.4),
+                    0 0 40px rgba(34, 211, 238, 0.1);
+            ">
+                <!-- Inner Glow Border -->
+                <div style="position: absolute; inset: 4px; border: 1px solid rgba(34, 211, 238, 0.15); border-radius: 12px; pointer-events: none;"></div>
+                
+                <!-- Header -->
+                <div style="text-align: center; margin-bottom: 28px;">
+                    <h1 style="font-family: var(--font-display); font-size: 24px; color: white; margin-bottom: 8px;">Welcome Back</h1>
+                    <p style="color: #8b949e; font-size: 15px;">Login to continue your streak</p>
+                </div>
+
+                <!-- GitHub Button (Primary) -->
+                <button onclick="alert('GitHub OAuth coming soon!')" style="
+                    width: 100%;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    gap: 12px;
+                    padding: 14px 24px;
+                    background: #238636;
+                    color: white;
+                    border: none;
+                    border-radius: 8px;
+                    font-size: 15px;
+                    font-weight: 600;
+                    cursor: pointer;
+                    box-shadow: 0 4px 0 #1a7f37;
+                    transition: all 0.15s;
+                    margin-bottom: 20px;
+                " onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 0 #1a7f37'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 0 #1a7f37'" onmousedown="this.style.transform='translateY(2px)'; this.style.boxShadow='0 2px 0 #1a7f37'">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+                    Original with GitHub
+                </button>
+
+                <!-- Divider -->
+                <div style="display: flex; align-items: center; gap: 16px; margin: 20px 0; color: #6e7681; font-size: 13px;">
+                    <div style="flex: 1; height: 1px; background: #30363d;"></div>
+                    <span>or</span>
+                    <div style="flex: 1; height: 1px; background: #30363d;"></div>
+                </div>
+
+                <!-- Email Input -->
+                <div style="margin-bottom: 16px;">
+                    <label style="display: block; font-size: 14px; color: #8b949e; margin-bottom: 8px; font-weight: 500;">Email</label>
+                    <input type="email" placeholder="you@example.com" style="
+                        width: 100%;
+                        padding: 12px 14px;
+                        background: #010409;
+                        border: 1px solid #30363d;
+                        border-radius: 6px;
+                        color: white;
+                        font-size: 15px;
+                        outline: none;
+                        box-sizing: border-box;
+                    " onfocus="this.style.borderColor='#58a6ff'; this.style.boxShadow='0 0 0 3px rgba(88,166,255,0.15)'" onblur="this.style.borderColor='#30363d'; this.style.boxShadow='none'">
+                </div>
+
+                <!-- Password Input -->
+                <div style="margin-bottom: 24px;">
+                    <label style="display: block; font-size: 14px; color: #8b949e; margin-bottom: 8px; font-weight: 500;">Password</label>
+                    <input type="password" placeholder="Password" style="
+                        width: 100%;
+                        padding: 12px 14px;
+                        background: #010409;
+                        border: 1px solid #30363d;
+                        border-radius: 6px;
+                        color: white;
+                        font-size: 15px;
+                        outline: none;
+                        box-sizing: border-box;
+                    " onfocus="this.style.borderColor='#58a6ff'; this.style.boxShadow='0 0 0 3px rgba(88,166,255,0.15)'" onblur="this.style.borderColor='#30363d'; this.style.boxShadow='none'">
+                </div>
+
+                <!-- Submit Button -->
+                <button onclick="localStorage.setItem('minecode_save_v1', JSON.stringify(GameState.data)); navigateTo('home')" style="
+                    width: 100%;
+                    padding: 14px;
+                    background: linear-gradient(180deg, #22d3ee 0%, #06b6d4 100%);
+                    color: #000;
+                    border: none;
+                    border-radius: 8px;
+                    font-family: var(--font-display);
+                    font-size: 13px;
+                    font-weight: 700;
+                    cursor: pointer;
+                    box-shadow: 0 4px 0 #0891b2;
+                    transition: all 0.15s;
+                    text-transform: uppercase;
+                    letter-spacing: 1px;
+                " onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 0 #0891b2'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 0 #0891b2'" onmousedown="this.style.transform='translateY(2px)'; this.style.boxShadow='0 2px 0 #0891b2'">
+                    Log In
+                </button>
+
+                <!-- Footer -->
+                <div style="text-align: center; margin-top: 20px; font-size: 14px; color: #6e7681;">
+                    Don't have an account? <a href="#" onclick="navigateTo('signup')" style="color: #58a6ff; text-decoration: none; font-weight: 500;">Sign up</a>
+                </div>
+            </div>
+        </div>
+    `;
+
+    document.getElementById('main-content').innerHTML = contentHTML;
+}
+
 // HOME DASHBOARD (Logged In) - CYBER FUTURISTIC CODEDEX STYLE
 // HOME DASHBOARD (Logged In) - CYBER FUTURISTIC CODEDEX STYLE
 function renderHomeDashboard() {
@@ -1069,12 +1078,9 @@ function renderHomeDashboard() {
                 <button class="tip-dismiss" data-tooltip="Dismiss Tip" style="padding: 8px; margin-right: -8px;">✕</button>
             </div>
 
-            <!-- FULL SCREEN HERO SUCCESSOR -->
-            <div class="hero-pixel-scene" style="height: 80vh; min-height: 600px; margin-bottom: 40px; width: 100%;">
-                    <!-- Background Video -->
-                    <video id="dashboard-video-bg" class="video-bg" autoplay muted loop playsinline>
-                        <source src="./assets/_looped_video_1080p_202512201349.mp4" type="video/mp4">
-                    </video>
+                <div class="hero-pixel-scene" style="height: 80vh; min-height: 600px; margin-bottom: 40px; width: 100%;">
+                    <!-- Background Image (Static) -->
+                    <div class="video-bg" style="background: url('assets/pixel_art/background.png') no-repeat center center; background-size: cover;"></div>
                     
                     <div class="overlay-gradient"></div>
                     
@@ -1096,12 +1102,7 @@ function renderHomeDashboard() {
                             </p>
                             
                             <div class="hero-buttons" style="margin-top: 32px;">
-                                <button class="btn-nes-primary" onclick="navigateTo('courses')">
-                                    ACCESS PROTOCOLS
-                                </button>
-                                <button class="btn-nes-secondary" onclick="navigateTo('practice')">
-                                    ENTER FORGE
-                                </button>
+                                ${renderAuthButtons()}
                             </div>
                         </div>
                 </div> <!-- Close hero-content-wrapper -->
@@ -1317,6 +1318,10 @@ function navigateTo(route) {
         if (sidebar) sidebar.style.display = 'none';
         if (mainLayout) mainLayout.style.display = 'block';
         renderSignupPage();
+    } else if (route === 'login') {
+        if (sidebar) sidebar.style.display = 'none';
+        if (mainLayout) mainLayout.style.display = 'block';
+        renderLoginPage();
     } else if (route === 'home') {
         // HOME DASHBOARD LAYOUT
         if (sidebar) sidebar.style.display = 'none'; // Custom sidebar in dashboard
